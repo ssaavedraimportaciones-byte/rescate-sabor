@@ -95,9 +95,9 @@ export default function Auth({ onAuth }) {
     <div className="min-h-screen bg-orange-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <img src="/logo.svg" alt="Rescate Sabor" className="w-20 h-20 mx-auto mb-3" />
+          <img src="/logo.svg" alt="Rescate Sabor" className="w-24 h-24 mx-auto mb-4 rounded-full shadow-md" />
           <h1 className="text-2xl font-bold text-gray-900">Rescate Sabor</h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-600 mt-1 text-sm">
             {mode === 'login' ? 'Bienvenido de vuelta' : 'Crea tu cuenta'}
           </p>
         </div>

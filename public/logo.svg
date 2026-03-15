@@ -3,40 +3,40 @@
     <radialGradient id="bg" cx="42%" cy="36%" r="72%">
       <stop offset="0%" stop-color="#fb923c"/>
       <stop offset="55%" stop-color="#f97316"/>
-      <stop offset="100%" stop-color="#b45309"/>
+      <stop offset="100%" stop-color="#c2410c"/>
     </radialGradient>
   </defs>
 
   <!-- Fondo circular -->
   <circle cx="100" cy="100" r="100" fill="url(#bg)"/>
 
-  <!-- Corazón-hoja GRANDE: ocupa ~80% del círculo -->
-  <path d="M100 172
-           C80 152 26 124 26 82
-           C26 56 46 36 74 36
-           C87 36 96 48 100 56
-           C104 48 113 36 126 36
-           C154 36 174 56 174 82
-           C174 124 120 152 100 172Z"
+  <!-- Corazón-hoja GRANDE: rellena ~88% del círculo -->
+  <path d="M100 178
+           C76 156 20 126 20 80
+           C20 52 42 30 70 30
+           C84 30 95 43 100 52
+           C105 43 116 30 130 30
+           C158 30 180 52 180 80
+           C180 126 124 156 100 178Z"
         fill="white"/>
 
-  <!-- Nervadura central gruesa -->
-  <path d="M100 58 L100 164" stroke="#f97316" stroke-width="4" stroke-linecap="round" opacity="0.45"/>
+  <!-- Nervadura central — gruesa y visible -->
+  <path d="M100 52 L100 170" stroke="#ea580c" stroke-width="6" stroke-linecap="round" opacity="0.55"/>
 
-  <!-- Nervaduras laterales superiores -->
-  <path d="M100 80 Q70 98 46 108" stroke="#f97316" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
-  <path d="M100 80 Q130 98 154 108" stroke="#f97316" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
+  <!-- Nervaduras superiores — bien visibles -->
+  <path d="M100 78 Q66 94 38 106" stroke="#ea580c" stroke-width="4.5" stroke-linecap="round" opacity="0.5"/>
+  <path d="M100 78 Q134 94 162 106" stroke="#ea580c" stroke-width="4.5" stroke-linecap="round" opacity="0.5"/>
 
-  <!-- Nervaduras laterales inferiores -->
-  <path d="M100 110 Q74 126 54 134" stroke="#f97316" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
-  <path d="M100 110 Q126 126 146 134" stroke="#f97316" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
+  <!-- Nervaduras medias -->
+  <path d="M100 110 Q70 126 46 136" stroke="#ea580c" stroke-width="3.5" stroke-linecap="round" opacity="0.4"/>
+  <path d="M100 110 Q130 126 154 136" stroke="#ea580c" stroke-width="3.5" stroke-linecap="round" opacity="0.4"/>
 
-  <!-- Nervaduras pequeñas -->
-  <path d="M100 140 Q82 148 68 154" stroke="#f97316" stroke-width="2" stroke-linecap="round" opacity="0.2"/>
-  <path d="M100 140 Q118 148 132 154" stroke="#f97316" stroke-width="2" stroke-linecap="round" opacity="0.2"/>
+  <!-- Nervaduras inferiores -->
+  <path d="M100 138 Q80 148 64 156" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round" opacity="0.3"/>
+  <path d="M100 138 Q120 148 136 156" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round" opacity="0.3"/>
 
-  <!-- Brote verde en la punta superior (vida que renace) -->
-  <path d="M100 36 C100 36 80 16 90 6 C97 18 100 36 100 36Z" fill="#4ade80"/>
-  <path d="M100 36 C100 36 120 18 128 30 C120 37 100 36 100 36Z" fill="#22c55e"/>
-  <line x1="100" y1="36" x2="100" y2="18" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+  <!-- Brote verde en la punta superior -->
+  <path d="M100 30 C100 30 79 12 89 3 C97 15 100 30 100 30Z" fill="#4ade80"/>
+  <path d="M100 30 C100 30 121 14 129 27 C121 35 100 30 100 30Z" fill="#22c55e"/>
+  <line x1="100" y1="30" x2="100" y2="13" stroke="#15803d" stroke-width="4" stroke-linecap="round"/>
 </svg>

@@ -3,10 +3,10 @@ import { supabase } from '../lib/supabase'
 import Header from './Header'
 
 const STATUS_CONFIG = {
-  pending: { label: 'Pendiente', color: 'bg-yellow-100 text-yellow-700' },
-  confirmed: { label: 'Confirmado', color: 'bg-blue-100 text-blue-700' },
-  delivered: { label: 'Entregado', color: 'bg-green-100 text-green-700' },
-  cancelled: { label: 'Cancelado', color: 'bg-gray-100 text-gray-500' },
+  pending: { label: 'Pendiente', color: 'bg-yellow-100 text-yellow-800 border border-yellow-200' },
+  confirmed: { label: 'Confirmado', color: 'bg-blue-100 text-blue-800 border border-blue-200' },
+  delivered: { label: 'Entregado', color: 'bg-green-100 text-green-800 border border-green-200' },
+  cancelled: { label: 'Cancelado', color: 'bg-gray-100 text-gray-600 border border-gray-200' },
 }
 
 const EMPTY_BAG = { title: '', description: '', original_price: '', discount_price: '', quantity: 1, pickup_start: '', pickup_end: '' }
@@ -223,10 +223,10 @@ export default function SellerDashboard({ user, profile }) {
                     <div className="flex justify-between items-start gap-2">
                       <div>
                         <h3 className="font-bold text-gray-900">{reservation.bags?.title}</h3>
-                        <p className="text-gray-500 text-sm">
+                        <p className="text-gray-600 text-sm font-medium">
                           {reservation.profiles?.name || reservation.profiles?.email || 'Comprador'}
                         </p>
-                        <p className="text-gray-400 text-xs mt-0.5">
+                        <p className="text-gray-500 text-xs mt-0.5">
                           {new Date(reservation.created_at).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
@@ -371,11 +371,11 @@ export default function SellerDashboard({ user, profile }) {
                     <div className="flex justify-between items-start gap-2">
                       <div>
                         <h3 className="font-bold text-gray-900">{bag.title}</h3>
-                        <p className="text-gray-500 text-sm">
-                          ${bag.discount_price} · {bag.quantity} disponible{bag.quantity !== 1 ? 's' : ''}
+                        <p className="text-gray-700 text-sm font-medium">
+                          ${Number(bag.discount_price).toFixed(2)} · <span className="text-gray-500">{bag.quantity} disponible{bag.quantity !== 1 ? 's' : ''}</span>
                         </p>
                         {bag.description && (
-                          <p className="text-gray-400 text-sm mt-1">{bag.description}</p>
+                          <p className="text-gray-500 text-sm mt-1">{bag.description}</p>
                         )}
                       </div>
                       <button
