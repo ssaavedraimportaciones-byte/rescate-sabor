@@ -8,7 +8,7 @@ export default function Header({ profile, title }) {
   return (
     <header className="bg-white border-b border-gray-100 px-4 py-4 flex items-center justify-between sticky top-0 z-10">
       <div className="flex items-center gap-2">
-        <span className="text-2xl">🥗</span>
+        <img src="/logo.svg" alt="" className="w-8 h-8" />
         <div>
           <h1 className="font-bold text-gray-900 leading-tight">{title || 'Rescate Sabor'}</h1>
           {profile?.name && (
