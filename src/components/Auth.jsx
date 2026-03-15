@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
 export default function Auth({ onAuth }) {
-  const [mode, setMode] = useState('login')
+  const [mode, setMode] = useState('login') // 'login' | 'register' | 'forgot'
   const [step, setStep] = useState(1)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -11,6 +11,7 @@ export default function Auth({ onAuth }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [confirmationSent, setConfirmationSent] = useState(false)
+  const [resetSent, setResetSent] = useState(false)
 
   async function handleRegister() {
     if (!name || !role) {
@@ -70,6 +71,34 @@ export default function Auth({ onAuth }) {
     setLoading(false)
   }
 
+  async function handleForgotPassword() {
+    if (!email) {
+      setError('Ingresa tu email')
+      return
+    }
+    setLoading(true)
+    setError('')
+
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/`,
+    })
+
+    if (resetError) {
+      setError(resetError.message)
+    } else {
+      setResetSent(true)
+    }
+    setLoading(false)
+  }
+
+  function goToLogin() {
+    setMode('login')
+    setStep(1)
+    setError('')
+    setResetSent(false)
+    setConfirmationSent(false)
+  }
+
   if (confirmationSent) {
     return (
       <div className="min-h-screen bg-orange-50 flex items-center justify-center p-4">
@@ -80,10 +109,7 @@ export default function Auth({ onAuth }) {
             Te enviamos un enlace de confirmación a <strong>{email}</strong>.
             Haz clic en el enlace y luego inicia sesión.
           </p>
-          <button
-            onClick={() => { setConfirmationSent(false); setMode('login'); setStep(1) }}
-            className="mt-6 text-orange-500 font-medium text-sm"
-          >
+          <button onClick={goToLogin} className="mt-6 text-orange-500 font-medium text-sm">
             Ir al inicio de sesión
           </button>
         </div>
@@ -91,24 +117,77 @@ export default function Auth({ onAuth }) {
     )
   }
 
-  return (
-    <div className="min-h-screen bg-orange-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
-        <div className="text-center mb-8">
-          <img src="/logo.svg" alt="Rescate Sabor" className="w-24 h-24 mx-auto mb-4 rounded-full shadow-md" />
-          <h1 className="text-2xl font-bold text-gray-900">Rescate Sabor</h1>
-          <p className="text-gray-600 mt-1 text-sm">
-            {mode === 'login' ? 'Bienvenido de vuelta' : 'Crea tu cuenta'}
+  if (resetSent) {
+    return (
+      <div className="min-h-screen bg-orange-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md text-center">
+          <div className="text-5xl mb-4">🔑</div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Revisa tu correo</h2>
+          <p className="text-gray-500">
+            Enviamos un enlace para restablecer tu contraseña a <strong>{email}</strong>.
           </p>
+          <button onClick={goToLogin} className="mt-6 text-orange-500 font-medium text-sm">
+            Volver al inicio de sesión
+          </button>
         </div>
+      </div>
+    )
+  }
 
-        {error && (
-          <div className="bg-red-50 text-red-600 rounded-xl p-3 mb-4 text-sm">
-            {error}
+  /* ── FORGOT PASSWORD ── */
+  if (mode === 'forgot') {
+    return (
+      <div className="min-h-screen bg-orange-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
+          <div className="text-center mb-8">
+            <img src="/logo.svg" alt="Rescate Sabor" className="w-24 h-24 mx-auto mb-4 rounded-full shadow-md" />
+            <h1 className="text-2xl font-bold text-gray-900">Recuperar contraseña</h1>
+            <p className="text-gray-500 mt-1 text-sm">Te enviamos un enlace a tu email</p>
           </div>
-        )}
+          {error && (
+            <div className="bg-red-50 text-red-600 rounded-xl p-3 mb-4 text-sm">{error}</div>
+          )}
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="tu@email.com"
+                onKeyDown={e => e.key === 'Enter' && handleForgotPassword()}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+            </div>
+            <button
+              onClick={handleForgotPassword}
+              disabled={loading}
+              className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              {loading ? 'Enviando...' : 'Enviar enlace'}
+            </button>
+            <button onClick={goToLogin} className="w-full text-gray-400 py-2 hover:text-gray-600 text-sm">
+              Volver al inicio de sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
-        {mode === 'register' && step === 2 ? (
+  /* ── REGISTER step 2 ── */
+  if (mode === 'register' && step === 2) {
+    return (
+      <div className="min-h-screen bg-orange-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
+          <div className="text-center mb-8">
+            <img src="/logo.svg" alt="Rescate Sabor" className="w-24 h-24 mx-auto mb-4 rounded-full shadow-md" />
+            <h1 className="text-2xl font-bold text-gray-900">Rescate Sabor</h1>
+            <p className="text-gray-600 mt-1 text-sm">Cuéntanos sobre ti</p>
+          </div>
+          {error && (
+            <div className="bg-red-50 text-red-600 rounded-xl p-3 mb-4 text-sm">{error}</div>
+          )}
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Tu nombre</label>
@@ -126,9 +205,7 @@ export default function Auth({ onAuth }) {
                 <button
                   onClick={() => setRole('buyer')}
                   className={`border-2 rounded-xl p-4 text-center transition-all ${
-                    role === 'buyer'
-                      ? 'border-orange-500 bg-orange-50'
-                      : 'border-gray-200 hover:border-orange-300'
+                    role === 'buyer' ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-orange-300'
                   }`}
                 >
                   <div className="text-3xl mb-1">🛍️</div>
@@ -138,9 +215,7 @@ export default function Auth({ onAuth }) {
                 <button
                   onClick={() => setRole('seller')}
                   className={`border-2 rounded-xl p-4 text-center transition-all ${
-                    role === 'seller'
-                      ? 'border-green-500 bg-green-50'
-                      : 'border-gray-200 hover:border-green-300'
+                    role === 'seller' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300'
                   }`}
                 >
                   <div className="text-3xl mb-1">🏪</div>
@@ -156,14 +231,28 @@ export default function Auth({ onAuth }) {
             >
               {loading ? 'Creando cuenta...' : 'Crear cuenta'}
             </button>
-            <button
-              onClick={() => setStep(1)}
-              className="w-full text-gray-400 py-2 hover:text-gray-600 text-sm"
-            >
+            <button onClick={() => setStep(1)} className="w-full text-gray-400 py-2 hover:text-gray-600 text-sm">
               Atrás
             </button>
           </div>
-        ) : mode === 'register' ? (
+        </div>
+      </div>
+    )
+  }
+
+  /* ── REGISTER step 1 ── */
+  if (mode === 'register') {
+    return (
+      <div className="min-h-screen bg-orange-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
+          <div className="text-center mb-8">
+            <img src="/logo.svg" alt="Rescate Sabor" className="w-24 h-24 mx-auto mb-4 rounded-full shadow-md" />
+            <h1 className="text-2xl font-bold text-gray-900">Rescate Sabor</h1>
+            <p className="text-gray-600 mt-1 text-sm">Crea tu cuenta</p>
+          </div>
+          {error && (
+            <div className="bg-red-50 text-red-600 rounded-xl p-3 mb-4 text-sm">{error}</div>
+          )}
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
@@ -198,55 +287,75 @@ export default function Auth({ onAuth }) {
             </button>
             <p className="text-center text-gray-500 text-sm">
               ¿Ya tienes cuenta?{' '}
-              <button
-                onClick={() => { setMode('login'); setStep(1); setError('') }}
-                className="text-orange-500 font-medium"
-              >
+              <button onClick={goToLogin} className="text-orange-500 font-medium">
                 Inicia sesión
               </button>
             </p>
           </div>
-        ) : (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="tu@email.com"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-              <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="Tu contraseña"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                onKeyDown={e => e.key === 'Enter' && handleLogin()}
-              />
-            </div>
-            <button
-              onClick={handleLogin}
-              disabled={loading}
-              className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-colors"
-            >
-              {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
-            </button>
-            <p className="text-center text-gray-500 text-sm">
-              ¿No tienes cuenta?{' '}
-              <button
-                onClick={() => { setMode('register'); setStep(1); setError('') }}
-                className="text-orange-500 font-medium"
-              >
-                Regístrate
-              </button>
-            </p>
-          </div>
+        </div>
+      </div>
+    )
+  }
+
+  /* ── LOGIN ── */
+  return (
+    <div className="min-h-screen bg-orange-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
+        <div className="text-center mb-8">
+          <img src="/logo.svg" alt="Rescate Sabor" className="w-24 h-24 mx-auto mb-4 rounded-full shadow-md" />
+          <h1 className="text-2xl font-bold text-gray-900">Rescate Sabor</h1>
+          <p className="text-gray-600 mt-1 text-sm">Bienvenido de vuelta</p>
+        </div>
+        {error && (
+          <div className="bg-red-50 text-red-600 rounded-xl p-3 mb-4 text-sm">{error}</div>
         )}
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="tu@email.com"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+            <input
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="Tu contraseña"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              onKeyDown={e => e.key === 'Enter' && handleLogin()}
+            />
+          </div>
+          <div className="text-right -mt-2">
+            <button
+              onClick={() => { setMode('forgot'); setError('') }}
+              className="text-sm text-orange-500 hover:text-orange-600 font-medium"
+            >
+              ¿Olvidaste tu contraseña?
+            </button>
+          </div>
+          <button
+            onClick={handleLogin}
+            disabled={loading}
+            className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-colors"
+          >
+            {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+          </button>
+          <p className="text-center text-gray-500 text-sm">
+            ¿No tienes cuenta?{' '}
+            <button
+              onClick={() => { setMode('register'); setStep(1); setError('') }}
+              className="text-orange-500 font-medium"
+            >
+              Regístrate
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   )

@@ -5,9 +5,13 @@ const STATUS_CONFIG = {
   cancelled: { label: 'Cancelado', color: 'bg-red-100 text-red-700 border border-red-200', icon: '❌' },
 }
 
-export default function ReservationTicket({ reservation }) {
+function clp(amount) {
+  return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(amount)
+}
+
+export default function ReservationTicket({ reservation, onCancel }) {
   const status = STATUS_CONFIG[reservation.status] || STATUS_CONFIG.pending
-  const date = new Date(reservation.created_at).toLocaleDateString('es-ES', {
+  const date = new Date(reservation.created_at).toLocaleDateString('es-CL', {
     day: 'numeric', month: 'short', year: 'numeric',
   })
 
@@ -31,11 +35,21 @@ export default function ReservationTicket({ reservation }) {
         </div>
         {reservation.bags?.discount_price && (
           <div className="text-right">
-            <span className="text-lg font-bold text-gray-900">${Number(reservation.bags.discount_price).toFixed(2)}</span>
+            <span className="text-lg font-bold text-gray-900">{clp(reservation.bags.discount_price)}</span>
             <p className="text-xs text-gray-400">pagado</p>
           </div>
         )}
       </div>
+      {reservation.status === 'pending' && onCancel && (
+        <div className="px-4 pb-3">
+          <button
+            onClick={() => onCancel(reservation)}
+            className="w-full text-sm text-red-500 hover:text-red-600 font-medium py-2 border border-red-100 hover:border-red-200 rounded-xl transition-colors"
+          >
+            Cancelar reserva
+          </button>
+        </div>
+      )}
     </div>
   )
 }

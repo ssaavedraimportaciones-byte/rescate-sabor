@@ -10,6 +10,8 @@ export default function BuyerDashboard({ user, profile }) {
   const [reservations, setReservations] = useState([])
   const [loading, setLoading] = useState(true)
   const [reservedBagIds, setReservedBagIds] = useState(new Set())
+  const [reservingId, setReservingId] = useState(null)
+  const [toast, setToast] = useState(null)
 
   useEffect(() => {
     loadBags()
@@ -30,6 +32,11 @@ export default function BuyerDashboard({ user, profile }) {
       supabase.removeChannel(resChannel)
     }
   }, [])
+
+  function showToast(msg, type = 'success') {
+    setToast({ msg, type })
+    setTimeout(() => setToast(null), 3000)
+  }
 
   async function loadBags() {
     const { data } = await supabase
@@ -54,15 +61,45 @@ export default function BuyerDashboard({ user, profile }) {
   }
 
   async function handleReserve(bag) {
+    setReservingId(bag.id)
     const { error } = await supabase
       .from('reservations')
       .insert({ bag_id: bag.id, buyer_id: user.id, store_id: bag.store_id })
 
-    if (!error) {
+    if (error) {
+      showToast('No se pudo reservar. Intenta de nuevo.', 'error')
+    } else {
       await supabase
         .from('bags')
         .update({ quantity: bag.quantity - 1, available: bag.quantity - 1 > 0 })
         .eq('id', bag.id)
+      showToast('¡Reserva realizada con éxito!')
+      loadReservations()
+      loadBags()
+    }
+    setReservingId(null)
+  }
+
+  async function handleCancelReservation(reservation) {
+    const { error } = await supabase
+      .from('reservations')
+      .update({ status: 'cancelled' })
+      .eq('id', reservation.id)
+
+    if (!error) {
+      // Devolver stock a la bolsa
+      const { data: bag } = await supabase
+        .from('bags')
+        .select('quantity')
+        .eq('id', reservation.bag_id)
+        .single()
+      if (bag) {
+        await supabase
+          .from('bags')
+          .update({ quantity: bag.quantity + 1, available: true })
+          .eq('id', reservation.bag_id)
+      }
+      showToast('Reserva cancelada')
       loadReservations()
       loadBags()
     }
@@ -74,14 +111,21 @@ export default function BuyerDashboard({ user, profile }) {
     <div className="min-h-screen bg-gray-50">
       <Header profile={profile} title="Rescate Sabor" />
 
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl shadow-lg text-sm font-medium transition-all ${
+          toast.type === 'error' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
+        }`}>
+          {toast.msg}
+        </div>
+      )}
+
       <div className="bg-white border-b border-gray-100">
         <div className="flex">
           <button
             onClick={() => setTab('browse')}
             className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${
-              tab === 'browse'
-                ? 'border-orange-500 text-orange-600'
-                : 'border-transparent text-gray-500'
+              tab === 'browse' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500'
             }`}
           >
             🛍️ Bolsas disponibles
@@ -89,9 +133,7 @@ export default function BuyerDashboard({ user, profile }) {
           <button
             onClick={() => setTab('reservations')}
             className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${
-              tab === 'reservations'
-                ? 'border-orange-500 text-orange-600'
-                : 'border-transparent text-gray-500'
+              tab === 'reservations' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500'
             }`}
           >
             🎫 Mis reservas
@@ -122,6 +164,7 @@ export default function BuyerDashboard({ user, profile }) {
                   bag={bag}
                   onReserve={handleReserve}
                   reserved={reservedBagIds.has(bag.id)}
+                  loading={reservingId === bag.id}
                 />
               ))}
             </div>
@@ -136,7 +179,11 @@ export default function BuyerDashboard({ user, profile }) {
           ) : (
             <div className="space-y-4">
               {reservations.map(r => (
-                <ReservationTicket key={r.id} reservation={r} />
+                <ReservationTicket
+                  key={r.id}
+                  reservation={r}
+                  onCancel={handleCancelReservation}
+                />
               ))}
             </div>
           )

@@ -2,6 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 import Header from './Header'
 
+function clp(amount) {
+  return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(amount)
+}
+
 const STATUS_CONFIG = {
   pending: { label: 'Pendiente', color: 'bg-yellow-100 text-yellow-800 border border-yellow-200' },
   confirmed: { label: 'Confirmado', color: 'bg-blue-100 text-blue-800 border border-blue-200' },
@@ -372,7 +376,7 @@ export default function SellerDashboard({ user, profile }) {
                       <div>
                         <h3 className="font-bold text-gray-900">{bag.title}</h3>
                         <p className="text-gray-700 text-sm font-medium">
-                          ${Number(bag.discount_price).toFixed(2)} · <span className="text-gray-500">{bag.quantity} disponible{bag.quantity !== 1 ? 's' : ''}</span>
+                          {clp(bag.discount_price)} · <span className="text-gray-500">{bag.quantity} disponible{bag.quantity !== 1 ? 's' : ''}</span>
                         </p>
                         {bag.description && (
                           <p className="text-gray-500 text-sm mt-1">{bag.description}</p>

@@ -1,4 +1,8 @@
-export default function BagCard({ bag, onReserve, reserved }) {
+function clp(amount) {
+  return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(amount)
+}
+
+export default function BagCard({ bag, onReserve, reserved, loading }) {
   const savings = bag.original_price - bag.discount_price
   const savingsPercent = Math.round((savings / bag.original_price) * 100)
 
@@ -21,11 +25,11 @@ export default function BagCard({ bag, onReserve, reserved }) {
         )}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-gray-900">${Number(bag.discount_price).toFixed(2)}</span>
-            <span className="text-gray-400 line-through text-sm">${Number(bag.original_price).toFixed(2)}</span>
+            <span className="text-2xl font-bold text-gray-900">{clp(bag.discount_price)}</span>
+            <span className="text-gray-400 line-through text-sm">{clp(bag.original_price)}</span>
           </div>
           <span className="text-green-700 bg-green-50 text-xs font-semibold px-2 py-1 rounded-lg">
-            Ahorras ${Number(savings).toFixed(2)}
+            Ahorras {clp(savings)}
           </span>
         </div>
         {bag.pickup_start && bag.pickup_end && (
@@ -51,9 +55,10 @@ export default function BagCard({ bag, onReserve, reserved }) {
           ) : (
             <button
               onClick={() => onReserve(bag)}
-              className="bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white text-sm font-semibold px-5 py-2 rounded-xl transition-colors shadow-sm"
+              disabled={loading}
+              className="bg-orange-500 hover:bg-orange-600 active:bg-orange-700 disabled:opacity-60 text-white text-sm font-semibold px-5 py-2 rounded-xl transition-colors shadow-sm"
             >
-              Reservar
+              {loading ? 'Reservando...' : 'Reservar'}
             </button>
           )}
         </div>
