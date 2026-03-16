@@ -1,42 +1,77 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 450">
   <defs>
-    <radialGradient id="bg" cx="42%" cy="36%" r="72%">
-      <stop offset="0%" stop-color="#fb923c"/>
-      <stop offset="55%" stop-color="#f97316"/>
-      <stop offset="100%" stop-color="#c2410c"/>
-    </radialGradient>
+    <linearGradient id="bowlGrad" x1="30%" y1="0%" x2="70%" y2="100%">
+      <stop offset="0%" stop-color="#4ade80"/>
+      <stop offset="100%" stop-color="#15803d"/>
+    </linearGradient>
+    <linearGradient id="leaf1Grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#15803d"/>
+      <stop offset="100%" stop-color="#4ade80"/>
+    </linearGradient>
+    <linearGradient id="leaf2Grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#166534"/>
+      <stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
   </defs>
 
-  <!-- Fondo circular -->
-  <circle cx="100" cy="100" r="100" fill="url(#bg)"/>
+  <!-- Background -->
+  <rect width="400" height="450" fill="white"/>
 
-  <!-- Corazón-hoja GRANDE: rellena ~88% del círculo -->
-  <path d="M100 178
-           C76 156 20 126 20 80
-           C20 52 42 30 70 30
-           C84 30 95 43 100 52
-           C105 43 116 30 130 30
-           C158 30 180 52 180 80
-           C180 126 124 156 100 178Z"
-        fill="white"/>
+  <!-- White circle inside arrows -->
+  <circle cx="200" cy="185" r="107" fill="white"/>
 
-  <!-- Nervadura central — gruesa y visible -->
-  <path d="M100 52 L100 170" stroke="#ea580c" stroke-width="6" stroke-linecap="round" opacity="0.55"/>
+  <!-- Orange arc: 225deg to 30deg clockwise (165deg) -->
+  <!-- 225deg: (118.7, 103.7)  30deg: (299.6, 242.5) -->
+  <path d="M 118.7,103.7 A 115,115 0 0,1 299.6,242.5"
+        fill="none" stroke="#f97316" stroke-width="20" stroke-linecap="butt"/>
+  <!-- Orange arrowhead at 30deg, tangent 120deg -->
+  <polygon points="12,0 -9,-8 -9,8" transform="translate(299.6,242.5) rotate(120)" fill="#f97316"/>
 
-  <!-- Nervaduras superiores — bien visibles -->
-  <path d="M100 78 Q66 94 38 106" stroke="#ea580c" stroke-width="4.5" stroke-linecap="round" opacity="0.5"/>
-  <path d="M100 78 Q134 94 162 106" stroke="#ea580c" stroke-width="4.5" stroke-linecap="round" opacity="0.5"/>
+  <!-- Green arc: 30deg to 225deg clockwise (195deg) -->
+  <path d="M 299.6,242.5 A 115,115 0 1,1 118.7,103.7"
+        fill="none" stroke="#166534" stroke-width="20" stroke-linecap="butt"/>
+  <!-- Green arrowhead at 225deg, tangent 315deg -->
+  <polygon points="12,0 -9,-8 -9,8" transform="translate(118.7,103.7) rotate(315)" fill="#166534"/>
 
-  <!-- Nervaduras medias -->
-  <path d="M100 110 Q70 126 46 136" stroke="#ea580c" stroke-width="3.5" stroke-linecap="round" opacity="0.4"/>
-  <path d="M100 110 Q130 126 154 136" stroke="#ea580c" stroke-width="3.5" stroke-linecap="round" opacity="0.4"/>
+  <!-- BOWL BODY -->
+  <path d="M 132,218 Q 130,296 200,299 Q 270,296 268,218 Z" fill="url(#bowlGrad)"/>
 
-  <!-- Nervaduras inferiores -->
-  <path d="M100 138 Q80 148 64 156" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round" opacity="0.3"/>
-  <path d="M100 138 Q120 148 136 156" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round" opacity="0.3"/>
+  <!-- BOWL RIM (orange band) -->
+  <ellipse cx="200" cy="218" rx="68" ry="13" fill="#f97316"/>
+  <!-- Rim inner highlight -->
+  <ellipse cx="200" cy="216" rx="59" ry="9" fill="rgba(255,255,255,0.25)"/>
 
-  <!-- Brote verde en la punta superior -->
-  <path d="M100 30 C100 30 79 12 89 3 C97 15 100 30 100 30Z" fill="#4ade80"/>
-  <path d="M100 30 C100 30 121 14 129 27 C121 35 100 30 100 30Z" fill="#22c55e"/>
-  <line x1="100" y1="30" x2="100" y2="13" stroke="#15803d" stroke-width="4" stroke-linecap="round"/>
+  <!-- Bowl shine -->
+  <path d="M 150,235 Q 144,268 156,288" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="11" stroke-linecap="round"/>
+
+  <!-- Bowl base -->
+  <rect x="182" y="296" width="36" height="9" rx="4" fill="#166534"/>
+  <ellipse cx="200" cy="305" rx="26" ry="6" fill="#15803d"/>
+
+  <!-- FORK (orange) -->
+  <rect x="178" y="150" width="5" height="24" rx="2" fill="#f97316"/>
+  <rect x="186" y="150" width="5" height="24" rx="2" fill="#f97316"/>
+  <rect x="194" y="150" width="5" height="24" rx="2" fill="#f97316"/>
+  <rect x="179" y="171" width="22" height="6" rx="2" fill="#f97316"/>
+  <rect x="183" y="176" width="13" height="28" rx="5" fill="#f97316"/>
+
+  <!-- LEAVES (green) -->
+  <path d="M 220,208 C 215,208 209,178 225,163 C 239,166 237,202 220,208Z" fill="url(#leaf1Grad)"/>
+  <line x1="220" y1="208" x2="226" y2="166" stroke="#166534" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M 234,210 C 229,210 225,179 242,165 C 255,168 252,204 234,210Z" fill="url(#leaf2Grad)"/>
+  <line x1="234" y1="210" x2="241" y2="168" stroke="#14532d" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- TEXT -->
+  <text x="194" y="385"
+        font-family="Arial Black, Arial, sans-serif"
+        font-weight="900"
+        font-size="52"
+        fill="#f97316"
+        text-anchor="end">Rescate</text>
+  <text x="208" y="385"
+        font-family="Arial Black, Arial, sans-serif"
+        font-weight="900"
+        font-size="52"
+        fill="#166534"
+        text-anchor="start">Sabor</text>
 </svg>

@@ -26,29 +26,12 @@ export default function SplashScreen() {
         }`}
       >
         {/* Logo prominente */}
-        <img
-          src="/logo.svg"
-          alt="Rescate Sabor"
-          className="w-52 h-52 mb-5"
-          style={{ filter: 'drop-shadow(0 16px 32px rgba(0,0,0,0.4))' }}
-        />
-
-        {/* Título */}
-        <h1 className="text-6xl font-black tracking-tight leading-none drop-shadow-lg">
-          RESCATE
-        </h1>
-        <h2
-          className="text-5xl font-black tracking-widest leading-none mt-1 drop-shadow-lg"
-          style={{ color: '#fde68a' }}
-        >
-          SABOR
-        </h2>
-
-        {/* Separador */}
-        <div className="flex items-center gap-3 my-4">
-          <div className="h-px w-14 bg-white opacity-40" />
-          <span className="text-xl opacity-80">🌿</span>
-          <div className="h-px w-14 bg-white opacity-40" />
+        <div className="bg-white rounded-3xl p-4 mb-4 shadow-2xl">
+          <img
+            src="/logo.svg"
+            alt="Rescate Sabor"
+            className="w-48 h-48"
+          />
         </div>
 
         {/* Tagline */}
