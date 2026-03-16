@@ -25,13 +25,18 @@ export default function SplashScreen() {
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        {/* Logo prominente */}
-        <div className="bg-white rounded-3xl p-4 mb-4 shadow-2xl">
+        {/* Logo grande en tarjeta blanca */}
+        <div className="bg-white rounded-3xl p-5 mb-5 shadow-2xl">
           <img
             src="/logo.svg"
             alt="Rescate Sabor"
-            className="w-48 h-48"
+            className="w-52 h-44"
           />
+          {/* Nombre con colores de marca */}
+          <p className="font-black text-2xl mt-2 leading-tight tracking-tight text-center">
+            <span style={{ color: '#f57c00' }}>Rescate</span>
+            <span style={{ color: '#1b7a30' }}> Sabor</span>
+          </p>
         </div>
 
         {/* Tagline */}
