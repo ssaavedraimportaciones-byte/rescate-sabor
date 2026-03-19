@@ -134,6 +134,11 @@ create policy "Sellers can update reservation status"
     exists (select 1 from public.stores where id = store_id and seller_id = auth.uid())
   );
 
+create policy "Buyers can cancel their own pending reservations"
+  on public.reservations for update
+  using (buyer_id = auth.uid() and status = 'pending')
+  with check (status = 'cancelled');
+
 -- =====================
 -- TRIGGER: auto-create profile on signup
 -- =====================
