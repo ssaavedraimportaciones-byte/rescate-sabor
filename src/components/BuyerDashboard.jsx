@@ -1,8 +1,24 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import Header from './Header'
 import BagCard from './BagCard'
 import ReservationTicket from './ReservationTicket'
+
+function SkeletonCard() {
+  return (
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-pulse">
+      <div className="bg-gray-200 h-16 w-full" />
+      <div className="p-4 space-y-3">
+        <div className="h-4 bg-gray-200 rounded w-3/4" />
+        <div className="h-4 bg-gray-200 rounded w-1/2" />
+        <div className="flex justify-between items-center pt-2">
+          <div className="h-8 bg-gray-200 rounded w-1/3" />
+          <div className="h-9 bg-gray-200 rounded-xl w-24" />
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function BuyerDashboard({ user, profile }) {
   const [tab, setTab] = useState('browse')
@@ -12,6 +28,8 @@ export default function BuyerDashboard({ user, profile }) {
   const [reservedBagIds, setReservedBagIds] = useState(new Set())
   const [reservingId, setReservingId] = useState(null)
   const [toast, setToast] = useState(null)
+  const [search, setSearch] = useState('')
+  const [sortBy, setSortBy] = useState('newest')
 
   useEffect(() => {
     loadBags()
@@ -39,22 +57,24 @@ export default function BuyerDashboard({ user, profile }) {
   }
 
   async function loadBags() {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('bags')
       .select('*, stores(name, address)')
       .eq('available', true)
       .gt('quantity', 0)
       .order('created_at', { ascending: false })
+    if (error) showToast('Error cargando bolsas', 'error')
     setBags(data || [])
     setLoading(false)
   }
 
   async function loadReservations() {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('reservations')
       .select('*, bags(title, discount_price, stores(name))')
       .eq('buyer_id', user.id)
       .order('created_at', { ascending: false })
+    if (error) return
     setReservations(data || [])
     const ids = new Set(data?.filter(r => r.status !== 'cancelled').map(r => r.bag_id) || [])
     setReservedBagIds(ids)
@@ -86,24 +106,50 @@ export default function BuyerDashboard({ user, profile }) {
       .update({ status: 'cancelled' })
       .eq('id', reservation.id)
 
-    if (!error) {
-      // Devolver stock a la bolsa
-      const { data: bag } = await supabase
-        .from('bags')
-        .select('quantity')
-        .eq('id', reservation.bag_id)
-        .single()
-      if (bag) {
-        await supabase
-          .from('bags')
-          .update({ quantity: bag.quantity + 1, available: true })
-          .eq('id', reservation.bag_id)
-      }
-      showToast('Reserva cancelada')
-      loadReservations()
-      loadBags()
+    if (error) {
+      showToast('No se pudo cancelar', 'error')
+      return
     }
+
+    const { data: bag } = await supabase
+      .from('bags')
+      .select('quantity')
+      .eq('id', reservation.bag_id)
+      .single()
+    if (bag) {
+      await supabase
+        .from('bags')
+        .update({ quantity: bag.quantity + 1, available: true })
+        .eq('id', reservation.bag_id)
+    }
+    showToast('Reserva cancelada')
+    loadReservations()
+    loadBags()
   }
+
+  const filteredBags = useMemo(() => {
+    let result = bags
+    if (search.trim()) {
+      const q = search.toLowerCase()
+      result = result.filter(b =>
+        b.title?.toLowerCase().includes(q) ||
+        b.stores?.name?.toLowerCase().includes(q) ||
+        b.description?.toLowerCase().includes(q)
+      )
+    }
+    switch (sortBy) {
+      case 'cheapest':
+        return [...result].sort((a, b) => a.discount_price - b.discount_price)
+      case 'most_discount':
+        return [...result].sort((a, b) => {
+          const discA = (a.original_price - a.discount_price) / a.original_price
+          const discB = (b.original_price - b.discount_price) / b.original_price
+          return discB - discA
+        })
+      default:
+        return result
+    }
+  }, [bags, search, sortBy])
 
   const pendingCount = reservations.filter(r => r.status === 'pending').length
 
@@ -111,7 +157,6 @@ export default function BuyerDashboard({ user, profile }) {
     <div className="min-h-screen bg-gray-50">
       <Header profile={profile} title="Rescate Sabor" />
 
-      {/* Toast */}
       {toast && (
         <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl shadow-lg text-sm font-medium transition-all ${
           toast.type === 'error' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
@@ -146,19 +191,73 @@ export default function BuyerDashboard({ user, profile }) {
         </div>
       </div>
 
+      {tab === 'browse' && (
+        <div className="bg-white border-b border-gray-100 px-4 py-3">
+          <div className="max-w-2xl mx-auto space-y-2">
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Buscar bolsas o tiendas..."
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+            />
+            <div className="flex gap-2">
+              {[
+                { key: 'newest', label: 'Más nuevas' },
+                { key: 'cheapest', label: 'Más baratas' },
+                { key: 'most_discount', label: 'Mayor descuento' },
+              ].map(opt => (
+                <button
+                  key={opt.key}
+                  onClick={() => setSortBy(opt.key)}
+                  className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
+                    sortBy === opt.key
+                      ? 'bg-orange-500 text-white border-orange-500'
+                      : 'bg-white text-gray-600 border-gray-200 hover:border-orange-300'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="p-4 max-w-2xl mx-auto">
         {tab === 'browse' ? (
           loading ? (
-            <div className="text-center py-12 text-gray-400">Cargando bolsas...</div>
-          ) : bags.length === 0 ? (
+            <div className="space-y-4">
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </div>
+          ) : filteredBags.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-5xl mb-3">🥡</div>
-              <p className="text-gray-500 font-medium">No hay bolsas disponibles</p>
-              <p className="text-gray-400 text-sm mt-1">Vuelve más tarde</p>
+              <div className="text-5xl mb-3">{search ? '🔍' : '🥡'}</div>
+              <p className="text-gray-500 font-medium">
+                {search ? `Sin resultados para "${search}"` : 'No hay bolsas disponibles'}
+              </p>
+              <p className="text-gray-400 text-sm mt-1">
+                {search ? 'Probá con otro término' : 'Vuelve más tarde'}
+              </p>
+              {search && (
+                <button
+                  onClick={() => setSearch('')}
+                  className="mt-3 text-orange-500 text-sm font-medium"
+                >
+                  Limpiar búsqueda
+                </button>
+              )}
             </div>
           ) : (
             <div className="space-y-4">
-              {bags.map(bag => (
+              {search && (
+                <p className="text-xs text-gray-500">
+                  {filteredBags.length} resultado{filteredBags.length !== 1 ? 's' : ''} para "{search}"
+                </p>
+              )}
+              {filteredBags.map(bag => (
                 <BagCard
                   key={bag.id}
                   bag={bag}
