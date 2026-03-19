@@ -11,13 +11,13 @@ export default function SplashScreen() {
   return (
     <div
       className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center select-none"
-      style={{ background: 'linear-gradient(150deg, #f97316 0%, #ea580c 45%, #b91c1c 100%)' }}
+      style={{ background: 'linear-gradient(150deg, #1b7a30 0%, #2d9d47 40%, #f57c00 100%)' }}
     >
       {/* Decoración de fondo */}
       <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-white opacity-[0.04]" />
       <div className="absolute -bottom-16 -left-16 w-72 h-72 rounded-full bg-white opacity-[0.04]" />
-      <div className="absolute top-1/4 -left-10 w-48 h-48 rounded-full bg-orange-300 opacity-10" />
-      <div className="absolute bottom-1/3 -right-8 w-36 h-36 rounded-full bg-red-300 opacity-10" />
+      <div className="absolute top-1/4 -left-10 w-48 h-48 rounded-full opacity-10" style={{ background: '#5ab848' }} />
+      <div className="absolute bottom-1/3 -right-8 w-36 h-36 rounded-full opacity-10" style={{ background: '#f57c00' }} />
 
       {/* Contenido */}
       <div
@@ -40,11 +40,11 @@ export default function SplashScreen() {
         </div>
 
         {/* Tagline */}
-        <p className="text-xl text-orange-100 font-light">Menos desperdicio.</p>
+        <p className="text-xl text-green-100 font-light">Menos desperdicio.</p>
         <p className="text-xl text-white font-semibold">Más sabor.</p>
 
         {/* Descripción */}
-        <p className="mt-4 text-sm text-orange-200 opacity-75 max-w-[280px] leading-relaxed">
+        <p className="mt-4 text-sm text-green-100 opacity-80 max-w-[280px] leading-relaxed">
           Bolsas sorpresa de comida de tiendas locales a precio justo.
         </p>
 
@@ -57,7 +57,7 @@ export default function SplashScreen() {
           ].map(({ icon, label }) => (
             <div key={label} className="flex flex-col items-center gap-1">
               <span className="text-2xl">{icon}</span>
-              <span className="text-[11px] text-orange-100 opacity-80">{label}</span>
+              <span className="text-[11px] text-green-100 opacity-80">{label}</span>
             </div>
           ))}
         </div>

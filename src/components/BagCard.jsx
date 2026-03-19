@@ -8,13 +8,13 @@ export default function BagCard({ bag, onReserve, reserved, loading }) {
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="bg-gradient-to-r from-orange-400 to-orange-500 px-4 py-3 text-white">
+      <div className="px-4 py-3 text-white" style={{ background: 'linear-gradient(90deg, #1b7a30 0%, #2d9d47 50%, #f57c00 100%)' }}>
         <div className="flex justify-between items-start gap-2">
           <div>
             <h3 className="font-bold text-lg leading-tight">{bag.title}</h3>
-            <p className="text-orange-100 text-sm mt-0.5 font-medium">{bag.stores?.name}</p>
+            <p className="text-green-100 text-sm mt-0.5 font-medium">{bag.stores?.name}</p>
           </div>
-          <span className="bg-white text-orange-600 text-xs font-bold px-2.5 py-1 rounded-full ml-2 shrink-0 shadow-sm">
+          <span className="bg-white text-xs font-bold px-2.5 py-1 rounded-full ml-2 shrink-0 shadow-sm" style={{ color: '#f57c00' }}>
             -{savingsPercent}%
           </span>
         </div>

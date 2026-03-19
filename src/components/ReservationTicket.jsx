@@ -16,7 +16,7 @@ export default function ReservationTicket({ reservation, onCancel }) {
   })
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden" style={{ borderTop: '3px solid #f57c00' }}>
       <div className="p-4 border-b border-dashed border-gray-200">
         <div className="flex justify-between items-start gap-2">
           <div>
