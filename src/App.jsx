@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabase'
 import SplashScreen from './components/SplashScreen'
+import LandingPage from './components/LandingPage'
 import Auth from './components/Auth'
 import BuyerDashboard from './components/BuyerDashboard'
 import SellerDashboard from './components/SellerDashboard'
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true)
+  const [showLanding, setShowLanding] = useState(false)
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
@@ -19,6 +21,7 @@ export default function App() {
       if (session?.user) {
         loadProfile(session.user.id)
       } else {
+        setShowLanding(true)
         setLoading(false)
       }
     })
@@ -29,6 +32,7 @@ export default function App() {
         loadProfile(session.user.id)
       } else {
         setProfile(null)
+        setShowLanding(true)
         setLoading(false)
       }
     })
@@ -52,6 +56,9 @@ export default function App() {
   if (showSplash || loading) return <SplashScreen />
 
   if (!user || !profile?.role) {
+    if (showLanding) {
+      return <LandingPage onStart={() => setShowLanding(false)} />
+    }
     return <Auth onAuth={(p) => setProfile(p)} />
   }
 
