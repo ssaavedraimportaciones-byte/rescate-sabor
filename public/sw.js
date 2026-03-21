@@ -1,5 +1,10 @@
-const CACHE = 'rescate-sabor-v1'
-const STATIC = ['/', '/index.html', '/logo.svg', '/manifest.json']
+const CACHE = 'rescate-sabor-v2'
+const STATIC = [
+  '/rescate-sabor/',
+  '/rescate-sabor/index.html',
+  '/rescate-sabor/logo.svg',
+  '/rescate-sabor/manifest.json'
+]
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC)))
@@ -22,7 +27,7 @@ self.addEventListener('fetch', e => {
   // Navegación: devuelve index.html (SPA)
   if (e.request.mode === 'navigate') {
     e.respondWith(
-      fetch(e.request).catch(() => caches.match('/index.html'))
+      fetch(e.request).catch(() => caches.match('/rescate-sabor/index.html'))
     )
     return
   }
