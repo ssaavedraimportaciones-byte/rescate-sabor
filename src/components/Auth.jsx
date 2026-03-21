@@ -1,50 +1,121 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-/* Wrapper de pantalla con fondo degradado de marca */
+const G = '#1b7a30'
+const GM = '#2d9d47'
+const O = '#f57c00'
+
+/* ─── Fondo animado ─── */
 function Screen({ children }) {
   return (
     <div
-      className="min-h-screen flex items-center justify-center p-4"
-      style={{ background: 'linear-gradient(160deg, #1b7a30 0%, #2d9d47 45%, #f57c00 100%)' }}
+      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+      style={{ background: `linear-gradient(155deg, #0d5c1f 0%, ${G} 25%, ${GM} 55%, ${O} 100%)` }}
     >
+      <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full pointer-events-none opacity-[0.05]"
+        style={{ background: 'radial-gradient(circle, #fff 0%, transparent 70%)' }} />
+      <div className="absolute -bottom-24 -left-16 w-72 h-72 rounded-full pointer-events-none opacity-[0.05]"
+        style={{ background: `radial-gradient(circle, ${O} 0%, transparent 70%)` }} />
       {children}
     </div>
   )
 }
 
-/* Tarjeta con cabecera de marca + cuerpo blanco */
-function Card({ title, subtitle, children }) {
+/* ─── Card ─── */
+function Card({ title, subtitle, step, totalSteps, children }) {
   return (
-    <div className="w-full max-w-md rounded-3xl overflow-hidden shadow-2xl">
-      {/* Cabecera con degradado */}
-      <div
-        className="flex flex-col items-center py-8 px-6"
-        style={{ background: 'linear-gradient(135deg, #1b7a30 0%, #f57c00 100%)' }}
-      >
-        <div className="bg-white rounded-2xl p-3 shadow-lg mb-3">
-          <img src="/logo.svg" alt="Rescate Sabor" className="w-20 h-16" />
+    <div className="w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl animate-scaleIn">
+      {/* Header */}
+      <div className="flex flex-col items-center py-8 px-6 relative"
+        style={{ background: `linear-gradient(135deg, ${G} 0%, ${O} 100%)` }}>
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 60%)' }} />
+        <div className="bg-white rounded-2xl p-3 shadow-lg mb-3 relative z-10">
+          <img src="/logo.svg" alt="Rescate Sabor" className="w-16 h-12" />
         </div>
-        <p className="font-black text-lg leading-tight tracking-tight">
+        <p className="font-black text-base leading-tight tracking-tight relative z-10">
           <span style={{ color: '#ffe0b2' }}>Rescate</span>
           <span className="text-white"> Sabor</span>
         </p>
-        {title && <h2 className="text-white font-semibold mt-2 text-base">{title}</h2>}
-        {subtitle && <p className="text-green-100 text-xs mt-0.5 opacity-80">{subtitle}</p>}
+        {title && <h2 className="text-white font-bold mt-2 text-base relative z-10">{title}</h2>}
+        {subtitle && <p className="text-green-100/70 text-xs mt-0.5 relative z-10">{subtitle}</p>}
+
+        {/* Barra de progreso pasos */}
+        {totalSteps && (
+          <div className="flex gap-1.5 mt-4 relative z-10">
+            {Array.from({ length: totalSteps }).map((_, i) => (
+              <div key={i} className="h-1.5 rounded-full transition-all duration-300"
+                style={{
+                  width: i < step ? 28 : 18,
+                  background: i < step ? '#fff' : 'rgba(255,255,255,0.3)',
+                }} />
+            ))}
+          </div>
+        )}
       </div>
-      {/* Cuerpo blanco */}
-      <div className="bg-white p-7">
-        {children}
+      {/* Body */}
+      <div className="bg-white p-7">{children}</div>
+    </div>
+  )
+}
+
+/* ─── Input con ícono opcional ─── */
+function Input({ label, type = 'text', value, onChange, placeholder, onKeyDown, right }) {
+  return (
+    <div>
+      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{label}</label>
+      <div className="relative">
+        <input
+          type={type} value={value} onChange={onChange} placeholder={placeholder} onKeyDown={onKeyDown}
+          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-gray-50 focus:bg-white focus:ring-2 focus:border-transparent transition-all"
+          style={{ '--tw-ring-color': O }}
+        />
+        {right && <div className="absolute right-3 top-1/2 -translate-y-1/2">{right}</div>}
       </div>
     </div>
   )
 }
 
+/* ─── Botón toggle mostrar contraseña ─── */
+function EyeBtn({ show, onToggle }) {
+  return (
+    <button type="button" onClick={onToggle} className="text-gray-400 hover:text-gray-600 transition p-1">
+      {show
+        ? <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+        : <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+      }
+    </button>
+  )
+}
+
+/* ─── Botón principal ─── */
+function Btn({ onClick, disabled, loading, children, style }) {
+  return (
+    <button
+      onClick={onClick} disabled={disabled}
+      className="w-full text-white font-bold py-3.5 rounded-xl transition-all active:scale-95 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+      style={{ background: `linear-gradient(90deg, ${G}, ${O})`, ...style }}
+    >
+      {loading ? (
+        <span className="flex items-center justify-center gap-2">
+          <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+          {children}
+        </span>
+      ) : children}
+    </button>
+  )
+}
+
+/* ━━━ COMPONENTE PRINCIPAL ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 export default function Auth({ onAuth }) {
   const [mode, setMode] = useState('login')
   const [step, setStep] = useState(1)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPw, setShowPw] = useState(false)
   const [name, setName] = useState('')
   const [role, setRole] = useState('')
   const [loading, setLoading] = useState(false)
@@ -54,51 +125,28 @@ export default function Auth({ onAuth }) {
 
   async function handleRegister() {
     if (!name || !role) { setError('Completa todos los campos'); return }
-    setLoading(true)
-    setError('')
-
+    setLoading(true); setError('')
     const { data, error: signUpError } = await supabase.auth.signUp({ email, password })
     if (signUpError) { setError(signUpError.message); setLoading(false); return }
-
-    if (!data.session) {
-      setConfirmationSent(true)
-      setLoading(false)
-      return
-    }
-
+    if (!data.session) { setConfirmationSent(true); setLoading(false); return }
     await supabase.from('profiles').upsert({ id: data.user.id, email, name, role })
-
-    const { data: profile } = await supabase
-      .from('profiles').select('*').eq('id', data.user.id).single()
-
-    onAuth(profile)
-    setLoading(false)
+    const { data: profile } = await supabase.from('profiles').select('*').eq('id', data.user.id).single()
+    onAuth(profile); setLoading(false)
   }
 
   async function handleLogin() {
     if (!email || !password) { setError('Ingresa email y contraseña'); return }
-    setLoading(true)
-    setError('')
-
+    setLoading(true); setError('')
     const { data, error: loginError } = await supabase.auth.signInWithPassword({ email, password })
     if (loginError) { setError('Email o contraseña incorrectos'); setLoading(false); return }
-
-    const { data: profile } = await supabase
-      .from('profiles').select('*').eq('id', data.user.id).single()
-
-    onAuth(profile)
-    setLoading(false)
+    const { data: profile } = await supabase.from('profiles').select('*').eq('id', data.user.id).single()
+    onAuth(profile); setLoading(false)
   }
 
   async function handleForgotPassword() {
     if (!email) { setError('Ingresa tu email'); return }
-    setLoading(true)
-    setError('')
-
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/`,
-    })
-
+    setLoading(true); setError('')
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/` })
     if (resetError) { setError(resetError.message) } else { setResetSent(true) }
     setLoading(false)
   }
@@ -108,192 +156,191 @@ export default function Auth({ onAuth }) {
     setResetSent(false); setConfirmationSent(false)
   }
 
-  const inputCls = "w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
-  const btnPrimary = "w-full text-white font-semibold py-3 rounded-xl transition-all active:scale-95 shadow-sm"
+  /* ── Confirmación enviada ── */
+  if (confirmationSent) return (
+    <Screen>
+      <Card title="Revisa tu correo">
+        <div className="text-center py-4">
+          <div className="w-20 h-20 rounded-full bg-orange-50 flex items-center justify-center text-4xl mx-auto mb-4">📧</div>
+          <p className="text-gray-500 text-sm leading-relaxed">
+            Enviamos un enlace de confirmación a<br />
+            <strong className="text-gray-900">{email}</strong>
+          </p>
+          <button onClick={goToLogin} className="mt-6 font-bold text-sm" style={{ color: O }}>
+            ← Ir al inicio de sesión
+          </button>
+        </div>
+      </Card>
+    </Screen>
+  )
 
-  if (confirmationSent) {
-    return (
-      <Screen>
-        <Card title="Revisa tu correo">
-          <div className="text-center">
-            <div className="text-5xl mb-4">📧</div>
-            <p className="text-gray-600 text-sm">
-              Enviamos un enlace de confirmación a <strong className="text-gray-900">{email}</strong>.
-              Haz clic en el enlace y luego inicia sesión.
-            </p>
-            <button onClick={goToLogin} className="mt-5 text-orange-500 font-semibold text-sm">
-              Ir al inicio de sesión
-            </button>
-          </div>
-        </Card>
-      </Screen>
-    )
-  }
+  /* ── Reset enviado ── */
+  if (resetSent) return (
+    <Screen>
+      <Card title="Revisa tu correo">
+        <div className="text-center py-4">
+          <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center text-4xl mx-auto mb-4">🔑</div>
+          <p className="text-gray-500 text-sm leading-relaxed">
+            Enviamos un enlace para restablecer tu contraseña a<br />
+            <strong className="text-gray-900">{email}</strong>
+          </p>
+          <button onClick={goToLogin} className="mt-6 font-bold text-sm" style={{ color: O }}>
+            ← Volver al inicio de sesión
+          </button>
+        </div>
+      </Card>
+    </Screen>
+  )
 
-  if (resetSent) {
-    return (
-      <Screen>
-        <Card title="Revisa tu correo">
-          <div className="text-center">
-            <div className="text-5xl mb-4">🔑</div>
-            <p className="text-gray-600 text-sm">
-              Enviamos un enlace para restablecer tu contraseña a <strong className="text-gray-900">{email}</strong>.
-            </p>
-            <button onClick={goToLogin} className="mt-5 text-orange-500 font-semibold text-sm">
-              Volver al inicio de sesión
-            </button>
-          </div>
-        </Card>
-      </Screen>
-    )
-  }
+  /* ── Recuperar contraseña ── */
+  if (mode === 'forgot') return (
+    <Screen>
+      <Card title="Recuperar contraseña" subtitle="Te enviamos un enlace a tu email">
+        <div className="space-y-4">
+          {error && <div className="bg-red-50 text-red-600 rounded-xl px-4 py-3 text-sm border border-red-100">{error}</div>}
+          <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)}
+            placeholder="tu@email.com" onKeyDown={e => e.key === 'Enter' && handleForgotPassword()} />
+          <Btn onClick={handleForgotPassword} loading={loading}>
+            {loading ? 'Enviando...' : 'Enviar enlace de recuperación'}
+          </Btn>
+          <button onClick={goToLogin} className="w-full text-gray-400 hover:text-gray-600 py-2 text-sm transition">
+            ← Volver al inicio de sesión
+          </button>
+        </div>
+      </Card>
+    </Screen>
+  )
 
-  /* FORGOT PASSWORD */
-  if (mode === 'forgot') {
-    return (
-      <Screen>
-        <Card title="Recuperar contraseña" subtitle="Te enviamos un enlace a tu email">
-          {error && <div className="bg-red-50 text-red-600 rounded-xl p-3 mb-4 text-sm">{error}</div>}
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                placeholder="tu@email.com" onKeyDown={e => e.key === 'Enter' && handleForgotPassword()}
-                className={inputCls} />
-            </div>
-            <button onClick={handleForgotPassword} disabled={loading}
-              className={btnPrimary} style={{ background: 'linear-gradient(90deg, #1b7a30, #f57c00)' }}>
-              {loading ? 'Enviando...' : 'Enviar enlace'}
-            </button>
-            <button onClick={goToLogin} className="w-full text-gray-400 py-2 hover:text-gray-600 text-sm">
-              Volver al inicio de sesión
-            </button>
-          </div>
-        </Card>
-      </Screen>
-    )
-  }
+  /* ── Registro paso 2 ── */
+  if (mode === 'register' && step === 2) return (
+    <Screen>
+      <Card title="Cuéntanos sobre ti" step={2} totalSteps={2}>
+        <div className="space-y-5">
+          {error && <div className="bg-red-50 text-red-600 rounded-xl px-4 py-3 text-sm border border-red-100">{error}</div>}
+          <Input label="Tu nombre" value={name} onChange={e => setName(e.target.value)} placeholder="¿Cómo te llamamos?" />
 
-  /* REGISTER step 2 */
-  if (mode === 'register' && step === 2) {
-    return (
-      <Screen>
-        <Card title="Cuéntanos sobre ti">
-          {error && <div className="bg-red-50 text-red-600 rounded-xl p-3 mb-4 text-sm">{error}</div>}
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Tu nombre</label>
-              <input type="text" value={name} onChange={e => setName(e.target.value)}
-                placeholder="¿Cómo te llamamos?" className={inputCls} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">¿Cómo usarás la app?</label>
-              <div className="grid grid-cols-2 gap-3">
-                <button onClick={() => setRole('buyer')}
-                  className={`border-2 rounded-2xl p-4 text-center transition-all ${
-                    role === 'buyer'
-                      ? 'border-orange-500 bg-orange-50 shadow-inner'
-                      : 'border-gray-200 hover:border-orange-300'
-                  }`}>
-                  <div className="text-3xl mb-1">🛍️</div>
-                  <div className="font-semibold text-gray-900 text-sm">Comprador</div>
-                  <div className="text-xs text-gray-500 mt-0.5">Reservo bolsas</div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">¿Cómo usarás la app?</label>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { key: 'buyer', icon: '🛍️', title: 'Comprador', desc: 'Reservo bolsas sorpresa', color: O, bg: '#fff3e0', border: O },
+                { key: 'seller', icon: '🏪', title: 'Vendedor', desc: 'Vendo mis excedentes', color: G, bg: '#f0fdf4', border: G },
+              ].map(({ key, icon, title, desc, color, bg, border }) => (
+                <button key={key} onClick={() => setRole(key)}
+                  className="border-2 rounded-2xl p-4 text-center transition-all hover:scale-[1.02]"
+                  style={{
+                    borderColor: role === key ? border : '#e5e7eb',
+                    background: role === key ? bg : '#fff',
+                    boxShadow: role === key ? `0 0 0 3px ${border}20` : 'none',
+                  }}>
+                  <div className="text-3xl mb-1.5">{icon}</div>
+                  <div className="font-bold text-gray-900 text-sm">{title}</div>
+                  <div className="text-xs text-gray-400 mt-0.5">{desc}</div>
+                  {role === key && (
+                    <div className="mt-2 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs mx-auto" style={{ background: border }}>✓</div>
+                  )}
                 </button>
-                <button onClick={() => setRole('seller')}
-                  className={`border-2 rounded-2xl p-4 text-center transition-all ${
-                    role === 'seller'
-                      ? 'border-green-600 bg-green-50 shadow-inner'
-                      : 'border-gray-200 hover:border-green-400'
-                  }`}>
-                  <div className="text-3xl mb-1">🏪</div>
-                  <div className="font-semibold text-gray-900 text-sm">Vendedor</div>
-                  <div className="text-xs text-gray-500 mt-0.5">Vendo excedentes</div>
-                </button>
+              ))}
+            </div>
+          </div>
+
+          <Btn onClick={handleRegister} disabled={!name || !role} loading={loading}>
+            {loading ? 'Creando cuenta...' : 'Crear cuenta →'}
+          </Btn>
+          <button onClick={() => setStep(1)} className="w-full text-gray-400 hover:text-gray-600 py-2 text-sm transition">
+            ← Atrás
+          </button>
+        </div>
+      </Card>
+    </Screen>
+  )
+
+  /* ── Registro paso 1 ── */
+  if (mode === 'register') return (
+    <Screen>
+      <Card title="Crea tu cuenta" subtitle="Gratis, sin complicaciones" step={1} totalSteps={2}>
+        <div className="space-y-4">
+          {error && <div className="bg-red-50 text-red-600 rounded-xl px-4 py-3 text-sm border border-red-100">{error}</div>}
+          <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="tu@email.com" />
+          <Input label="Contraseña" type={showPw ? 'text' : 'password'} value={password}
+            onChange={e => setPassword(e.target.value)} placeholder="Mínimo 6 caracteres"
+            right={<EyeBtn show={showPw} onToggle={() => setShowPw(v => !v)} />} />
+
+          {/* Indicador fuerza contraseña */}
+          {password.length > 0 && (
+            <div className="space-y-1">
+              <div className="flex gap-1">
+                {[1,2,3,4].map(i => (
+                  <div key={i} className="h-1 flex-1 rounded-full transition-all duration-300"
+                    style={{ background: password.length >= i * 2 ? (password.length >= 8 ? G : O) : '#e5e7eb' }} />
+                ))}
               </div>
+              <p className="text-xs text-gray-400">
+                {password.length < 6 ? 'Muy corta' : password.length < 8 ? 'Aceptable' : 'Segura ✓'}
+              </p>
             </div>
-            <button onClick={handleRegister} disabled={loading || !name || !role}
-              className={`${btnPrimary} disabled:opacity-50`}
-              style={{ background: 'linear-gradient(90deg, #1b7a30, #f57c00)' }}>
-              {loading ? 'Creando cuenta...' : 'Crear cuenta'}
-            </button>
-            <button onClick={() => setStep(1)} className="w-full text-gray-400 py-2 hover:text-gray-600 text-sm">
-              Atrás
-            </button>
-          </div>
-        </Card>
-      </Screen>
-    )
-  }
+          )}
 
-  /* REGISTER step 1 */
-  if (mode === 'register') {
-    return (
-      <Screen>
-        <Card title="Crea tu cuenta">
-          {error && <div className="bg-red-50 text-red-600 rounded-xl p-3 mb-4 text-sm">{error}</div>}
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                placeholder="tu@email.com" className={inputCls} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-              <input type="password" value={password} onChange={e => setPassword(e.target.value)}
-                placeholder="Mínimo 6 caracteres" className={inputCls} />
-            </div>
-            <button onClick={() => {
-              if (!email || !password) { setError('Completa todos los campos'); return }
-              if (password.length < 6) { setError('La contraseña debe tener al menos 6 caracteres'); return }
-              setError(''); setStep(2)
-            }} className={btnPrimary} style={{ background: 'linear-gradient(90deg, #1b7a30, #f57c00)' }}>
-              Continuar
+          <Btn onClick={() => {
+            if (!email || !password) { setError('Completa todos los campos'); return }
+            if (password.length < 6) { setError('La contraseña debe tener al menos 6 caracteres'); return }
+            setError(''); setStep(2)
+          }}>
+            Continuar →
+          </Btn>
+          <p className="text-center text-gray-400 text-sm">
+            ¿Ya tienes cuenta?{' '}
+            <button onClick={goToLogin} className="font-bold transition hover:opacity-80" style={{ color: O }}>
+              Inicia sesión
             </button>
-            <p className="text-center text-gray-500 text-sm">
-              ¿Ya tienes cuenta?{' '}
-              <button onClick={goToLogin} className="font-semibold" style={{ color: '#f57c00' }}>
-                Inicia sesión
-              </button>
-            </p>
-          </div>
-        </Card>
-      </Screen>
-    )
-  }
+          </p>
+        </div>
+      </Card>
+    </Screen>
+  )
 
-  /* LOGIN */
+  /* ── Login ── */
   return (
     <Screen>
-      <Card title="Bienvenido de vuelta">
-        {error && <div className="bg-red-50 text-red-600 rounded-xl p-3 mb-4 text-sm">{error}</div>}
+      <Card title="Bienvenido de vuelta" subtitle="Inicia sesión en tu cuenta">
         <div className="space-y-4">
+          {error && (
+            <div className="bg-red-50 text-red-600 rounded-xl px-4 py-3 text-sm border border-red-100 flex items-center gap-2">
+              <span>⚠️</span>{error}
+            </div>
+          )}
+          <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="tu@email.com" />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-              placeholder="tu@email.com" className={inputCls} />
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Contraseña</label>
+              <button onClick={() => { setMode('forgot'); setError('') }}
+                className="text-xs font-semibold transition hover:opacity-70" style={{ color: O }}>
+                ¿Olvidaste tu contraseña?
+              </button>
+            </div>
+            <div className="relative">
+              <input
+                type={showPw ? 'text' : 'password'} value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="Tu contraseña"
+                onKeyDown={e => e.key === 'Enter' && handleLogin()}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 pr-10 text-sm bg-gray-50 focus:bg-white focus:ring-2 focus:border-transparent transition-all"
+              />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <EyeBtn show={showPw} onToggle={() => setShowPw(v => !v)} />
+              </div>
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)}
-              placeholder="Tu contraseña" className={inputCls}
-              onKeyDown={e => e.key === 'Enter' && handleLogin()} />
-          </div>
-          <div className="text-right -mt-2">
-            <button onClick={() => { setMode('forgot'); setError('') }}
-              className="text-sm font-medium" style={{ color: '#f57c00' }}>
-              ¿Olvidaste tu contraseña?
-            </button>
-          </div>
-          <button onClick={handleLogin} disabled={loading}
-            className={`${btnPrimary} disabled:opacity-50`}
-            style={{ background: 'linear-gradient(90deg, #1b7a30, #f57c00)' }}>
-            {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
-          </button>
-          <p className="text-center text-gray-500 text-sm">
+
+          <Btn onClick={handleLogin} loading={loading}>
+            {loading ? 'Iniciando sesión...' : 'Iniciar sesión →'}
+          </Btn>
+
+          <p className="text-center text-gray-400 text-sm">
             ¿No tienes cuenta?{' '}
             <button onClick={() => { setMode('register'); setStep(1); setError('') }}
-              className="font-semibold" style={{ color: '#1b7a30' }}>
-              Regístrate
+              className="font-bold transition hover:opacity-80" style={{ color: G }}>
+              Regístrate gratis
             </button>
           </p>
         </div>
