@@ -82,17 +82,13 @@ export default function BuyerDashboard({ user, profile }) {
 
   async function handleReserve(bag) {
     setReservingId(bag.id)
-    const { error } = await supabase
-      .from('reservations')
-      .insert({ bag_id: bag.id, buyer_id: user.id, store_id: bag.store_id })
-
+    const { error } = await supabase.rpc('reserve_bag', {
+      p_bag_id: bag.id,
+      p_store_id: bag.store_id,
+    })
     if (error) {
-      showToast('No se pudo reservar. Intenta de nuevo.', 'error')
+      showToast(error.message === 'Sin stock disponible' ? 'Ya no hay stock disponible' : 'No se pudo reservar. Intenta de nuevo.', 'error')
     } else {
-      await supabase
-        .from('bags')
-        .update({ quantity: bag.quantity - 1, available: bag.quantity - 1 > 0 })
-        .eq('id', bag.id)
       showToast('¡Reserva realizada con éxito!')
       loadReservations()
       loadBags()
@@ -101,26 +97,12 @@ export default function BuyerDashboard({ user, profile }) {
   }
 
   async function handleCancelReservation(reservation) {
-    const { error } = await supabase
-      .from('reservations')
-      .update({ status: 'cancelled' })
-      .eq('id', reservation.id)
-
+    const { error } = await supabase.rpc('cancel_reservation', {
+      p_reservation_id: reservation.id,
+    })
     if (error) {
       showToast('No se pudo cancelar', 'error')
       return
-    }
-
-    const { data: bag } = await supabase
-      .from('bags')
-      .select('quantity')
-      .eq('id', reservation.bag_id)
-      .single()
-    if (bag) {
-      await supabase
-        .from('bags')
-        .update({ quantity: bag.quantity + 1, available: true })
-        .eq('id', reservation.bag_id)
     }
     showToast('Reserva cancelada')
     loadReservations()
