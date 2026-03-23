@@ -42,7 +42,7 @@ export default function SplashScreen() {
         {/* Logo card */}
         <div className="bg-white rounded-3xl px-8 py-6 shadow-2xl mb-7"
           style={{ boxShadow: '0 24px 64px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.1)' }}>
-          <img src="/logo.svg" alt="Rescate Sabor" className="w-44 h-36 mx-auto" />
+          <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Rescate Sabor" className="w-44 h-36 mx-auto" />
           <p className="font-black text-2xl mt-3 tracking-tight text-center leading-tight">
             <span style={{ color: '#f57c00' }}>Rescate</span>
             <span style={{ color: '#1b7a30' }}> Sabor</span>

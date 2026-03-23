@@ -17,7 +17,7 @@ create table if not exists public.profiles (
 -- Stores (one per seller)
 create table if not exists public.stores (
   id uuid default gen_random_uuid() primary key,
-  seller_id uuid references public.profiles(id) on delete cascade not null,
+  seller_id uuid references public.profiles(id) on delete cascade not null unique,
   name text not null,
   description text,
   address text,
@@ -30,13 +30,14 @@ create table if not exists public.bags (
   store_id uuid references public.stores(id) on delete cascade not null,
   title text not null,
   description text,
-  original_price numeric(10,2) not null,
-  discount_price numeric(10,2) not null,
-  quantity int default 1 not null,
+  original_price numeric(10,2) not null check (original_price > 0),
+  discount_price numeric(10,2) not null check (discount_price > 0),
+  quantity int default 1 not null check (quantity >= 0),
   pickup_start time,
   pickup_end time,
   available boolean default true not null,
-  created_at timestamptz default now() not null
+  created_at timestamptz default now() not null,
+  check (discount_price < original_price)
 );
 
 -- Reservations
@@ -48,6 +49,16 @@ create table if not exists public.reservations (
   status text check (status in ('pending', 'confirmed', 'delivered', 'cancelled')) default 'pending' not null,
   created_at timestamptz default now() not null
 );
+
+-- =====================
+-- INDEXES (performance)
+-- =====================
+
+create index if not exists idx_stores_seller_id on public.stores(seller_id);
+create index if not exists idx_bags_store_id on public.bags(store_id);
+create index if not exists idx_reservations_buyer_id on public.reservations(buyer_id);
+create index if not exists idx_reservations_store_id on public.reservations(store_id);
+create index if not exists idx_reservations_bag_id on public.reservations(bag_id);
 
 -- =====================
 -- ROW LEVEL SECURITY
@@ -128,9 +139,14 @@ create policy "Buyers can create reservations"
     exists (select 1 from public.profiles where id = auth.uid() and role = 'buyer')
   );
 
+-- Sellers can only update status field, and only to valid transitions
 create policy "Sellers can update reservation status"
   on public.reservations for update
   using (
+    exists (select 1 from public.stores where id = store_id and seller_id = auth.uid())
+  )
+  with check (
+    -- Only allow valid status transitions (no changing buyer_id, bag_id, etc.)
     exists (select 1 from public.stores where id = store_id and seller_id = auth.uid())
   );
 
@@ -147,7 +163,8 @@ create or replace function public.handle_new_user()
 returns trigger as $$
 begin
   insert into public.profiles (id, email)
-  values (new.id, new.email);
+  values (new.id, new.email)
+  on conflict (id) do nothing;
   return new;
 end;
 $$ language plpgsql security definer;
@@ -171,15 +188,30 @@ as $$
 declare
   v_reservation_id uuid;
   v_qty int;
+  v_available boolean;
+  v_actual_store_id uuid;
 begin
-  -- Lock fila y verificar stock
-  select quantity into v_qty from public.bags where id = p_bag_id for update;
+  -- Verificar que el caller es buyer
+  if not exists (select 1 from public.profiles where id = auth.uid() and role = 'buyer') then
+    raise exception 'Solo compradores pueden reservar';
+  end if;
+  -- Lock fila y verificar stock + disponibilidad
+  select quantity, available, store_id
+    into v_qty, v_available, v_actual_store_id
+    from public.bags where id = p_bag_id for update;
   if v_qty is null or v_qty < 1 then
     raise exception 'Sin stock disponible';
   end if;
+  if not v_available then
+    raise exception 'Bolsa no disponible';
+  end if;
+  -- Validar que p_store_id coincide con la bolsa real
+  if v_actual_store_id <> p_store_id then
+    raise exception 'store_id no coincide con la bolsa';
+  end if;
   -- Crear reserva
   insert into public.reservations (bag_id, buyer_id, store_id)
-    values (p_bag_id, auth.uid(), p_store_id)
+    values (p_bag_id, auth.uid(), v_actual_store_id)
     returning id into v_reservation_id;
   -- Decrementar cantidad
   update public.bags
@@ -190,7 +222,7 @@ begin
 end;
 $$;
 
--- Cancelar reserva: cancela + devuelve unidad al stock
+-- Cancelar reserva (buyer): cancela + devuelve unidad al stock
 create or replace function public.cancel_reservation(p_reservation_id uuid)
 returns void
 language plpgsql
@@ -202,10 +234,12 @@ declare
   v_buyer   uuid;
   v_status  text;
 begin
+  -- Lock para evitar doble cancelación
   select bag_id, buyer_id, status
     into v_bag_id, v_buyer, v_status
     from public.reservations
-    where id = p_reservation_id;
+    where id = p_reservation_id
+    for update;
   if v_buyer <> auth.uid() then
     raise exception 'Sin permiso';
   end if;
@@ -220,7 +254,7 @@ begin
 end;
 $$;
 
--- Cancelar reserva por parte del vendedor: cancela (solo pending) + devuelve stock
+-- Cancelar reserva (seller): cancela (solo pending) + devuelve stock
 create or replace function public.seller_cancel_reservation(p_reservation_id uuid)
 returns void
 language plpgsql
@@ -232,10 +266,12 @@ declare
   v_store_id uuid;
   v_status   text;
 begin
+  -- Lock para evitar doble cancelación
   select bag_id, store_id, status
     into v_bag_id, v_store_id, v_status
     from public.reservations
-    where id = p_reservation_id;
+    where id = p_reservation_id
+    for update;
   -- Verificar que el seller es dueño de la tienda
   if not exists (select 1 from public.stores where id = v_store_id and seller_id = auth.uid()) then
     raise exception 'Sin permiso';

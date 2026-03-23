@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from './lib/supabase'
 import SplashScreen from './components/SplashScreen'
 import LandingPage from './components/LandingPage'
@@ -12,11 +12,13 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
+  const initialSessionHandled = useRef(false)
 
   useEffect(() => {
     const splashTimer = setTimeout(() => setShowSplash(false), 2500)
 
     supabase.auth.getSession().then(({ data: { session } }) => {
+      initialSessionHandled.current = true
       setUser(session?.user ?? null)
       if (session?.user) {
         loadProfile(session.user.id)
@@ -27,6 +29,8 @@ export default function App() {
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      // Skip the initial INITIAL_SESSION event — already handled above
+      if (!initialSessionHandled.current) return
       setUser(session?.user ?? null)
       if (session?.user) {
         loadProfile(session.user.id)
@@ -44,12 +48,23 @@ export default function App() {
   }, [])
 
   async function loadProfile(userId) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .single()
-    setProfile(data)
+    if (error || !data) {
+      // Profile not yet created (trigger may be delayed) — retry once
+      await new Promise(r => setTimeout(r, 500))
+      const retry = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single()
+      setProfile(retry.data)
+    } else {
+      setProfile(data)
+    }
     setLoading(false)
   }
 

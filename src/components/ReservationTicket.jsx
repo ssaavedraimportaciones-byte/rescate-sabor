@@ -30,7 +30,7 @@ export default function ReservationTicket({ reservation, onCancel }) {
       </div>
       <div className="px-4 py-3 flex justify-between items-center">
         <div>
-          <p className="text-xs text-gray-400 font-mono">#{reservation.id.slice(0, 8).toUpperCase()}</p>
+          <p className="text-xs text-gray-400 font-mono">#{reservation.id?.slice(0, 8)?.toUpperCase()}</p>
           <p className="text-xs text-gray-500 mt-0.5">{date}</p>
         </div>
         {reservation.bags?.discount_price && (

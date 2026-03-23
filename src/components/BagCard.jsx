@@ -3,8 +3,8 @@ function clp(amount) {
 }
 
 export default function BagCard({ bag, onReserve, reserved, loading }) {
-  const savings = bag.original_price - bag.discount_price
-  const savingsPercent = Math.round((savings / bag.original_price) * 100)
+  const savings = (bag.original_price || 0) - (bag.discount_price || 0)
+  const savingsPercent = bag.original_price > 0 ? Math.round((savings / bag.original_price) * 100) : 0
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
