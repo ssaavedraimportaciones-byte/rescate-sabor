@@ -42,9 +42,10 @@ if [ -f .env ]; then
   source <(grep -v '^#' .env | sed 's/^/export /')
 fi
 
-# Verificar si la anon key es válida (debe ser un JWT — empieza con eyJ)
+# Verificar si la anon key es válida (JWT: eyJ... o nueva clave publicable: sb_publishable_...)
 NEEDS_KEY=false
-if [ -z "${VITE_SUPABASE_ANON_KEY:-}" ] || [[ ! "${VITE_SUPABASE_ANON_KEY}" == eyJ* ]]; then
+if [ -z "${VITE_SUPABASE_ANON_KEY:-}" ] || \
+   { [[ ! "${VITE_SUPABASE_ANON_KEY}" == eyJ* ]] && [[ ! "${VITE_SUPABASE_ANON_KEY}" == sb_publishable_* ]]; }; then
   NEEDS_KEY=true
 fi
 
@@ -56,7 +57,7 @@ fi
 
 if [ "$NEEDS_KEY" = true ]; then
   echo -e "${RED}  ⚠ La VITE_SUPABASE_ANON_KEY actual no es válida${NC}"
-  echo -e "  La clave debe ser un JWT (empieza con eyJhbG...)"
+  echo -e "  La clave puede ser JWT (eyJhbG...) o el nuevo formato publicable (sb_publishable_...)"
   echo -e ""
   echo -e "  Para obtenerla:"
   echo -e "  1. Ve a ${CYAN}https://supabase.com/dashboard${NC}"
