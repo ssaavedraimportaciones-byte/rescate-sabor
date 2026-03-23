@@ -220,6 +220,37 @@ begin
 end;
 $$;
 
+-- Cancelar reserva por parte del vendedor: cancela (solo pending) + devuelve stock
+create or replace function public.seller_cancel_reservation(p_reservation_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_bag_id   uuid;
+  v_store_id uuid;
+  v_status   text;
+begin
+  select bag_id, store_id, status
+    into v_bag_id, v_store_id, v_status
+    from public.reservations
+    where id = p_reservation_id;
+  -- Verificar que el seller es dueño de la tienda
+  if not exists (select 1 from public.stores where id = v_store_id and seller_id = auth.uid()) then
+    raise exception 'Sin permiso';
+  end if;
+  if v_status <> 'pending' then
+    raise exception 'Solo se pueden cancelar reservas pendientes';
+  end if;
+  update public.reservations set status = 'cancelled' where id = p_reservation_id;
+  update public.bags
+    set quantity  = quantity + 1,
+        available = true
+    where id = v_bag_id;
+end;
+$$;
+
 -- =====================
 -- REALTIME
 -- =====================

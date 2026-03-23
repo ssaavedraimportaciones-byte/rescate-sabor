@@ -306,9 +306,18 @@ export default function SellerDashboard({ user, profile }) {
   }
 
   async function handleUpdateStatus(reservationId, status) {
-    const { error } = await supabase.from('reservations').update({ status }).eq('id', reservationId)
+    let error
+    if (status === 'cancelled') {
+      // Usar RPC para restaurar stock al cancelar
+      ;({ error } = await supabase.rpc('seller_cancel_reservation', { p_reservation_id: reservationId }))
+    } else {
+      ;({ error } = await supabase.from('reservations').update({ status }).eq('id', reservationId))
+    }
     if (error) showToast('Error al actualizar estado', 'error')
-    else loadReservations(store.id)
+    else {
+      loadReservations(store.id)
+      if (status === 'cancelled') loadBags(store.id)
+    }
   }
 
   async function handleToggleBag(bag) {
