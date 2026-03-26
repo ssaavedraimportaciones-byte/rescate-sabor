@@ -1,21 +1,12 @@
-name: Deploy a GitHub Pages
+name: Deploy a Vercel
 
 on:
   push:
     branches: [master, main, SSAAVEDRA, 'claude/**']
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
-
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,27 +19,11 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Configurar GitHub Pages
-        uses: actions/configure-pages@v4
-
       - name: Build
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
 
-      - name: Subir artefacto
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
+      - name: Instalar Vercel CLI
+        run: npm install -g vercel
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy a GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Deploy a Vercel
+        run: vercel deploy dist/ --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
