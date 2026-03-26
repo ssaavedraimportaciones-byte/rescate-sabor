@@ -17,7 +17,16 @@ export default function App() {
   useEffect(() => {
     const splashTimer = setTimeout(() => setShowSplash(false), 2500)
 
+    const sessionTimeout = setTimeout(() => {
+      if (!initialSessionHandled.current) {
+        initialSessionHandled.current = true
+        setShowLanding(true)
+        setLoading(false)
+      }
+    }, 5000)
+
     supabase.auth.getSession().then(({ data: { session } }) => {
+      clearTimeout(sessionTimeout)
       initialSessionHandled.current = true
       setUser(session?.user ?? null)
       if (session?.user) {
@@ -26,6 +35,11 @@ export default function App() {
         setShowLanding(true)
         setLoading(false)
       }
+    }).catch(() => {
+      clearTimeout(sessionTimeout)
+      initialSessionHandled.current = true
+      setShowLanding(true)
+      setLoading(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -43,6 +57,7 @@ export default function App() {
 
     return () => {
       clearTimeout(splashTimer)
+      clearTimeout(sessionTimeout)
       subscription.unsubscribe()
     }
   }, [])
