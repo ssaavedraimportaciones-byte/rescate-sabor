@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  pages: write
 
 concurrency:
   group: pages
@@ -32,8 +33,33 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
 
-      - name: Deploy a gh-pages
+      - name: Deploy a rama gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+
+      - name: Activar GitHub Pages automáticamente
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Activando GitHub Pages desde rama gh-pages..."
+          # Intentar crear Pages (si no existe)
+          CREATE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/ssaavedraimportaciones-byte/rescate-sabor/pages" \
+            -d '{"source":{"branch":"gh-pages","path":"/"}}')
+          echo "POST /pages → HTTP $CREATE"
+          # Si ya existe (409), actualizar la fuente
+          if [ "$CREATE" = "409" ] || [ "$CREATE" = "422" ]; then
+            UPDATE=$(curl -s -o /dev/null -w "%{http_code}" -X PUT \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/ssaavedraimportaciones-byte/rescate-sabor/pages" \
+              -d '{"source":{"branch":"gh-pages","path":"/"}}')
+            echo "PUT /pages → HTTP $UPDATE"
+          fi
+          echo "✅ Listo"
