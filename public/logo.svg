@@ -1,72 +1,65 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 190">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 200">
   <defs>
-    <!-- Gradiente flechas: verde puro izq → naranja puro der -->
     <linearGradient id="ag" x1="0%" y1="50%" x2="100%" y2="50%">
       <stop offset="0%"   stop-color="#1a7a2f"/>
-      <stop offset="38%"  stop-color="#4db840"/>
-      <stop offset="62%"  stop-color="#e8841a"/>
+      <stop offset="40%"  stop-color="#4db840"/>
+      <stop offset="60%"  stop-color="#e8841a"/>
       <stop offset="100%" stop-color="#f57c00"/>
     </linearGradient>
-    <!-- Gradiente bowl -->
-    <linearGradient id="bg" x1="15%" y1="0%" x2="85%" y2="100%">
-      <stop offset="0%"   stop-color="#80e070"/>
+    <linearGradient id="bg" x1="10%" y1="0%" x2="90%" y2="100%">
+      <stop offset="0%"   stop-color="#85e572"/>
       <stop offset="100%" stop-color="#1a7a2f"/>
     </linearGradient>
-    <!-- Gradiente hoja delantera -->
     <linearGradient id="lg" x1="50%" y1="0%" x2="50%" y2="100%">
-      <stop offset="0%"   stop-color="#62cc52"/>
+      <stop offset="0%"   stop-color="#65cc54"/>
       <stop offset="100%" stop-color="#1a7a2f"/>
     </linearGradient>
   </defs>
 
-  <!-- ══ ARCOS circulares (centro 110,88 radio 74) ══ -->
-  <path d="M 184,88 A 74,74 0 0,1 36,88"
-        fill="none" stroke="url(#ag)" stroke-width="19" stroke-linecap="butt"/>
-  <path d="M 36,88 A 74,74 0 0,1 184,88"
-        fill="none" stroke="url(#ag)" stroke-width="19" stroke-linecap="butt"/>
+  <!-- ARCOS (centro 110,90 radio 74) -->
+  <path d="M 184,90 A 74,74 0 0,1 36,90"
+        fill="none" stroke="url(#ag)" stroke-width="20" stroke-linecap="butt"/>
+  <path d="M 36,90 A 74,74 0 0,1 184,90"
+        fill="none" stroke="url(#ag)" stroke-width="20" stroke-linecap="butt"/>
 
-  <!-- Punta flecha NARANJA derecha (apunta abajo) -->
-  <polygon points="0,-16 13,9 -13,9"
-           transform="translate(184,88) rotate(180)" fill="#f57c00"/>
-  <!-- Punta flecha VERDE izquierda (apunta arriba) -->
-  <polygon points="0,-16 13,9 -13,9"
-           transform="translate(36,88) rotate(0)" fill="#1a7a2f"/>
+  <!-- Punta NARANJA derecha -->
+  <polygon points="0,-16 14,10 -14,10"
+           transform="translate(184,90) rotate(180)" fill="#f57c00"/>
+  <!-- Punta VERDE izquierda -->
+  <polygon points="0,-16 14,10 -14,10"
+           transform="translate(36,90) rotate(0)" fill="#1a7a2f"/>
 
-  <!-- ══ BOWL ══ -->
-  <!-- Cuerpo verde del bowl -->
-  <path d="M 52,99 Q 50,169 110,173 Q 170,169 168,99 Z"
+  <!-- BOWL cuerpo verde -->
+  <path d="M 46,100 Q 44,172 110,176 Q 176,172 174,100 Z"
         fill="url(#bg)"/>
-  <!-- Gloss blanco lado izquierdo -->
-  <path d="M 64,116 Q 57,146 66,167"
-        fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="16" stroke-linecap="round"/>
+
+  <!-- Gloss blanco izquierdo -->
+  <path d="M 60,118 Q 52,150 62,171"
+        fill="none" stroke="rgba(255,255,255,0.62)" stroke-width="17" stroke-linecap="round"/>
+
   <!-- Rim naranja -->
-  <ellipse cx="110" cy="99" rx="58" ry="12" fill="#f57c00"/>
+  <ellipse cx="110" cy="100" rx="64" ry="11" fill="#f57c00"/>
   <!-- Interior blanco del rim -->
-  <ellipse cx="110" cy="97" rx="48" ry="8" fill="rgba(255,255,255,0.35)"/>
-  <!-- Base del bowl -->
-  <rect x="93" y="170" width="34" height="8" rx="4" fill="#156b26"/>
-  <ellipse cx="110" cy="178" rx="26" ry="5.5" fill="#1a7030"/>
+  <ellipse cx="110" cy="98"  rx="53" ry="7"  fill="rgba(255,255,255,0.36)"/>
 
-  <!-- ══ TENEDOR naranja — 3 dientes ══ -->
-  <!-- Diente izquierdo -->
-  <rect x="74"  y="38" width="7.5" height="28" rx="3.8" fill="#f57c00"/>
-  <!-- Diente central -->
-  <rect x="86"  y="38" width="7.5" height="28" rx="3.8" fill="#f57c00"/>
-  <!-- Diente derecho -->
-  <rect x="98"  y="38" width="7.5" height="28" rx="3.8" fill="#f57c00"/>
-  <!-- Barra conectora -->
-  <rect x="74"  y="62" width="31.5" height="8" rx="4" fill="#f57c00"/>
-  <!-- Mango -->
-  <rect x="83"  y="70" width="12" height="38" rx="6" fill="#f57c00"/>
+  <!-- Base -->
+  <rect x="92" y="173" width="36" height="8" rx="4" fill="#156b26"/>
+  <ellipse cx="110" cy="181" rx="27" ry="6" fill="#1a7030"/>
 
-  <!-- ══ HOJAS ══ -->
-  <!-- Hoja izquierda (más pequeña, más oscura, detrás) -->
-  <path d="M 122,92 C 110,80 108,54 122,38 C 136,54 134,80 122,92 Z"
+  <!-- TENEDOR — 3 dientes naranja -->
+  <rect x="75"  y="40" width="6" height="28" rx="3" fill="#f57c00"/>
+  <rect x="85"  y="40" width="6" height="28" rx="3" fill="#f57c00"/>
+  <rect x="95"  y="40" width="6" height="28" rx="3" fill="#f57c00"/>
+  <rect x="75"  y="64" width="26" height="8" rx="4" fill="#f57c00"/>
+  <rect x="83"  y="72" width="10" height="36" rx="5" fill="#f57c00"/>
+
+  <!-- HOJA izquierda (detrás, oscura) -->
+  <path d="M 120,97 C 108,84 106,56 120,40 C 134,56 132,84 120,97 Z"
         fill="#2a9038"/>
-  <line x1="122" y1="92" x2="122" y2="42" stroke="#186225" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="120" y1="97" x2="120" y2="44" stroke="#186225" stroke-width="1.8" stroke-linecap="round"/>
 
-  <!-- Hoja derecha (más grande, gradiente, adelante) -->
-  <path d="M 138,92 C 124,79 122,50 138,33 C 154,50 152,79 138,92 Z"
+  <!-- HOJA derecha (adelante, gradiente) -->
+  <path d="M 137,97 C 123,83 121,52 137,34 C 153,52 151,83 137,97 Z"
         fill="url(#lg)"/>
-  <line x1="138" y1="92" x2="138" y2="37" stroke="#186225" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="137" y1="97" x2="137" y2="38" stroke="#186225" stroke-width="1.8" stroke-linecap="round"/>
 </svg>
