@@ -1,87 +1,101 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
   <defs>
-    <linearGradient id="arcG" x1="0%" y1="50%" x2="100%" y2="50%">
-      <stop offset="0%"   stop-color="#1a7a2e"/>
-      <stop offset="38%"  stop-color="#3db83a"/>
-      <stop offset="62%"  stop-color="#e07820"/>
+    <!-- Gradiente arco: verde oscuro izq → verde brillante → naranja → naranja -->
+    <linearGradient id="arcGrad" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%"   stop-color="#1b7a30"/>
+      <stop offset="35%"  stop-color="#3aaa35"/>
+      <stop offset="55%"  stop-color="#c47a10"/>
       <stop offset="100%" stop-color="#f57c00"/>
     </linearGradient>
-    <linearGradient id="bowlG" x1="20%" y1="0%" x2="80%" y2="100%">
-      <stop offset="0%"   stop-color="#6dcf55"/>
-      <stop offset="45%"  stop-color="#2fa832"/>
+
+    <!-- Bowl: verde claro arriba-izq → verde oscuro abajo-der -->
+    <linearGradient id="bowlGrad" x1="15%" y1="0%" x2="85%" y2="100%">
+      <stop offset="0%"   stop-color="#6dcf50"/>
+      <stop offset="35%"  stop-color="#3aaa35"/>
       <stop offset="100%" stop-color="#1b6b28"/>
     </linearGradient>
-    <radialGradient id="shineG" cx="32%" cy="28%" r="52%">
-      <stop offset="0%"   stop-color="rgba(255,255,255,0.45)"/>
+
+    <!-- Brillo radial bowl -->
+    <radialGradient id="bowlShine" cx="28%" cy="22%" r="50%">
+      <stop offset="0%"   stop-color="rgba(255,255,255,0.55)"/>
       <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
     </radialGradient>
-    <linearGradient id="leafG" x1="50%" y1="100%" x2="50%" y2="0%">
-      <stop offset="0%"   stop-color="#1a6b28"/>
-      <stop offset="100%" stop-color="#4ec245"/>
+
+    <!-- Hoja -->
+    <linearGradient id="leafGrad" x1="50%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%"   stop-color="#1b6b28"/>
+      <stop offset="100%" stop-color="#3aaa35"/>
     </linearGradient>
-    <linearGradient id="rimG" x1="0%" y1="0%" x2="100%" y2="0%">
+
+    <!-- Aro naranja -->
+    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%"   stop-color="#e07820"/>
       <stop offset="100%" stop-color="#f57c00"/>
     </linearGradient>
   </defs>
 
-  <!-- ══════ ARCOS CIRCULARES ══════ -->
-  <!-- Arco inferior — detrás del bowl -->
-  <path d="M 157,87 A 57,57 0 0,1 43,87"
-        fill="none" stroke="url(#arcG)" stroke-width="16" stroke-linecap="butt"/>
-  <!-- Arco superior -->
-  <path d="M 43,87 A 57,57 0 0,1 157,87"
-        fill="none" stroke="url(#arcG)" stroke-width="16" stroke-linecap="butt"/>
+  <!-- ════════ ARCO INFERIOR (detrás del bowl) ════════ -->
+  <path d="M 385,210 A 140,140 0 0,1 115,210"
+        fill="none" stroke="url(#arcGrad)" stroke-width="36" stroke-linecap="butt"/>
 
-  <!-- Flecha VERDE izquierda (43,87) → ARRIBA -->
-  <polygon points="0,-16 13,8 -13,8"
-           transform="translate(43,87) rotate(0)"
-           fill="#1a7a2e"/>
-  <!-- Flecha NARANJA derecha (157,87) → ABAJO -->
-  <polygon points="0,-16 13,8 -13,8"
-           transform="translate(157,87) rotate(180)"
-           fill="#f57c00"/>
-
-  <!-- ══════ BOWL ══════ -->
-  <!-- Cuerpo principal -->
-  <path d="M 42,94 Q 40,158 100,163 Q 160,158 158,94 Z"
-        fill="url(#bowlG)"/>
-  <!-- Brillo radial 3D -->
-  <path d="M 42,94 Q 40,158 100,163 Q 160,158 158,94 Z"
-        fill="url(#shineG)"/>
+  <!-- ════════ BOWL (encima del arco inferior) ════════ -->
+  <!-- Cuerpo del bowl -->
+  <path d="M 112,222 C 108,375 250,385 250,385 C 250,385 392,375 388,222 Z"
+        fill="url(#bowlGrad)"/>
+  <!-- Brillo 3D -->
+  <path d="M 112,222 C 108,375 250,385 250,385 C 250,385 392,375 388,222 Z"
+        fill="url(#bowlShine)"/>
   <!-- Brillo lateral izquierdo -->
-  <path d="M 53,110 Q 47,134 54,153"
-        fill="none" stroke="rgba(255,255,255,0.40)" stroke-width="14" stroke-linecap="round"/>
+  <path d="M 135,262 Q 120,318 132,368"
+        fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="30" stroke-linecap="round"/>
 
-  <!-- Aro/borde naranja -->
-  <ellipse cx="100" cy="94"  rx="58"  ry="12.5" fill="url(#rimG)"/>
-  <!-- Reflejo blanco interior -->
-  <ellipse cx="100" cy="92"  rx="48"  ry="8.5"  fill="rgba(255,255,255,0.28)"/>
+  <!-- Borde blanco alrededor del aro (separación) -->
+  <ellipse cx="250" cy="222" rx="142" ry="26" fill="white"/>
+  <!-- Aro naranja -->
+  <ellipse cx="250" cy="222" rx="138" ry="23" fill="url(#rimGrad)"/>
+  <!-- Reflejo interior blanco -->
+  <ellipse cx="250" cy="219" rx="115" ry="16" fill="rgba(255,255,255,0.30)"/>
 
   <!-- Base del bowl -->
-  <rect   x="82"  y="160" width="36" height="7"   rx="3.5" fill="#156b24"/>
-  <ellipse cx="100" cy="167" rx="26" ry="5.5"         fill="#1a7030"/>
+  <rect x="200" y="382" width="100" height="16" rx="8"  fill="#156b24"/>
+  <ellipse cx="250" cy="398"  rx="68"  ry="13" fill="#1a7030"/>
 
-  <!-- ══════ TENEDOR naranja ══════ -->
+  <!-- ════════ ARCO SUPERIOR ════════ -->
+  <path d="M 115,210 A 140,140 0 0,1 385,210"
+        fill="none" stroke="url(#arcGrad)" stroke-width="36" stroke-linecap="butt"/>
+
+  <!-- ════════ FLECHA VERDE izquierda → apunta ARRIBA ════════ -->
+  <polygon points="0,-42 32,20 -32,20"
+           transform="translate(115,210) rotate(0)"
+           fill="#1b7a30"/>
+
+  <!-- ════════ FLECHA NARANJA derecha → apunta ABAJO ════════ -->
+  <polygon points="0,-42 32,20 -32,20"
+           transform="translate(385,210) rotate(180)"
+           fill="#f57c00"/>
+
+  <!-- ════════ TENEDOR naranja (izquierda del centro) ════════ -->
   <!-- Tine izquierdo -->
-  <rect x="74" y="52" width="5.5" height="30" rx="2.8" fill="#f57c00"/>
+  <rect x="186" y="115" width="14" height="76" rx="7"  fill="#f57c00"/>
+  <!-- Tine central -->
+  <rect x="207" y="115" width="14" height="76" rx="7"  fill="#f57c00"/>
   <!-- Tine derecho -->
-  <rect x="84" y="52" width="5.5" height="30" rx="2.8" fill="#f57c00"/>
-  <!-- Barra conectora -->
-  <rect x="74" y="79" width="15.5" height="6" rx="3" fill="#f57c00"/>
+  <rect x="228" y="115" width="14" height="76" rx="7"  fill="#f57c00"/>
+  <!-- Barra -->
+  <rect x="186" y="185" width="56"  height="14" rx="7"  fill="#f57c00"/>
   <!-- Mango -->
-  <rect x="77.5" y="84" width="9" height="32" rx="4.5" fill="#f57c00"/>
+  <rect x="196" y="198" width="36"  height="82" rx="18" fill="#f57c00"/>
 
-  <!-- ══════ HOJAS verdes ══════ -->
-  <!-- Hoja 1 (atrás, izquierda) -->
-  <path d="M 111,92 C 106,91 102,60 120,46 C 134,49 130,88 111,92 Z"
-        fill="url(#leafG)" opacity="0.92"/>
-  <line x1="111" y1="92" x2="120" y2="49"
-        stroke="#156b24" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- ════════ HOJAS verdes (derecha del centro) ════════ -->
+  <!-- Hoja trasera (más a la izquierda y detrás) -->
+  <path d="M 275,220 C 268,218 262,148 294,112 C 320,116 313,215 275,220 Z"
+        fill="url(#leafGrad)" opacity="0.88"/>
+  <line x1="275" y1="220" x2="294" y2="116"
+        stroke="#156b24" stroke-width="4" stroke-linecap="round"/>
 
-  <!-- Hoja 2 (frente, derecha) -->
-  <path d="M 126,92 C 121,91 117,60 135,46 C 149,49 145,88 126,92 Z"
-        fill="url(#leafG)"/>
-  <line x1="126" y1="92" x2="135" y2="49"
-        stroke="#156b24" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Hoja delantera (más a la derecha y al frente) -->
+  <path d="M 305,220 C 298,218 292,148 324,112 C 350,116 343,215 305,220 Z"
+        fill="url(#leafGrad)"/>
+  <line x1="305" y1="220" x2="324" y2="116"
+        stroke="#156b24" stroke-width="4" stroke-linecap="round"/>
 </svg>
