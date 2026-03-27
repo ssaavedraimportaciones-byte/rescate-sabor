@@ -1,69 +1,72 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 175">
   <defs>
-    <!-- Gradiente circular: verde izquierda → naranja derecha -->
     <linearGradient id="arrowGrad" x1="0%" y1="50%" x2="100%" y2="50%">
       <stop offset="0%" stop-color="#1b7a30"/>
       <stop offset="42%" stop-color="#5ab848"/>
       <stop offset="58%" stop-color="#e8891a"/>
       <stop offset="100%" stop-color="#f57c00"/>
     </linearGradient>
-    <!-- Gradiente del bowl: verde claro arriba → verde oscuro abajo -->
-    <linearGradient id="bowlGrad" x1="25%" y1="0%" x2="75%" y2="100%">
+    <linearGradient id="bowlGrad" x1="20%" y1="0%" x2="80%" y2="100%">
       <stop offset="0%" stop-color="#6dcf61"/>
       <stop offset="100%" stop-color="#1b7a30"/>
     </linearGradient>
-    <!-- Gradiente de hojas -->
-    <linearGradient id="leafGrad" x1="50%" y1="100%" x2="50%" y2="0%">
-      <stop offset="0%" stop-color="#1b7a30"/>
-      <stop offset="100%" stop-color="#5ec254"/>
+    <linearGradient id="leafGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#5ec254"/>
+      <stop offset="100%" stop-color="#1b7a30"/>
     </linearGradient>
   </defs>
 
   <!-- ARC INFERIOR (detrás del bowl) -->
   <path d="M 168,83 A 68,68 0 0,1 32,83"
-        fill="none" stroke="url(#arrowGrad)" stroke-width="14" stroke-linecap="butt"/>
+        fill="none" stroke="url(#arrowGrad)" stroke-width="15" stroke-linecap="butt"/>
 
   <!-- ARC SUPERIOR -->
   <path d="M 32,83 A 68,68 0 0,1 168,83"
-        fill="none" stroke="url(#arrowGrad)" stroke-width="14" stroke-linecap="butt"/>
+        fill="none" stroke="url(#arrowGrad)" stroke-width="15" stroke-linecap="butt"/>
 
   <!-- Punta NARANJA en (168,83) → apunta hacia abajo -->
-  <polygon points="0,-12 10,7 -10,7" transform="translate(168,83) rotate(180)" fill="#f57c00"/>
+  <polygon points="0,-13 11,8 -11,8" transform="translate(168,83) rotate(180)" fill="#f57c00"/>
 
   <!-- Punta VERDE en (32,83) → apunta hacia arriba -->
-  <polygon points="0,-12 10,7 -10,7" transform="translate(32,83) rotate(0)" fill="#1b7a30"/>
+  <polygon points="0,-13 11,8 -11,8" transform="translate(32,83) rotate(0)" fill="#1b7a30"/>
 
   <!-- BOWL cuerpo verde (encima del arc inferior) -->
-  <path d="M 50,93 Q 48,154 100,158 Q 152,154 150,93 Z"
+  <path d="M 47,93 Q 44,156 100,160 Q 156,156 153,93 Z"
         fill="url(#bowlGrad)"/>
 
   <!-- Brillo lateral izquierdo del bowl -->
-  <path d="M 60,110 Q 55,133 63,152"
-        fill="none" stroke="rgba(255,255,255,0.48)" stroke-width="12" stroke-linecap="round"/>
+  <path d="M 59,112 Q 53,136 62,155"
+        fill="none" stroke="rgba(255,255,255,0.48)" stroke-width="13" stroke-linecap="round"/>
 
   <!-- Borde/aro naranja en la boca del bowl -->
-  <ellipse cx="100" cy="93" rx="50" ry="10" fill="#f57c00"/>
+  <ellipse cx="100" cy="93" rx="53" ry="11" fill="#f57c00"/>
   <!-- Borde interior blanco translúcido (profundidad) -->
-  <ellipse cx="100" cy="91" rx="42" ry="7" fill="rgba(255,255,255,0.30)"/>
+  <ellipse cx="100" cy="91" rx="44" ry="7.5" fill="rgba(255,255,255,0.30)"/>
 
   <!-- Base del bowl -->
-  <rect x="84" y="155" width="32" height="7" rx="3.5" fill="#156b26"/>
-  <ellipse cx="100" cy="162" rx="23" ry="5" fill="#1a7030"/>
+  <rect x="83" y="157" width="34" height="7" rx="3.5" fill="#156b26"/>
+  <ellipse cx="100" cy="164" rx="25" ry="5" fill="#1a7030"/>
 
-  <!-- TENEDOR naranja (izquierda del centro, dentro del bowl) -->
-  <rect x="76" y="52" width="4.5" height="23" rx="2.2" fill="#f57c00"/>
-  <rect x="85.5" y="52" width="4.5" height="23" rx="2.2" fill="#f57c00"/>
-  <rect x="76" y="72" width="14" height="5.5" rx="2.8" fill="#f57c00"/>
-  <rect x="79.5" y="77" width="7" height="29" rx="3.5" fill="#f57c00"/>
+  <!-- TENEDOR naranja 3 dientes (izquierda del centro) -->
+  <!-- Diente izquierdo -->
+  <rect x="69" y="47" width="5.5" height="24" rx="2.8" fill="#f57c00"/>
+  <!-- Diente central -->
+  <rect x="78" y="47" width="5.5" height="24" rx="2.8" fill="#f57c00"/>
+  <!-- Diente derecho -->
+  <rect x="87" y="47" width="5.5" height="24" rx="2.8" fill="#f57c00"/>
+  <!-- Barra conectora de dientes -->
+  <rect x="69" y="67" width="23.5" height="6" rx="3" fill="#f57c00"/>
+  <!-- Mango -->
+  <rect x="76" y="73" width="9.5" height="32" rx="4.8" fill="#f57c00"/>
 
-  <!-- HOJAS verdes (derecha del centro, dentro del bowl) -->
-  <!-- Hoja 1 (atrás-izquierda) -->
-  <path d="M 111,90 C 107,90 105,62 120,50 C 132,53 129,86 111,90 Z"
+  <!-- HOJAS verdes grandes y redondeadas (derecha del centro) -->
+  <!-- Hoja 1 (atrás-izquierda, más oscura) -->
+  <path d="M 113,89 C 101,79 99,53 113,39 C 127,53 125,79 113,89 Z"
+        fill="#2e9a3e"/>
+  <line x1="113" y1="89" x2="113" y2="43" stroke="#1b6b28" stroke-width="1.6" stroke-linecap="round"/>
+
+  <!-- Hoja 2 (adelante-derecha, con gradiente) -->
+  <path d="M 128,89 C 114,78 112,50 128,36 C 144,50 142,78 128,89 Z"
         fill="url(#leafGrad)"/>
-  <line x1="111" y1="90" x2="119" y2="53" stroke="#156b26" stroke-width="1.7" stroke-linecap="round"/>
-
-  <!-- Hoja 2 (adelante-derecha) -->
-  <path d="M 124,90 C 120,90 118,62 133,50 C 145,53 142,86 124,90 Z"
-        fill="url(#leafGrad)"/>
-  <line x1="124" y1="90" x2="132" y2="53" stroke="#156b26" stroke-width="1.7" stroke-linecap="round"/>
+  <line x1="128" y1="89" x2="128" y2="40" stroke="#1b6b28" stroke-width="1.6" stroke-linecap="round"/>
 </svg>
