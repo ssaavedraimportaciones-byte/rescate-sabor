@@ -1,65 +1,123 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
   <defs>
-    <linearGradient id="ag" x1="0%" y1="50%" x2="100%" y2="50%">
-      <stop offset="0%"   stop-color="#1a7a2f"/>
-      <stop offset="40%"  stop-color="#4db840"/>
-      <stop offset="60%"  stop-color="#e8841a"/>
-      <stop offset="100%" stop-color="#f57c00"/>
+
+    <!-- ─── GRADIENTES ─── -->
+
+    <!-- Arco: verde profundo → verde brillante → naranja brillante → naranja profundo -->
+    <linearGradient id="arc" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#16652a"/>
+      <stop offset="30%"  stop-color="#3db535"/>
+      <stop offset="70%"  stop-color="#e07818"/>
+      <stop offset="100%" stop-color="#d96600"/>
     </linearGradient>
-    <linearGradient id="bg" x1="10%" y1="0%" x2="90%" y2="100%">
-      <stop offset="0%"   stop-color="#85e572"/>
-      <stop offset="100%" stop-color="#1a7a2f"/>
+
+    <!-- Bowl: verde claro (top-left) → verde oscuro (bottom-right) -->
+    <radialGradient id="bowl" cx="32%" cy="28%" r="72%">
+      <stop offset="0%"   stop-color="#7ce86a"/>
+      <stop offset="100%" stop-color="#145a22"/>
+    </radialGradient>
+
+    <!-- Hoja grande (delantera) -->
+    <linearGradient id="leaf1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#5dd64a"/>
+      <stop offset="100%" stop-color="#145a22"/>
     </linearGradient>
-    <linearGradient id="lg" x1="50%" y1="0%" x2="50%" y2="100%">
-      <stop offset="0%"   stop-color="#65cc54"/>
-      <stop offset="100%" stop-color="#1a7a2f"/>
+
+    <!-- Hoja pequeña (trasera) -->
+    <linearGradient id="leaf2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#3aab2e"/>
+      <stop offset="100%" stop-color="#0f4a1a"/>
     </linearGradient>
+
   </defs>
 
-  <!-- ARCOS (centro 110,90 radio 74) -->
-  <path d="M 184,90 A 74,74 0 0,1 36,90"
-        fill="none" stroke="url(#ag)" stroke-width="20" stroke-linecap="butt"/>
-  <path d="M 36,90 A 74,74 0 0,1 184,90"
-        fill="none" stroke="url(#ag)" stroke-width="20" stroke-linecap="butt"/>
+  <!-- ══════════════════════════════════════
+       FLECHAS CIRCULARES
+       Centro (100,96) • Radio 68
+       Arco inferior: 180°→0° (por abajo)
+       Arco superior: 0°→180° (por arriba)
+       ══════════════════════════════════════ -->
 
-  <!-- Punta NARANJA derecha -->
-  <polygon points="0,-16 14,10 -14,10"
-           transform="translate(184,90) rotate(180)" fill="#f57c00"/>
-  <!-- Punta VERDE izquierda -->
-  <polygon points="0,-16 14,10 -14,10"
-           transform="translate(36,90) rotate(0)" fill="#1a7a2f"/>
+  <!-- Arco que va por ARRIBA (de izquierda a derecha) -->
+  <path d="M 32,96 A 68,68 0 0,1 168,96"
+        fill="none" stroke="url(#arc)"
+        stroke-width="17" stroke-linecap="butt"/>
 
-  <!-- BOWL cuerpo verde -->
-  <path d="M 46,100 Q 44,172 110,176 Q 176,172 174,100 Z"
-        fill="url(#bg)"/>
+  <!-- Arco que va por ABAJO (de derecha a izquierda) -->
+  <path d="M 168,96 A 68,68 0 0,1 32,96"
+        fill="none" stroke="url(#arc)"
+        stroke-width="17" stroke-linecap="butt"/>
 
-  <!-- Gloss blanco izquierdo -->
-  <path d="M 60,118 Q 52,150 62,171"
-        fill="none" stroke="rgba(255,255,255,0.62)" stroke-width="17" stroke-linecap="round"/>
+  <!-- Punta VERDE integrada (izquierda, apunta arriba)
+       Triángulo del ancho exacto del trazo -->
+  <polygon points="32,96  22,96  32,74  42,96"
+           fill="#16652a"/>
 
-  <!-- Rim naranja -->
-  <ellipse cx="110" cy="100" rx="64" ry="11" fill="#f57c00"/>
-  <!-- Interior blanco del rim -->
-  <ellipse cx="110" cy="98"  rx="53" ry="7"  fill="rgba(255,255,255,0.36)"/>
+  <!-- Punta NARANJA integrada (derecha, apunta abajo) -->
+  <polygon points="168,96  158,96  168,118  178,96"
+           fill="#d96600"/>
 
-  <!-- Base -->
-  <rect x="92" y="173" width="36" height="8" rx="4" fill="#156b26"/>
-  <ellipse cx="110" cy="181" rx="27" ry="6" fill="#1a7030"/>
+  <!-- ══════════════════════════════════════
+       BOWL — curva cúbica suave
+       ══════════════════════════════════════ -->
 
-  <!-- TENEDOR — 3 dientes naranja -->
-  <rect x="75"  y="40" width="6" height="28" rx="3" fill="#f57c00"/>
-  <rect x="85"  y="40" width="6" height="28" rx="3" fill="#f57c00"/>
-  <rect x="95"  y="40" width="6" height="28" rx="3" fill="#f57c00"/>
-  <rect x="75"  y="64" width="26" height="8" rx="4" fill="#f57c00"/>
-  <rect x="83"  y="72" width="10" height="36" rx="5" fill="#f57c00"/>
+  <!-- Cuerpo (bezier redondeado) -->
+  <path d="M 44,104
+           C 42,154  66,178 100,180
+           C 134,178 158,154 156,104 Z"
+        fill="url(#bowl)"/>
 
-  <!-- HOJA izquierda (detrás, oscura) -->
-  <path d="M 120,97 C 108,84 106,56 120,40 C 134,56 132,84 120,97 Z"
-        fill="#2a9038"/>
-  <line x1="120" y1="97" x2="120" y2="44" stroke="#186225" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Gloss lateral izquierdo -->
+  <ellipse cx="64" cy="138" rx="8" ry="22"
+           fill="rgba(255,255,255,0.25)"
+           transform="rotate(-20,64,138)"/>
 
-  <!-- HOJA derecha (adelante, gradiente) -->
-  <path d="M 137,97 C 123,83 121,52 137,34 C 153,52 151,83 137,97 Z"
-        fill="url(#lg)"/>
-  <line x1="137" y1="97" x2="137" y2="38" stroke="#186225" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Rim naranja del bowl -->
+  <ellipse cx="100" cy="104" rx="56" ry="10.5" fill="#d96600"/>
+
+  <!-- Borde interno (reflejo blanco) -->
+  <ellipse cx="100" cy="102" rx="46" ry="7"
+           fill="rgba(255,255,255,0.32)"/>
+
+  <!-- Base del bowl -->
+  <path d="M 84,177 Q 84,185 100,186 Q 116,185 116,177 Z"
+        fill="#145a22"/>
+  <ellipse cx="100" cy="186" rx="22" ry="5" fill="#0f4a1a"/>
+
+  <!-- ══════════════════════════════════════
+       TENEDOR — path vectorial real
+       Centro x=80, dientes desde y=54 a y=80
+       ══════════════════════════════════════ -->
+  <path d="
+    M 85,112  Q 85,117 80,117  Q 75,117 75,112
+    L 75,82   L 71,77
+    L 71,54   Q 71,50 73.5,50  Q 76,50 76,54
+    L 76,74   L 78,74  L 78,54
+    Q 78,50 80,50  Q 82,50 82,54
+    L 82,74   L 84,74  L 84,54
+    Q 84,50 86.5,50  Q 89,50 89,54
+    L 89,77   L 85,82
+    Z"
+    fill="#d96600"/>
+
+  <!-- ══════════════════════════════════════
+       HOJAS — bezier orgánicas elegantes
+       ══════════════════════════════════════ -->
+
+  <!-- Hoja trasera (izquierda, x=112) -->
+  <path d="M 112,100
+           C 100,87  99,60  112,44
+           C 125,60 124,87  112,100 Z"
+        fill="url(#leaf2)"/>
+  <line x1="112" y1="100" x2="112" y2="48"
+        stroke="#0f4a1a" stroke-width="1.6" stroke-linecap="round"/>
+
+  <!-- Hoja delantera (derecha, x=127, más grande) -->
+  <path d="M 127,100
+           C 113,86  112,56  127,38
+           C 142,56 141,86  127,100 Z"
+        fill="url(#leaf1)"/>
+  <line x1="127" y1="100" x2="127" y2="42"
+        stroke="#0f4a1a" stroke-width="1.6" stroke-linecap="round"/>
+
 </svg>
