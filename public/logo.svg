@@ -1,91 +1,96 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 480">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 460">
   <defs>
+    <!-- Gradiente del arco: verde oscuro izq → verde brillante → naranja → naranja -->
     <linearGradient id="ag" x1="0%" y1="50%" x2="100%" y2="50%">
       <stop offset="0%"   stop-color="#1b7a30"/>
-      <stop offset="30%"  stop-color="#2fa832"/>
-      <stop offset="52%"  stop-color="#a07828"/>
-      <stop offset="72%"  stop-color="#e07820"/>
+      <stop offset="28%"  stop-color="#2fa832"/>
+      <stop offset="50%"  stop-color="#c47a10"/>
+      <stop offset="70%"  stop-color="#e07820"/>
       <stop offset="100%" stop-color="#f57c00"/>
     </linearGradient>
+    <!-- Bowl verde degradado -->
     <linearGradient id="bg" x1="15%" y1="0%" x2="85%" y2="100%">
       <stop offset="0%"   stop-color="#72d44e"/>
-      <stop offset="40%"  stop-color="#2fa832"/>
+      <stop offset="38%"  stop-color="#2fa832"/>
       <stop offset="100%" stop-color="#1b6b28"/>
     </linearGradient>
-    <radialGradient id="bs" cx="28%" cy="22%" r="55%">
-      <stop offset="0%"   stop-color="rgba(255,255,255,0.6)"/>
+    <!-- Brillo radial sobre el bowl -->
+    <radialGradient id="bs" cx="26%" cy="18%" r="52%">
+      <stop offset="0%"   stop-color="rgba(255,255,255,0.55)"/>
       <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
     </radialGradient>
+    <!-- Hojas verde degradado -->
     <linearGradient id="lg" x1="50%" y1="100%" x2="50%" y2="0%">
       <stop offset="0%"   stop-color="#1b6b28"/>
       <stop offset="100%" stop-color="#3aaa35"/>
     </linearGradient>
   </defs>
 
-  <!-- ARCO INFERIOR detrás del bowl -->
-  <path d="M 382,193 A 133,133 0 0,1 118,193"
-        fill="none" stroke="url(#ag)" stroke-width="38" stroke-linecap="butt"/>
+  <!-- ══ ARCO INFERIOR detrás del bowl ══ -->
+  <path d="M 373,183 A 123,123 0 0,1 127,183"
+        fill="none" stroke="url(#ag)" stroke-width="34" stroke-linecap="butt"/>
 
-  <!-- BOWL CUERPO encima del arco inferior -->
-  <path d="M 116,210 C 112,375 250,383 250,383 C 250,383 388,375 384,210 Z"
+  <!-- ══ BOWL cuerpo verde (encima del arco inferior) ══ -->
+  <path d="M 126,205 C 122,348 250,358 250,358 C 250,358 378,348 374,205 Z"
         fill="url(#bg)"/>
-  <path d="M 116,210 C 112,375 250,383 250,383 C 250,383 388,375 384,210 Z"
+  <!-- Brillo 3D radial -->
+  <path d="M 126,205 C 122,348 250,358 250,358 C 250,358 378,348 374,205 Z"
         fill="url(#bs)"/>
-  <!-- Brillo lateral izquierdo -->
-  <path d="M 138,248 Q 124,305 134,358"
-        fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="28" stroke-linecap="round"/>
+  <!-- Reflejo lateral izquierdo (línea de luz curva) -->
+  <path d="M 148,240 Q 133,295 143,342"
+        fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="26" stroke-linecap="round"/>
 
-  <!-- Separador blanco antes del aro -->
-  <ellipse cx="250" cy="210" rx="136" ry="24" fill="white"/>
+  <!-- Separador blanco alrededor del aro -->
+  <ellipse cx="250" cy="205" rx="130" ry="23" fill="white"/>
   <!-- Aro naranja -->
-  <ellipse cx="250" cy="210" rx="132" ry="20" fill="#f57c00"/>
-  <!-- Reflejo blanco interior -->
-  <ellipse cx="250" cy="207" rx="110" ry="14" fill="rgba(255,255,255,0.32)"/>
+  <ellipse cx="250" cy="205" rx="124" ry="19" fill="#f57c00"/>
+  <!-- Reflejo blanco interior del aro -->
+  <ellipse cx="250" cy="202" rx="104" ry="13" fill="rgba(255,255,255,0.30)"/>
 
-  <!-- BASE del bowl -->
-  <rect x="202" y="380" width="96" height="15" rx="7.5" fill="#156b24"/>
-  <ellipse cx="250" cy="395" rx="64" ry="11" fill="#1a7030"/>
+  <!-- Base del bowl -->
+  <rect x="208" y="355" width="84" height="14" rx="7" fill="#156b24"/>
+  <ellipse cx="250" cy="369" rx="56" ry="10" fill="#1a7030"/>
 
-  <!-- ARCO SUPERIOR encima del bowl -->
-  <path d="M 118,193 A 133,133 0 0,1 382,193"
-        fill="none" stroke="url(#ag)" stroke-width="38" stroke-linecap="butt"/>
+  <!-- ══ ARCO SUPERIOR encima del bowl ══ -->
+  <path d="M 127,183 A 123,123 0 0,1 373,183"
+        fill="none" stroke="url(#ag)" stroke-width="34" stroke-linecap="butt"/>
 
-  <!-- FLECHA VERDE izquierda apunta ARRIBA -->
-  <polygon points="0,-46 34,22 -34,22"
-           transform="translate(118,193) rotate(0)"
+  <!-- ══ FLECHA VERDE izquierda → apunta ARRIBA ══ -->
+  <polygon points="0,-44 32,22 -32,22"
+           transform="translate(127,183) rotate(0)"
            fill="#1b7a30"/>
 
-  <!-- FLECHA NARANJA derecha apunta ABAJO -->
-  <polygon points="0,-46 34,22 -34,22"
-           transform="translate(382,193) rotate(180)"
+  <!-- ══ FLECHA NARANJA derecha → apunta ABAJO ══ -->
+  <polygon points="0,-44 32,22 -32,22"
+           transform="translate(373,183) rotate(180)"
            fill="#f57c00"/>
 
-  <!-- TENEDOR naranja — izquierda del centro -->
-  <!-- Tine izq -->
-  <rect x="188" y="105" width="13" height="72" rx="6.5" fill="#f57c00"/>
-  <!-- Tine der -->
-  <rect x="210" y="105" width="13" height="72" rx="6.5" fill="#f57c00"/>
-  <!-- Barra -->
-  <rect x="188" y="173" width="35"  height="13" rx="6.5" fill="#f57c00"/>
+  <!-- ══ TENEDOR naranja — izquierda del centro ══ -->
+  <!-- Tine izquierdo -->
+  <rect x="185" y="105" width="12" height="70" rx="6" fill="#f57c00"/>
+  <!-- Tine derecho -->
+  <rect x="206" y="105" width="12" height="70" rx="6" fill="#f57c00"/>
+  <!-- Barra conectora -->
+  <rect x="185" y="172" width="33"  height="12" rx="6" fill="#f57c00"/>
   <!-- Mango -->
-  <rect x="194" y="185" width="23"  height="76" rx="11"  fill="#f57c00"/>
+  <rect x="191" y="183" width="21"  height="70" rx="10" fill="#f57c00"/>
 
-  <!-- HOJAS verdes — derecha del centro -->
-  <!-- Hoja trasera -->
-  <path d="M 278,212
-           C 262,205 258,150 272,108
-           C 280,98  302,98  310,108
-           C 324,150 320,205 304,212 Z"
-        fill="url(#lg)" opacity="0.90"/>
-  <line x1="291" y1="212" x2="291" y2="108"
-        stroke="#156b24" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- ══ HOJAS verdes — derecha del centro ══ -->
+  <!-- Hoja trasera (más izquierda y detrás) -->
+  <path d="M 280,205
+           C 274,190 264,145 278,102
+           C 286,93  302,93  310,102
+           C 324,145 314,190 308,205 Z"
+        fill="url(#lg)" opacity="0.88"/>
+  <line x1="294" y1="205" x2="294" y2="103"
+        stroke="#156b24" stroke-width="3" stroke-linecap="round"/>
 
-  <!-- Hoja delantera -->
-  <path d="M 300,212
-           C 284,205 280,150 294,108
-           C 302,98  324,98  332,108
-           C 346,150 342,205 326,212 Z"
+  <!-- Hoja delantera (más derecha y al frente) -->
+  <path d="M 306,205
+           C 300,190 290,145 304,102
+           C 312,93  328,93  336,102
+           C 350,145 340,190 334,205 Z"
         fill="url(#lg)"/>
-  <line x1="313" y1="212" x2="313" y2="108"
-        stroke="#156b24" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="320" y1="205" x2="320" y2="103"
+        stroke="#156b24" stroke-width="3" stroke-linecap="round"/>
 </svg>
