@@ -19,5 +19,8 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Deploy a Vercel
-        run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --yes
+      - name: Build
+        run: npm run build
+
+      - name: Deploy a Vercel (prebuilt)
+        run: npx vercel deploy --prebuilt --token ${{ secrets.VERCEL_TOKEN }} --prod --yes
