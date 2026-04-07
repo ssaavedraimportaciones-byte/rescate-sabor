@@ -127,12 +127,14 @@ export default function Auth({ onAuth }) {
     if (!name || !role) { setError('Completa todos los campos'); return }
     if (loading) return
     setLoading(true); setError('')
-    const { data, error: signUpError } = await supabase.auth.signUp({ email, password })
+    const { data, error: signUpError } = await supabase.auth.signUp({ email, password, options: { data: { name, role } } })
     if (signUpError) { setError(signUpError.message); setLoading(false); return }
+    // Si no hay sesión, Supabase requiere confirmación de email — intentar igual crear el perfil
+    const userId = data?.user?.id
+    if (!userId) { setConfirmationSent(true); setLoading(false); return }
+    await supabase.from('profiles').upsert({ id: userId, email, name, role })
     if (!data.session) { setConfirmationSent(true); setLoading(false); return }
-    const { error: upsertError } = await supabase.from('profiles').upsert({ id: data.user.id, email, name, role })
-    if (upsertError) { setError('Error al crear perfil. Intenta de nuevo.'); setLoading(false); return }
-    const { data: profile } = await supabase.from('profiles').select('*').eq('id', data.user.id).single()
+    const { data: profile } = await supabase.from('profiles').select('*').eq('id', userId).single()
     if (!profile) { setError('Error al cargar perfil'); setLoading(false); return }
     onAuth(profile); setLoading(false)
   }

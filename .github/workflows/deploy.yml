@@ -19,6 +19,14 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
+      - name: Deshabilitar confirmación de email en Supabase
+        run: |
+          curl -s -X PATCH \
+            "https://api.supabase.com/v1/projects/bogdnblwcdiydybnsqni/config/auth" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"mailer_autoconfirm": true}' || echo "Supabase token no configurado - omitido"
+
       - name: Build
         run: npm run build
         env:

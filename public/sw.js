@@ -1,5 +1,5 @@
-const CACHE = 'rescate-sabor-v5'
-const STATIC = ['/', '/index.html', '/logo.svg', '/manifest.json']
+const CACHE = 'rescate-sabor-v6'
+const STATIC = ['/', '/index.html', '/manifest.json']
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC)))
@@ -18,6 +18,11 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url)
   if (url.hostname.includes('supabase')) return
+  // SVG/imágenes: siempre red (sin caché para ver cambios al instante)
+  if (url.pathname.endsWith('.svg') || url.pathname.endsWith('.png')) {
+    e.respondWith(fetch(e.request).catch(() => new Response('', { status: 404 })))
+    return
+  }
   if (e.request.mode === 'navigate') {
     e.respondWith(
       fetch(e.request).catch(() => caches.match('/index.html'))
