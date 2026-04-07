@@ -1,122 +1,110 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
   <defs>
 
-    <!-- ─── GRADIENTES ─── -->
-
-    <!-- Arco: verde profundo → verde brillante → naranja brillante → naranja profundo -->
-    <linearGradient id="arc" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%"   stop-color="#16652a"/>
-      <stop offset="30%"  stop-color="#3db535"/>
-      <stop offset="70%"  stop-color="#e07818"/>
-      <stop offset="100%" stop-color="#d96600"/>
+    <!-- Gradiente para las flechas: verde vivo → dorado → naranja vivo (evita el marrón) -->
+    <linearGradient id="ag" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#156b24"/>
+      <stop offset="35%"  stop-color="#38b530"/>
+      <stop offset="48%"  stop-color="#c8a000"/>
+      <stop offset="62%"  stop-color="#e87500"/>
+      <stop offset="100%" stop-color="#f57c00"/>
     </linearGradient>
 
-    <!-- Bowl: verde claro (top-left) → verde oscuro (bottom-right) -->
-    <radialGradient id="bowl" cx="32%" cy="28%" r="72%">
-      <stop offset="0%"   stop-color="#7ce86a"/>
-      <stop offset="100%" stop-color="#145a22"/>
+    <!-- Bowl: radial gradient -->
+    <radialGradient id="bg" cx="30%" cy="22%" r="78%">
+      <stop offset="0%"   stop-color="#82e86d"/>
+      <stop offset="55%"  stop-color="#1e9628"/>
+      <stop offset="100%" stop-color="#0c4f18"/>
     </radialGradient>
 
-    <!-- Hoja grande (delantera) -->
-    <linearGradient id="leaf1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%"   stop-color="#5dd64a"/>
-      <stop offset="100%" stop-color="#145a22"/>
-    </linearGradient>
-
-    <!-- Hoja pequeña (trasera) -->
-    <linearGradient id="leaf2" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%"   stop-color="#3aab2e"/>
-      <stop offset="100%" stop-color="#0f4a1a"/>
+    <!-- Hoja -->
+    <linearGradient id="lg" x1="25%" y1="0%" x2="75%" y2="100%">
+      <stop offset="0%"   stop-color="#52d43e"/>
+      <stop offset="100%" stop-color="#0c4f18"/>
     </linearGradient>
 
   </defs>
 
-  <!-- ══════════════════════════════════════
-       FLECHAS CIRCULARES
-       Centro (100,96) • Radio 68
-       Arco inferior: 180°→0° (por abajo)
-       Arco superior: 0°→180° (por arriba)
-       ══════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════════
+       FLECHAS CIRCULARES — filled paths (premium)
+       Centro (100,96) · outer R=79 · inner R=61
+       ══════════════════════════════════════════ -->
 
-  <!-- Arco que va por ARRIBA (de izquierda a derecha) -->
-  <path d="M 32,96 A 68,68 0 0,1 168,96"
-        fill="none" stroke="url(#arc)"
-        stroke-width="17" stroke-linecap="butt"/>
+  <!-- Flecha SUPERIOR: de izquierda a derecha sobre la cima
+       Arrowhead en el extremo derecho (apunta abajo) -->
+  <path d="M 21,96
+           A 79,79 0 0,1 179,96
+           L 170,114
+           L 161,96
+           A 61,61 0 0,0 39,96
+           Z"
+        fill="url(#ag)"/>
 
-  <!-- Arco que va por ABAJO (de derecha a izquierda) -->
-  <path d="M 168,96 A 68,68 0 0,1 32,96"
-        fill="none" stroke="url(#arc)"
-        stroke-width="17" stroke-linecap="butt"/>
+  <!-- Flecha INFERIOR: de derecha a izquierda bajo el fondo
+       Arrowhead en el extremo izquierdo (apunta arriba) -->
+  <path d="M 179,96
+           A 79,79 0 0,1 21,96
+           L 30,78
+           L 39,96
+           A 61,61 0 0,0 161,96
+           Z"
+        fill="url(#ag)"/>
 
-  <!-- Punta VERDE (izquierda, apunta arriba) -->
-  <polygon points="32,100  19,100  32,70  45,100"
-           fill="#16652a"/>
+  <!-- ══════════════════════════════════════════
+       BOWL
+       ══════════════════════════════════════════ -->
 
-  <!-- Punta NARANJA (derecha, apunta abajo) -->
-  <polygon points="168,92  155,92  168,122  181,92"
-           fill="#d96600"/>
+  <!-- Cuerpo -->
+  <path d="M 45,104
+           C 43,156 67,182 100,184
+           C 133,182 157,156 155,104 Z"
+        fill="url(#bg)"/>
 
-  <!-- ══════════════════════════════════════
-       BOWL — curva cúbica suave
-       ══════════════════════════════════════ -->
+  <!-- Gloss crescent (reflejo realista, no un óvalo) -->
+  <path d="M 60,116 C 53,138 55,163 65,177
+           C 57,162 55,137 63,116 Z"
+        fill="rgba(255,255,255,0.40)"/>
 
-  <!-- Cuerpo (bezier redondeado) -->
-  <path d="M 44,104
-           C 42,154  66,178 100,180
-           C 134,178 158,154 156,104 Z"
-        fill="url(#bowl)"/>
+  <!-- Rim naranja -->
+  <ellipse cx="100" cy="104" rx="55" ry="10" fill="#e87500"/>
+  <!-- Interior blanco del rim -->
+  <ellipse cx="100" cy="102" rx="46" ry="6.5" fill="rgba(255,255,255,0.32)"/>
 
-  <!-- Gloss lateral izquierdo -->
-  <ellipse cx="64" cy="138" rx="8" ry="22"
-           fill="rgba(255,255,255,0.25)"
-           transform="rotate(-20,64,138)"/>
+  <!-- Base simple -->
+  <rect x="88" y="181" width="24" height="7" rx="3.5" fill="#0e4a1a"/>
 
-  <!-- Rim naranja del bowl -->
-  <ellipse cx="100" cy="104" rx="56" ry="10.5" fill="#d96600"/>
-
-  <!-- Borde interno (reflejo blanco) -->
-  <ellipse cx="100" cy="102" rx="46" ry="7"
-           fill="rgba(255,255,255,0.32)"/>
-
-  <!-- Base del bowl -->
-  <path d="M 84,177 Q 84,185 100,186 Q 116,185 116,177 Z"
-        fill="#145a22"/>
-  <ellipse cx="100" cy="186" rx="22" ry="5" fill="#0f4a1a"/>
-
-  <!-- ══════════════════════════════════════
-       TENEDOR — path vectorial real
-       Centro x=80, dientes desde y=54 a y=80
-       ══════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════════
+       TENEDOR — path vectorial completo
+       Centro x≈83, dientes y=40–68, mango y=73–108
+       ══════════════════════════════════════════ -->
   <path d="
-    M 85,112  Q 85,117 80,117  Q 75,117 75,112
-    L 75,82   L 71,77
-    L 71,54   Q 71,50 73.5,50  Q 76,50 76,54
-    L 76,74   L 78,74  L 78,54
-    Q 78,50 80,50  Q 82,50 82,54
-    L 82,74   L 84,74  L 84,54
-    Q 84,50 86.5,50  Q 89,50 89,54
-    L 89,77   L 85,82
+    M 90,108  Q 90,112 83,112  Q 76,112 76,108
+    L 76,73
+    L 70,68
+    L 70,44   Q 70,40 73.5,40  Q 77,40 77,44
+    L 77,68   L 80,68
+    L 80,44   Q 80,40 83.5,40  Q 87,40 87,44
+    L 87,68   L 90,68
+    L 90,44   Q 90,40 93.5,40  Q 97,40 97,44
+    L 97,68
+    L 90,73
     Z"
-    fill="#d96600"/>
+    fill="#f57c00"/>
 
-  <!-- ══════════════════════════════════════
-       HOJAS — bezier orgánicas elegantes
-       ══════════════════════════════════════ -->
-
-  <!-- Hoja trasera (izquierda, x=114) -->
-  <path d="M 114,101
-           C 99,85  97,54  114,36
-           C 131,54 129,85  114,101 Z"
-        fill="url(#leaf2)"/>
-  <line x1="114" y1="101" x2="114" y2="40"
-        stroke="#0f4a1a" stroke-width="1.6" stroke-linecap="round"/>
-
-  <!-- Hoja delantera (derecha, x=130, más grande) -->
-  <path d="M 130,101
-           C 113,84  111,50  130,30
-           C 149,50 147,84  130,101 Z"
-        fill="url(#leaf1)"/>
-  <line x1="130" y1="101" x2="130" y2="34"
-        stroke="#0f4a1a" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- ══════════════════════════════════════════
+       HOJA — bezier premium
+       ══════════════════════════════════════════ -->
+  <path d="M 120,101
+           C 103,86 102,55 120,38
+           C 138,55 137,86 120,101 Z"
+        fill="url(#lg)"/>
+  <!-- Vena central -->
+  <line x1="120" y1="101" x2="120" y2="42"
+        stroke="rgba(12,79,24,0.50)" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Venas laterales -->
+  <line x1="120" y1="73"  x2="111" y2="59"
+        stroke="rgba(12,79,24,0.28)" stroke-width="1" stroke-linecap="round"/>
+  <line x1="120" y1="73"  x2="129" y2="59"
+        stroke="rgba(12,79,24,0.28)" stroke-width="1" stroke-linecap="round"/>
 
 </svg>
