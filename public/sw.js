@@ -1,4 +1,4 @@
-const CACHE = 'rescate-sabor-v4'
+const CACHE = 'rescate-sabor-v5'
 const STATIC = ['/', '/index.html', '/logo.svg', '/manifest.json']
 
 self.addEventListener('install', e => {
