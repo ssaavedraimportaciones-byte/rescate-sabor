@@ -31,7 +31,7 @@ function Card({ title, subtitle, step, totalSteps, children }) {
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 60%)' }} />
         <div className="bg-white rounded-2xl p-3 shadow-lg mb-3 relative z-10">
-          <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Rescate Sabor" className="w-16 h-12" />
+          <img src={`${import.meta.env.BASE_URL}logo.svg?v=7`} alt="Rescate Sabor" className="w-16 h-12" />
         </div>
         <p className="font-black text-base leading-tight tracking-tight relative z-10">
           <span style={{ color: '#ffe0b2' }}>Rescate</span>
