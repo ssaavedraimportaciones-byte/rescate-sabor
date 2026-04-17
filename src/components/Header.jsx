@@ -8,7 +8,7 @@ export default function Header({ profile, title }) {
   return (
     <header className="bg-white px-4 py-2 flex items-center justify-between sticky top-0 z-10 shadow-sm" style={{ borderBottom: '2.5px solid #f57c00' }}>
       <div className="flex items-center gap-2">
-        <img src={`${import.meta.env.BASE_URL}logo.svg?v=7`} alt="Rescate Sabor" className="w-16 h-14" />
+        <img src="/logo.svg" alt="Rescate Sabor" className="w-16 h-14" />
         <div>
           <h1 className="font-black text-xl leading-tight tracking-tight">
             <span style={{ color: '#f57c00' }}>Rescate</span>

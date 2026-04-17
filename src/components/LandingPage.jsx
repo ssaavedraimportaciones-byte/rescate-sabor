@@ -63,7 +63,7 @@ export default function LandingPage({ onStart }) {
         }}
       >
         <div className="flex items-center gap-2.5">
-          <img src={`${import.meta.env.BASE_URL}logo.svg?v=7`} alt="Rescate Sabor" className="w-10 h-9" />
+          <img src="/logo.svg" alt="Rescate Sabor" className="w-10 h-9" />
           <span className="font-black text-lg tracking-tight">
             <span style={{ color: O }}>Rescate</span>
             <span style={{ color: G }}> Sabor</span>
@@ -102,7 +102,7 @@ export default function LandingPage({ onStart }) {
         {/* Logo */}
         <div className="animate-scaleIn">
           <div className="bg-white rounded-3xl p-6 shadow-2xl mb-8 inline-block animate-float" style={{ animationDuration: '5s' }}>
-            <img src={`${import.meta.env.BASE_URL}logo.svg?v=7`} alt="Rescate Sabor" className="w-36 h-28 mx-auto" />
+            <img src="/logo.svg" alt="Rescate Sabor" className="w-36 h-28 mx-auto" />
             <p className="font-black text-2xl mt-3 tracking-tight">
               <span style={{ color: O }}>Rescate</span>
               <span style={{ color: G }}> Sabor</span>
@@ -412,7 +412,7 @@ export default function LandingPage({ onStart }) {
         <div className="relative z-10 max-w-2xl mx-auto">
           <div className="inline-block mb-8">
             <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-4 inline-block">
-              <img src={`${import.meta.env.BASE_URL}logo.svg?v=7`} alt="Rescate Sabor" className="w-20 h-16 mx-auto" />
+              <img src="/logo.svg" alt="Rescate Sabor" className="w-20 h-16 mx-auto" />
             </div>
           </div>
           <h2 className="text-3xl sm:text-5xl font-black text-white mb-4 leading-tight">
@@ -447,7 +447,7 @@ export default function LandingPage({ onStart }) {
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-8">
             <div className="flex items-center gap-2.5">
-              <img src={`${import.meta.env.BASE_URL}logo.svg?v=7`} alt="Rescate Sabor" className="w-9 h-8" />
+              <img src="/logo.svg" alt="Rescate Sabor" className="w-9 h-8" />
               <span className="font-black text-lg tracking-tight">
                 <span style={{ color: O }}>Rescate</span>
                 <span className="text-white"> Sabor</span>
