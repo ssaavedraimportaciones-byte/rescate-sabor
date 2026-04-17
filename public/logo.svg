@@ -1,45 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#15803d"/>
-      <stop offset="100%" stop-color="#052e16"/>
+    <linearGradient id="gradGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00A651"/>
+      <stop offset="100%" stop-color="#6BCB3D"/>
     </linearGradient>
-    <radialGradient id="bowl2" cx="35%" cy="25%" r="75%">
-      <stop offset="0%" stop-color="#4ade80"/>
-      <stop offset="100%" stop-color="#14532d"/>
-    </radialGradient>
+    <linearGradient id="gradOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF6A00"/>
+      <stop offset="100%" stop-color="#FF8C42"/>
+    </linearGradient>
   </defs>
 
-  <!-- Fondo circular verde oscuro -->
-  <circle cx="100" cy="100" r="96" fill="url(#bg2)"/>
+  <path d="M256 40 A216 216 0 1 1 120 440"
+        fill="none"
+        stroke="url(#gradOrange)"
+        stroke-width="24"
+        stroke-linecap="round"/>
 
-  <!-- Bowl -->
-  <path d="M50,98 C48,150 72,174 100,176 C128,174 152,150 150,98Z" fill="url(#bowl2)"/>
-  <!-- Rim naranja -->
-  <ellipse cx="100" cy="98" rx="50" ry="10" fill="#f97316"/>
-  <ellipse cx="100" cy="96" rx="41" ry="6.5" fill="rgba(255,255,255,0.28)"/>
-  <!-- Base -->
-  <ellipse cx="100" cy="175" rx="22" ry="5" fill="#052e16"/>
+  <polygon points="120,440 150,420 140,460" fill="#FF6A00"/>
 
-  <!-- TENEDOR blanco — path vectorial correcto -->
-  <path d="
-    M83,96  Q83,99 80,99  Q77,99 77,96
-    L77,78  L74,74
-    L74,57  Q74,53 76,53  Q78,53 78,57
-    L78,72  L80,72  L80,57
-    Q80,53 81.5,53  Q83,53 83,57
-    L83,72  L85,72  L85,57
-    Q85,53 87,53  Q89,53 89,57
-    L89,74  L86,78
-    Z"
-    fill="white"/>
+  <ellipse cx="256" cy="300" rx="140" ry="60" fill="url(#gradGreen)"/>
+  <ellipse cx="256" cy="260" rx="140" ry="30" fill="#FF6A00"/>
 
-  <!-- HOJA blanca — bezier premium -->
-  <path d="M108,95 C96,82 94,56 108,40 C122,56 120,82 108,95Z" fill="white"/>
-  <line x1="108" y1="95" x2="108" y2="44"
-        stroke="rgba(5,46,22,0.35)" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="108" y1="70" x2="101" y2="58"
-        stroke="rgba(5,46,22,0.20)" stroke-width="1" stroke-linecap="round"/>
-  <line x1="108" y1="70" x2="115" y2="58"
-        stroke="rgba(5,46,22,0.20)" stroke-width="1" stroke-linecap="round"/>
+  <path d="M260 240 C300 180, 360 220, 300 280 C270 300, 250 270, 260 240 Z"
+        fill="#00A651"/>
 </svg>
