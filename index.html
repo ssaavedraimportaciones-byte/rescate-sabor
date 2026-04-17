@@ -26,6 +26,26 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Rescate Sabor" />
 
+    <!-- Limpiar caché y SW viejos -->
+    <script>
+      (function() {
+        var APP_VERSION = '20260417-v7';
+        if (localStorage.getItem('app_version') !== APP_VERSION) {
+          localStorage.setItem('app_version', APP_VERSION);
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(regs) {
+              regs.forEach(function(r) { r.unregister(); });
+            });
+          }
+          if ('caches' in window) {
+            caches.keys().then(function(keys) {
+              keys.forEach(function(k) { caches.delete(k); });
+            });
+          }
+        }
+      })();
+    </script>
+
     <!-- GitHub Pages SPA: restore path from 404 redirect -->
     <script>
       (function(l) {
