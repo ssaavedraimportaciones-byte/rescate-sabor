@@ -193,7 +193,7 @@ export default function SellerDashboard({ user, profile }) {
   async function loadReservations(storeId) {
     const { data } = await supabase
       .from('reservations')
-      .select('*, bags(title, discount_price), profiles(name, email)')
+      .select('*, bags(title, discount_price, original_price), profiles(name, email)')
       .eq('store_id', storeId)
       .order('created_at', { ascending: false })
     setReservations(data || [])
@@ -380,12 +380,15 @@ export default function SellerDashboard({ user, profile }) {
   }
 
   // ── Stats ──
-  const deliveredRevenue = reservations
-    .filter(r => r.status === 'delivered')
-    .reduce((sum, r) => sum + (r.bags?.discount_price || 0), 0)
+  const delivered = reservations.filter(r => r.status === 'delivered')
+  const deliveredRevenue = delivered.reduce((sum, r) => sum + (r.bags?.discount_price || 0), 0)
+  const originalValueDelivered = delivered.reduce((sum, r) => sum + (r.bags?.original_price || 0), 0)
+  const savedFromWaste = originalValueDelivered - deliveredRevenue
+  const recoveryRate = originalValueDelivered > 0 ? Math.round((deliveredRevenue / originalValueDelivered) * 100) : 0
   const pendingCount = reservations.filter(r => r.status === 'pending').length
   const confirmedCount = reservations.filter(r => r.status === 'confirmed').length
-  const deliveredCount = reservations.filter(r => r.status === 'delivered').length
+  const deliveredCount = delivered.length
+  const cancelledCount = reservations.filter(r => r.status === 'cancelled').length
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -697,51 +700,75 @@ export default function SellerDashboard({ user, profile }) {
               </div>
             </div>
 
-            {/* Metrics */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-                <p className="text-3xl font-black text-green-600">{clp(deliveredRevenue)}</p>
-                <p className="text-xs text-gray-500 mt-1 font-medium">Ingresos totales</p>
+            {/* Métricas financieras principales */}
+            <div className="grid grid-cols-1 gap-3">
+              <div className="bg-green-50 border border-green-200 rounded-2xl p-4">
+                <p className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-1">💰 Ingresos recuperados</p>
+                <p className="text-3xl font-black text-green-700">{clp(deliveredRevenue)}</p>
+                <p className="text-xs text-green-600 mt-1">Dinero recibido por bolsas entregadas</p>
               </div>
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-                <p className="text-3xl font-black text-gray-900">{reservations.length}</p>
-                <p className="text-xs text-gray-500 mt-1 font-medium">Reservas totales</p>
-              </div>
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-                <p className="text-3xl font-black text-yellow-500">{pendingCount}</p>
-                <p className="text-xs text-gray-500 mt-1 font-medium">Pendientes</p>
-              </div>
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-                <p className="text-3xl font-black text-blue-500">{confirmedCount}</p>
-                <p className="text-xs text-gray-500 mt-1 font-medium">Confirmadas</p>
-              </div>
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-                <p className="text-3xl font-black text-green-500">{deliveredCount}</p>
-                <p className="text-xs text-gray-500 mt-1 font-medium">Entregadas</p>
-              </div>
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-                <p className="text-3xl font-black text-gray-400">{bags.filter(b => b.available).length}</p>
-                <p className="text-xs text-gray-500 mt-1 font-medium">Bolsas activas</p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
+                  <p className="text-xs font-semibold text-blue-700 uppercase tracking-wide mb-1">📦 Valor original</p>
+                  <p className="text-2xl font-black text-blue-700">{clp(originalValueDelivered)}</p>
+                  <p className="text-xs text-blue-500 mt-1">Precio de lista rescatado</p>
+                </div>
+                <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4">
+                  <p className="text-xs font-semibold text-orange-700 uppercase tracking-wide mb-1">♻️ Pérdida evitada</p>
+                  <p className="text-2xl font-black text-orange-700">{clp(savedFromWaste)}</p>
+                  <p className="text-xs text-orange-500 mt-1">Ahorro vs. tirar la comida</p>
+                </div>
               </div>
             </div>
 
-            {/* Completion rate */}
+            {/* Tasa de recuperación */}
+            {originalValueDelivered > 0 && (
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+                <div className="flex justify-between items-center mb-2">
+                  <p className="text-sm font-semibold text-gray-700">Tasa de recuperación</p>
+                  <span className="text-lg font-black text-green-600">{recoveryRate}%</span>
+                </div>
+                <div className="bg-gray-100 rounded-full h-3 overflow-hidden">
+                  <div className="bg-green-500 h-3 rounded-full transition-all" style={{ width: `${recoveryRate}%` }} />
+                </div>
+                <p className="text-xs text-gray-400 mt-2">
+                  Recuperas {clp(deliveredRevenue)} de {clp(originalValueDelivered)} en valor original
+                </p>
+              </div>
+            )}
+
+            {/* Contadores de reservas */}
+            <div className="grid grid-cols-4 gap-2">
+              {[
+                { label: 'Pendientes', value: pendingCount, color: 'text-yellow-500' },
+                { label: 'Confirmadas', value: confirmedCount, color: 'text-blue-500' },
+                { label: 'Entregadas', value: deliveredCount, color: 'text-green-500' },
+                { label: 'Canceladas', value: cancelledCount, color: 'text-gray-400' },
+              ].map(({ label, value, color }) => (
+                <div key={label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-3 text-center">
+                  <p className={`text-2xl font-black ${color}`}>{value}</p>
+                  <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">{label}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Tasa de completado */}
             {reservations.length > 0 && (
               <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-                <p className="text-sm font-semibold text-gray-700 mb-3">Tasa de completado</p>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 bg-gray-100 rounded-full h-3 overflow-hidden">
-                    <div
-                      className="bg-green-500 h-3 rounded-full transition-all"
-                      style={{ width: `${Math.round((deliveredCount / reservations.length) * 100)}%` }}
-                    />
-                  </div>
-                  <span className="text-sm font-bold text-gray-700 shrink-0">
+                <div className="flex justify-between items-center mb-2">
+                  <p className="text-sm font-semibold text-gray-700">Tasa de completado</p>
+                  <span className="text-sm font-bold text-gray-700">
                     {Math.round((deliveredCount / reservations.length) * 100)}%
                   </span>
                 </div>
+                <div className="bg-gray-100 rounded-full h-3 overflow-hidden">
+                  <div
+                    className="bg-green-500 h-3 rounded-full transition-all"
+                    style={{ width: `${Math.round((deliveredCount / reservations.length) * 100)}%` }}
+                  />
+                </div>
                 <p className="text-xs text-gray-400 mt-2">
-                  {deliveredCount} entregadas de {reservations.length} totales
+                  {deliveredCount} entregadas de {reservations.length} totales · {bags.filter(b => b.available).length} bolsas activas
                 </p>
               </div>
             )}
