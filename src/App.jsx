@@ -5,6 +5,7 @@ import LandingPage from './components/LandingPage'
 import Auth from './components/Auth'
 import BuyerDashboard from './components/BuyerDashboard'
 import SellerDashboard from './components/SellerDashboard'
+import AdminDashboard from './components/AdminDashboard'
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true)
@@ -90,6 +91,10 @@ export default function App() {
       return <LandingPage onStart={() => setShowLanding(false)} />
     }
     return <Auth onAuth={(p) => setProfile(p)} />
+  }
+
+  if (profile.role === 'admin') {
+    return <AdminDashboard user={user} profile={profile} />
   }
 
   if (profile.role === 'seller') {

@@ -10,7 +10,7 @@ create table if not exists public.profiles (
   id uuid references auth.users(id) on delete cascade primary key,
   email text,
   name text,
-  role text check (role in ('buyer', 'seller')),
+  role text check (role in ('buyer', 'seller', 'admin')),
   created_at timestamptz default now() not null
 );
 
