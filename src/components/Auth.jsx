@@ -123,38 +123,60 @@ export default function Auth({ onAuth }) {
   const [confirmationSent, setConfirmationSent] = useState(false)
   const [resetSent, setResetSent] = useState(false)
 
+  function friendlyError(err) {
+    if (!err) return ''
+    if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
+      return 'No se pudo conectar con el servidor. Revisa tu conexión a internet e inténtalo de nuevo.'
+    }
+    return err.message
+  }
+
   async function handleRegister() {
     if (!name || !role) { setError('Completa todos los campos'); return }
     if (loading) return
     setLoading(true); setError('')
-    const { data, error: signUpError } = await supabase.auth.signUp({ email, password, options: { data: { name, role } } })
-    if (signUpError) { setError(signUpError.message); setLoading(false); return }
-    // Si no hay sesión, Supabase requiere confirmación de email — intentar igual crear el perfil
-    const userId = data?.user?.id
-    if (!userId) { setConfirmationSent(true); setLoading(false); return }
-    await supabase.from('profiles').upsert({ id: userId, email, name, role })
-    if (!data.session) { setConfirmationSent(true); setLoading(false); return }
-    const { data: profile } = await supabase.from('profiles').select('*').eq('id', userId).single()
-    if (!profile) { setError('Error al cargar perfil'); setLoading(false); return }
-    onAuth(profile); setLoading(false)
+    try {
+      // name y role se guardan en el perfil desde el trigger handle_new_user()
+      // usando este metadata, así funciona aunque la confirmación de email esté pendiente.
+      const { data, error: signUpError } = await supabase.auth.signUp({ email, password, options: { data: { name, role } } })
+      if (signUpError) { setError(friendlyError(signUpError)); setLoading(false); return }
+      const userId = data?.user?.id
+      if (!userId || !data.session) { setConfirmationSent(true); setLoading(false); return }
+      const { data: profile } = await supabase.from('profiles').select('*').eq('id', userId).single()
+      if (!profile) { setError('Error al cargar perfil'); setLoading(false); return }
+      onAuth(profile); setLoading(false)
+    } catch (err) {
+      setError(friendlyError(err)); setLoading(false)
+    }
   }
 
   async function handleLogin() {
     if (!email || !password) { setError('Ingresa email y contraseña'); return }
     if (loading) return
     setLoading(true); setError('')
-    const { data, error: loginError } = await supabase.auth.signInWithPassword({ email, password })
-    if (loginError) { setError('Email o contraseña incorrectos'); setLoading(false); return }
-    const { data: profile } = await supabase.from('profiles').select('*').eq('id', data.user.id).single()
-    if (!profile) { setError('Error al cargar perfil'); setLoading(false); return }
-    onAuth(profile); setLoading(false)
+    try {
+      const { data, error: loginError } = await supabase.auth.signInWithPassword({ email, password })
+      if (loginError) {
+        setError(loginError.message === 'Failed to fetch' ? friendlyError(loginError) : 'Email o contraseña incorrectos')
+        setLoading(false); return
+      }
+      const { data: profile } = await supabase.from('profiles').select('*').eq('id', data.user.id).single()
+      if (!profile) { setError('Error al cargar perfil'); setLoading(false); return }
+      onAuth(profile); setLoading(false)
+    } catch (err) {
+      setError(friendlyError(err)); setLoading(false)
+    }
   }
 
   async function handleForgotPassword() {
     if (!email) { setError('Ingresa tu email'); return }
     setLoading(true); setError('')
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/` })
-    if (resetError) { setError(resetError.message) } else { setResetSent(true) }
+    try {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/` })
+      if (resetError) { setError(friendlyError(resetError)) } else { setResetSent(true) }
+    } catch (err) {
+      setError(friendlyError(err))
+    }
     setLoading(false)
   }
 

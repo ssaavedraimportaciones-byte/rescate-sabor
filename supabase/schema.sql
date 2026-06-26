@@ -162,9 +162,15 @@ create policy "Buyers can cancel their own pending reservations"
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id, email)
-  values (new.id, new.email)
-  on conflict (id) do nothing;
+  -- name/role vienen del metadata pasado en signUp({ options: { data: { name, role } } }).
+  -- Se insertan aquí (security definer) porque el cliente aún no tiene sesión cuando
+  -- el email de confirmación está pendiente, y por lo tanto no puede pasar la RLS.
+  insert into public.profiles (id, email, name, role)
+  values (new.id, new.email, new.raw_user_meta_data->>'name', new.raw_user_meta_data->>'role')
+  on conflict (id) do update set
+    email = excluded.email,
+    name = coalesce(excluded.name, public.profiles.name),
+    role = coalesce(excluded.role, public.profiles.role);
   return new;
 end;
 $$ language plpgsql security definer;

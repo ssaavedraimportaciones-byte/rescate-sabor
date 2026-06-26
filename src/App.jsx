@@ -3,6 +3,7 @@ import { supabase } from './lib/supabase'
 import SplashScreen from './components/SplashScreen'
 import LandingPage from './components/LandingPage'
 import Auth from './components/Auth'
+import ResetPassword from './components/ResetPassword'
 import BuyerDashboard from './components/BuyerDashboard'
 import SellerDashboard from './components/SellerDashboard'
 import AdminDashboard from './components/AdminDashboard'
@@ -13,6 +14,7 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
+  const [recovering, setRecovering] = useState(false)
   const initialSessionHandled = useRef(false)
 
   useEffect(() => {
@@ -43,7 +45,12 @@ export default function App() {
       setLoading(false)
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        setRecovering(true)
+        setLoading(false)
+        return
+      }
       // Skip the initial INITIAL_SESSION event — already handled above
       if (!initialSessionHandled.current) return
       setUser(session?.user ?? null)
@@ -85,6 +92,16 @@ export default function App() {
   }
 
   if (showSplash || loading) return <SplashScreen />
+
+  if (recovering) {
+    return <ResetPassword onDone={() => {
+      setRecovering(false)
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        setUser(session?.user ?? null)
+        if (session?.user) loadProfile(session.user.id)
+      })
+    }} />
+  }
 
   if (!user || !profile?.role) {
     if (showLanding) {
