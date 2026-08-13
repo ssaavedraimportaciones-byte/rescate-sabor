@@ -250,11 +250,12 @@ export default function Auth({ onAuth }) {
 
           <div>
             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">¿Cómo usarás la app?</label>
-            <div className="grid grid-cols-3 gap-2">
+            {/* Admin no es una opción de auto-registro: se otorga desde el panel de
+                administración o directamente en la base, nunca por el propio usuario. */}
+            <div className="grid grid-cols-2 gap-2">
               {[
                 { key: 'buyer', icon: '🛍️', title: 'Comprador', desc: 'Reservo bolsas', color: O, bg: '#fff3e0', border: O },
                 { key: 'seller', icon: '🏪', title: 'Vendedor', desc: 'Vendo excedentes', color: G, bg: '#f0fdf4', border: G },
-                { key: 'admin', icon: '⚙️', title: 'Admin', desc: 'Gestión total', color: '#7c3aed', bg: '#f5f3ff', border: '#7c3aed' },
               ].map(({ key, icon, title, desc, color, bg, border }) => (
                 <button key={key} onClick={() => setRole(key)}
                   className="border-2 rounded-2xl p-4 text-center transition-all hover:scale-[1.02]"

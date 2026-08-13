@@ -70,13 +70,39 @@ alter table public.bags enable row level security;
 alter table public.reservations enable row level security;
 
 -- Profiles policies
-create policy "Authenticated users can view profiles"
+-- SEGURIDAD: antes cualquier usuario autenticado podía leer la tabla completa
+-- (todos los emails y roles de todos los usuarios). Se reemplaza por acceso
+-- acotado a lo que cada rol realmente necesita ver.
+create policy "Users can view their own profile"
   on public.profiles for select
-  using (auth.role() = 'authenticated');
+  using (auth.uid() = id);
 
+-- El vendedor necesita ver nombre/email de compradores que reservaron en su tienda
+-- (para saber a quién entregar la bolsa).
+create policy "Sellers can view profiles of their buyers"
+  on public.profiles for select
+  using (
+    exists (
+      select 1 from public.reservations r
+      join public.stores s on s.id = r.store_id
+      where r.buyer_id = public.profiles.id and s.seller_id = auth.uid()
+    )
+  );
+
+create policy "Admins can view all profiles"
+  on public.profiles for select
+  using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
+
+-- Un usuario puede editar su propio perfil (nombre/email). El campo role queda
+-- protegido aparte por el trigger enforce_role_immutable — esta política por sí
+-- sola NO evita que alguien intente poner role='admin' en el mismo UPDATE.
 create policy "Users can update their own profile"
   on public.profiles for update
   using (auth.uid() = id);
+
+create policy "Admins can update all profiles"
+  on public.profiles for update
+  using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
 
 create policy "Users can insert their own profile"
   on public.profiles for insert
@@ -126,34 +152,35 @@ create policy "Buyers can view their own reservations"
   on public.reservations for select
   using (buyer_id = auth.uid());
 
+create policy "Admins can view all reservations"
+  on public.reservations for select
+  using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
+
 create policy "Sellers can view reservations for their stores"
   on public.reservations for select
   using (
     exists (select 1 from public.stores where id = store_id and seller_id = auth.uid())
   );
 
-create policy "Buyers can create reservations"
-  on public.reservations for insert
-  with check (
-    buyer_id = auth.uid() and
-    exists (select 1 from public.profiles where id = auth.uid() and role = 'buyer')
-  );
+-- No hay política de INSERT directo para reservas: TODAS deben pasar por la función
+-- reserve_bag() (security definer, con lock). Un insert directo vía API dejaría el
+-- stock sin descontar, permitiendo sobreventa — por eso se cierra ese camino.
 
--- Sellers can only update status field, and only to valid transitions
+-- El vendedor puede avanzar el estado de reservas de SUS tiendas (pending→confirmed→
+-- delivered), pero NO a 'cancelled' por esta vía: cancelar debe pasar por
+-- seller_cancel_reservation() para que el stock se restaure de forma atómica.
 create policy "Sellers can update reservation status"
   on public.reservations for update
   using (
     exists (select 1 from public.stores where id = store_id and seller_id = auth.uid())
   )
   with check (
-    -- Only allow valid status transitions (no changing buyer_id, bag_id, etc.)
+    status in ('confirmed', 'delivered') and
     exists (select 1 from public.stores where id = store_id and seller_id = auth.uid())
   );
 
-create policy "Buyers can cancel their own pending reservations"
-  on public.reservations for update
-  using (buyer_id = auth.uid() and status = 'pending')
-  with check (status = 'cancelled');
+-- Igual para el comprador: cancelar una reserva propia debe pasar por
+-- cancel_reservation() para que el stock se restaure. No se expone UPDATE directo.
 
 -- =====================
 -- TRIGGER: auto-create profile on signup
@@ -161,16 +188,24 @@ create policy "Buyers can cancel their own pending reservations"
 
 create or replace function public.handle_new_user()
 returns trigger as $$
+declare
+  v_role text := new.raw_user_meta_data->>'role';
 begin
   -- name/role vienen del metadata pasado en signUp({ options: { data: { name, role } } }).
   -- Se insertan aquí (security definer) porque el cliente aún no tiene sesión cuando
   -- el email de confirmación está pendiente, y por lo tanto no puede pasar la RLS.
+  -- SEGURIDAD: el registro público solo puede crear 'buyer' o 'seller'. Cualquier otro
+  -- valor (incluido 'admin') se descarta y cae a 'buyer'. 'admin' solo se otorga desde
+  -- la base o por otro admin autenticado (ver enforce_role_immutable más abajo).
+  if v_role not in ('buyer', 'seller') then
+    v_role := 'buyer';
+  end if;
   insert into public.profiles (id, email, name, role)
-  values (new.id, new.email, new.raw_user_meta_data->>'name', new.raw_user_meta_data->>'role')
+  values (new.id, new.email, new.raw_user_meta_data->>'name', v_role)
   on conflict (id) do update set
     email = excluded.email,
     name = coalesce(excluded.name, public.profiles.name),
-    role = coalesce(excluded.role, public.profiles.role);
+    role = coalesce(public.profiles.role, excluded.role);
   return new;
 end;
 $$ language plpgsql security definer;
@@ -179,6 +214,30 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- SEGURIDAD: impide que un usuario cambie su propio rol (escalada de privilegios).
+-- La política "Users can update their own profile" permite editar nombre/email, pero
+-- si alguien intenta modificar 'role' sin ser admin, este trigger revierte el cambio
+-- silenciosamente. auth.uid() es NULL en el editor SQL / contexto service_role
+-- (confiable), así que ahí sí se permite — necesario para el bootstrap del primer admin.
+create or replace function public.enforce_role_immutable()
+returns trigger as $$
+begin
+  if new.role is distinct from old.role then
+    if auth.uid() is not null and not exists (
+      select 1 from public.profiles where id = auth.uid() and role = 'admin'
+    ) then
+      new.role := old.role;
+    end if;
+  end if;
+  return new;
+end;
+$$ language plpgsql security definer;
+
+drop trigger if exists trg_enforce_role_immutable on public.profiles;
+create trigger trg_enforce_role_immutable
+  before update on public.profiles
+  for each row execute procedure public.enforce_role_immutable();
 
 -- =====================
 -- FUNCTIONS (security definer — operaciones atómicas que bypass RLS)
