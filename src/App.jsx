@@ -11,6 +11,7 @@ import AdminDashboard from './components/AdminDashboard'
 export default function App() {
   const [showSplash, setShowSplash] = useState(true)
   const [showLanding, setShowLanding] = useState(false)
+  const [authIntent, setAuthIntent] = useState(null)
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
@@ -105,9 +106,20 @@ export default function App() {
 
   if (!user || !profile?.role) {
     if (showLanding) {
-      return <LandingPage onStart={() => setShowLanding(false)} />
+      // El botón de la landing dice para qué viene la persona (comprar o
+      // vender): eso decide si abre login o registro, y con qué rol elegido.
+      return <LandingPage onStart={(intent) => {
+        setAuthIntent(intent || null)
+        setShowLanding(false)
+      }} />
     }
-    return <Auth onAuth={(p) => setProfile(p)} />
+    return (
+      <Auth
+        onAuth={(p) => setProfile(p)}
+        initialMode={authIntent ? 'register' : 'login'}
+        initialRole={authIntent === 'seller' ? 'seller' : authIntent === 'buyer' ? 'buyer' : ''}
+      />
+    )
   }
 
   if (profile.role === 'admin') {

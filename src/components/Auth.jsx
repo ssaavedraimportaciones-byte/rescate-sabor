@@ -113,14 +113,17 @@ function Btn({ onClick, disabled, loading, children, style }) {
 }
 
 /* ━━━ COMPONENTE PRINCIPAL ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-export default function Auth({ onAuth }) {
-  const [mode, setMode] = useState('login')
+export default function Auth({ onAuth, initialMode = 'login', initialRole = '' }) {
+  // La landing tiene botones como "Registrar mi negocio" o "Crear mi cuenta":
+  // deben abrir el registro con ese rol ya elegido, no la pantalla de login
+  // genérica dejando que la persona adivine cómo llegar.
+  const [mode, setMode] = useState(initialMode)
   const [step, setStep] = useState(1)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPw, setShowPw] = useState(false)
   const [name, setName] = useState('')
-  const [role, setRole] = useState('')
+  const [role, setRole] = useState(initialRole)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [confirmationSent, setConfirmationSent] = useState(false)

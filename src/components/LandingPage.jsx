@@ -132,17 +132,17 @@ export default function LandingPage({ onStart }) {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              onClick={onStart}
+              onClick={() => onStart('buyer')}
               className="animate-pulse-glow bg-white font-black text-lg px-10 py-4 rounded-2xl shadow-xl transition-all active:scale-95 hover:shadow-2xl"
               style={{ color: G }}
             >
               Comenzar gratis →
             </button>
-            <a href="#negocios"
+            <button onClick={() => onStart('seller')}
               className="border-2 border-white/40 text-white font-semibold text-lg px-8 py-4 rounded-2xl transition-all hover:bg-white/10 hover:border-white/60"
             >
               Soy un negocio
-            </a>
+            </button>
           </div>
           <p className="mt-5 text-green-100/50 text-sm">Sin tarjeta de crédito · Registro en 30 segundos</p>
         </div>
@@ -230,7 +230,7 @@ export default function LandingPage({ onStart }) {
 
           <div className="text-center mt-14">
             <button
-              onClick={onStart}
+              onClick={() => onStart('buyer')}
               className="font-bold text-lg px-10 py-4 rounded-2xl text-white shadow-lg transition-all active:scale-95 hover:shadow-xl"
               style={{ background: CTA_GRADIENT }}
             >
@@ -276,7 +276,7 @@ export default function LandingPage({ onStart }) {
                   </li>
                 ))}
               </ul>
-              <button onClick={onStart}
+              <button onClick={() => onStart('seller')}
                 className="mt-8 w-full py-4 rounded-xl text-white font-bold text-lg transition-all active:scale-95 hover:opacity-90 shadow-md"
                 style={{ background: `linear-gradient(90deg, ${G}, ${GM})` }}>
                 Registrar mi negocio →
@@ -307,7 +307,7 @@ export default function LandingPage({ onStart }) {
                   </li>
                 ))}
               </ul>
-              <button onClick={onStart}
+              <button onClick={() => onStart('buyer')}
                 className="mt-8 w-full py-4 rounded-xl text-white font-bold text-lg transition-all active:scale-95 hover:opacity-90 shadow-md"
                 style={{ background: `linear-gradient(90deg, ${O}, #e65100)` }}>
                 Crear mi cuenta →
@@ -442,14 +442,14 @@ export default function LandingPage({ onStart }) {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              onClick={onStart}
+              onClick={() => onStart('buyer')}
               className="animate-pulse-glow bg-white font-black text-xl px-14 py-5 rounded-2xl shadow-2xl transition-all active:scale-95"
               style={{ color: G }}
             >
               Crear cuenta gratis
             </button>
             <button
-              onClick={onStart}
+              onClick={() => onStart('seller')}
               className="border-2 border-white/40 text-white font-bold text-xl px-10 py-5 rounded-2xl transition-all hover:bg-white/10"
             >
               Registrar mi negocio
