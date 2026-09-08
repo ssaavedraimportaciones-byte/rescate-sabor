@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase'
 import Header from './Header'
 import BagCard from './BagCard'
 import ReservationTicket from './ReservationTicket'
+import { ShoppingBag, Ticket, Search, PackageOpen } from 'lucide-react'
 
 function SkeletonCard() {
   return (
@@ -155,7 +156,7 @@ export default function BuyerDashboard({ user, profile }) {
               tab === 'browse' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500'
             }`}
           >
-            🛍️ Bolsas disponibles
+            <ShoppingBag className="w-4 h-4 inline -mt-0.5 mr-1.5" strokeWidth={2} />Bolsas disponibles
           </button>
           <button
             onClick={() => setTab('reservations')}
@@ -163,7 +164,7 @@ export default function BuyerDashboard({ user, profile }) {
               tab === 'reservations' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500'
             }`}
           >
-            🎫 Mis reservas
+            <Ticket className="w-4 h-4 inline -mt-0.5 mr-1.5" strokeWidth={2} />Mis reservas
             {pendingCount > 0 && (
               <span className="ml-1 bg-orange-500 text-white text-xs rounded-full px-1.5 py-0.5">
                 {pendingCount}
@@ -216,7 +217,11 @@ export default function BuyerDashboard({ user, profile }) {
             </div>
           ) : filteredBags.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-5xl mb-3">{search ? '🔍' : '🥡'}</div>
+              <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                {search
+                  ? <Search className="w-7 h-7 text-gray-400" strokeWidth={1.8} />
+                  : <PackageOpen className="w-7 h-7 text-gray-400" strokeWidth={1.8} />}
+              </div>
               <p className="text-gray-500 font-medium">
                 {search ? `Sin resultados para "${search}"` : 'No hay bolsas disponibles'}
               </p>
@@ -253,7 +258,9 @@ export default function BuyerDashboard({ user, profile }) {
         ) : (
           reservations.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-5xl mb-3">🎫</div>
+              <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                <Ticket className="w-7 h-7 text-gray-400" strokeWidth={1.8} />
+              </div>
               <p className="text-gray-500 font-medium">Sin reservas todavía</p>
               <p className="text-gray-400 text-sm mt-1">¡Reserva tu primera bolsa!</p>
             </div>

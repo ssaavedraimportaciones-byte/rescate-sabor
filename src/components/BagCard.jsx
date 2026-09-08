@@ -1,4 +1,5 @@
 import { HEADER_GRADIENT } from '../lib/brand'
+import { Clock, MapPin, Check } from 'lucide-react'
 
 function clp(amount) {
   return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(amount)
@@ -36,13 +37,13 @@ export default function BagCard({ bag, onReserve, reserved, loading }) {
         </div>
         {bag.pickup_start && bag.pickup_end && (
           <div className="flex items-center gap-1.5 text-sm text-gray-600 mb-2">
-            <span>🕒</span>
+            <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" strokeWidth={2} />
             <span>Retiro: <strong>{bag.pickup_start}</strong> – <strong>{bag.pickup_end}</strong></span>
           </div>
         )}
         {bag.stores?.address && (
           <div className="flex items-center gap-1.5 text-sm text-gray-600 mb-3">
-            <span>📍</span>
+            <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" strokeWidth={2} />
             <span>{bag.stores.address}</span>
           </div>
         )}
@@ -52,7 +53,7 @@ export default function BagCard({ bag, onReserve, reserved, loading }) {
           </span>
           {reserved ? (
             <span className="bg-green-100 text-green-700 text-sm font-semibold px-4 py-2 rounded-xl">
-              ✅ Reservado
+              <Check className="w-4 h-4 inline -mt-0.5 mr-1" strokeWidth={3} />Reservado
             </span>
           ) : (
             <button

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import Header from './Header'
+import { Users, Store, Package, ClipboardList, MapPin } from 'lucide-react'
 
 function clp(n) {
   return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(n)
@@ -94,7 +95,7 @@ export default function AdminDashboard({ user, profile }) {
               key={t}
               onClick={() => { setTab(t); setSearch('') }}
               className={`flex-1 min-w-[80px] py-2 px-3 rounded-xl text-sm font-semibold transition-all ${
-                tab === t ? 'bg-purple-600 text-white shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                tab === t ? 'bg-green-700 text-white shadow-sm' : 'text-gray-500 hover:text-gray-700'
               }`}
             >
               {t}
@@ -104,7 +105,7 @@ export default function AdminDashboard({ user, profile }) {
 
         {loading ? (
           <div className="flex justify-center py-16">
-            <div className="w-8 h-8 border-3 border-purple-600 border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-3 border-green-700 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
           <>
@@ -113,13 +114,13 @@ export default function AdminDashboard({ user, profile }) {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { label: 'Usuarios', value: stats.users, icon: '👥', color: 'bg-blue-50 border-blue-200', text: 'text-blue-700' },
-                    { label: 'Tiendas', value: stats.stores, icon: '🏪', color: 'bg-green-50 border-green-200', text: 'text-green-700' },
-                    { label: 'Bolsas', value: stats.bags, icon: '🥡', color: 'bg-orange-50 border-orange-200', text: 'text-orange-700' },
-                    { label: 'Reservas', value: stats.reservations, icon: '📋', color: 'bg-purple-50 border-purple-200', text: 'text-purple-700' },
-                  ].map(({ label, value, icon, color, text }) => (
+                    { label: 'Usuarios', value: stats.users, Icon: Users, color: 'bg-blue-50 border-blue-200', text: 'text-blue-700' },
+                    { label: 'Tiendas', value: stats.stores, Icon: Store, color: 'bg-green-50 border-green-200', text: 'text-green-700' },
+                    { label: 'Bolsas', value: stats.bags, Icon: Package, color: 'bg-orange-50 border-orange-200', text: 'text-orange-700' },
+                    { label: 'Reservas', value: stats.reservations, Icon: ClipboardList, color: 'bg-purple-50 border-purple-200', text: 'text-purple-700' },
+                  ].map(({ label, value, Icon, color, text }) => (
                     <div key={label} className={`${color} border rounded-2xl p-5`}>
-                      <div className="text-2xl mb-2">{icon}</div>
+                      <Icon className={`w-6 h-6 mb-2 ${text}`} strokeWidth={2} />
                       <div className={`text-3xl font-black ${text}`}>{value}</div>
                       <div className="text-sm text-gray-500 mt-1">{label}</div>
                     </div>
@@ -155,7 +156,7 @@ export default function AdminDashboard({ user, profile }) {
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     placeholder="Buscar por nombre o email..."
-                    className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
                   />
                 </div>
                 <div className="divide-y divide-gray-100">
@@ -192,18 +193,20 @@ export default function AdminDashboard({ user, profile }) {
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     placeholder="Buscar tienda..."
-                    className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
                   />
                 </div>
                 <div className="divide-y divide-gray-100">
                   {filteredStores.map(s => (
                     <div key={s.id} className="px-4 py-3">
                       <div className="flex items-center justify-between">
-                        <p className="text-sm font-semibold text-gray-800">🏪 {s.name}</p>
+                        <p className="text-sm font-semibold text-gray-800 flex items-center gap-1.5">
+                          <Store className="w-4 h-4 text-gray-400" strokeWidth={2} />{s.name}
+                        </p>
                         <p className="text-xs text-gray-400">{new Date(s.created_at).toLocaleDateString('es-CL')}</p>
                       </div>
                       <p className="text-xs text-gray-500 mt-0.5">{s.description || '—'}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">📍 {s.address || 'Sin dirección'} · Vendedor: {s.profiles?.name || s.profiles?.email || '—'}</p>
+                      <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" strokeWidth={2} />{s.address || 'Sin dirección'} · Vendedor: {s.profiles?.name || s.profiles?.email || '—'}</p>
                     </div>
                   ))}
                   {filteredStores.length === 0 && (
@@ -221,7 +224,7 @@ export default function AdminDashboard({ user, profile }) {
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     placeholder="Buscar por cliente o tienda..."
-                    className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-600"
                   />
                 </div>
                 <div className="divide-y divide-gray-100">

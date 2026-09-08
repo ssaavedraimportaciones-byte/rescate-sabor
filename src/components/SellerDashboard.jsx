@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 import Header from './Header'
+import {
+  Store, Trash2, ClipboardList, Package, BarChart3, Check, X, Clock,
+  Pencil, MapPin, Wallet, Boxes, Recycle, Plus,
+} from 'lucide-react'
 
 function clp(amount) {
   return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(amount)
@@ -340,7 +344,9 @@ export default function SellerDashboard({ user, profile }) {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
           <div className="text-center mb-6">
-            <div className="text-5xl mb-3">🏪</div>
+            <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+            <Store className="w-7 h-7 text-gray-400" strokeWidth={1.8} />
+          </div>
             <h2 className="text-2xl font-bold text-gray-900">Crea tu tienda</h2>
             <p className="text-gray-500 mt-1">Configura tu perfil de vendedor</p>
           </div>
@@ -453,7 +459,9 @@ export default function SellerDashboard({ user, profile }) {
       {confirmDeleteId && (
         <div className="fixed inset-0 bg-black/40 z-40 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm text-center">
-            <div className="text-4xl mb-3">🗑️</div>
+            <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+            <Trash2 className="w-7 h-7 text-gray-400" strokeWidth={1.8} />
+          </div>
             <h2 className="text-lg font-bold text-gray-900 mb-2">¿Eliminar bolsa?</h2>
             <p className="text-gray-500 text-sm mb-5">Esta acción no se puede deshacer.</p>
             <div className="flex gap-2">
@@ -482,7 +490,7 @@ export default function SellerDashboard({ user, profile }) {
               tab === 'reservations' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500'
             }`}
           >
-            📋 Reservas
+            <ClipboardList className="w-4 h-4 inline -mt-0.5 mr-1.5" strokeWidth={2} />Reservas
             {pendingCount > 0 && (
               <span className="ml-1 bg-green-500 text-white text-xs rounded-full px-1.5 py-0.5">
                 {pendingCount}
@@ -495,7 +503,7 @@ export default function SellerDashboard({ user, profile }) {
               tab === 'bags' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500'
             }`}
           >
-            🥡 Mis bolsas
+            <Package className="w-4 h-4 inline -mt-0.5 mr-1.5" strokeWidth={2} />Mis bolsas
           </button>
           <button
             onClick={() => setTab('stats')}
@@ -503,7 +511,7 @@ export default function SellerDashboard({ user, profile }) {
               tab === 'stats' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500'
             }`}
           >
-            📊 Stats
+            <BarChart3 className="w-4 h-4 inline -mt-0.5 mr-1.5" strokeWidth={2} />Stats
           </button>
         </div>
       </div>
@@ -514,7 +522,9 @@ export default function SellerDashboard({ user, profile }) {
         {tab === 'reservations' && (
           reservations.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-5xl mb-3">📋</div>
+              <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+            <ClipboardList className="w-7 h-7 text-gray-400" strokeWidth={1.8} />
+          </div>
               <p className="text-gray-500 font-medium">Sin reservas todavía</p>
               <p className="text-gray-400 text-sm mt-1">Aparecerán aquí en tiempo real</p>
             </div>
@@ -543,7 +553,7 @@ export default function SellerDashboard({ user, profile }) {
                       <>
                         <button
                           onClick={() => handleUpdateStatus(reservation.id, 'confirmed')}
-                          className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 rounded-xl transition-colors"
+                          className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold py-2 rounded-xl transition-colors"
                         >
                           Confirmar
                         </button>
@@ -560,12 +570,14 @@ export default function SellerDashboard({ user, profile }) {
                         onClick={() => handleUpdateStatus(reservation.id, 'delivered')}
                         className="flex-1 bg-green-500 hover:bg-green-600 text-white text-sm py-2 rounded-xl transition-colors"
                       >
-                        ✅ Marcar como entregado
+                        <Check className="w-4 h-4 inline -mt-0.5 mr-1.5" strokeWidth={3} />Marcar como entregado
                       </button>
                     )}
                     {(reservation.status === 'delivered' || reservation.status === 'cancelled') && (
                       <span className="text-gray-400 text-sm py-2 text-center flex-1">
-                        {reservation.status === 'delivered' ? '✅ Completado' : '❌ Cancelado'}
+                        {reservation.status === 'delivered'
+                          ? <><Check className="w-4 h-4 inline -mt-0.5 mr-1" strokeWidth={3} />Completado</>
+                          : <><X className="w-4 h-4 inline -mt-0.5 mr-1" strokeWidth={3} />Cancelado</>}
                       </span>
                     )}
                   </div>
@@ -582,7 +594,9 @@ export default function SellerDashboard({ user, profile }) {
               onClick={() => { setShowAddBag(!showAddBag); setNewBag(EMPTY_BAG) }}
               className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition-colors mb-4"
             >
-              {showAddBag ? '✕ Cancelar' : '+ Agregar bolsa'}
+              {showAddBag
+              ? <><X className="w-4 h-4 inline -mt-0.5 mr-1.5" strokeWidth={2.5} />Cancelar</>
+              : <><Plus className="w-4 h-4 inline -mt-0.5 mr-1.5" strokeWidth={2.5} />Agregar bolsa</>}
             </button>
 
             {showAddBag && (
@@ -600,7 +614,9 @@ export default function SellerDashboard({ user, profile }) {
 
             {bags.length === 0 ? (
               <div className="text-center py-12">
-                <div className="text-5xl mb-3">🥡</div>
+                <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+            <Package className="w-7 h-7 text-gray-400" strokeWidth={1.8} />
+          </div>
                 <p className="text-gray-500 font-medium">Sin bolsas publicadas</p>
                 <p className="text-gray-400 text-sm mt-1">Agrega tu primera bolsa arriba</p>
               </div>
@@ -634,7 +650,7 @@ export default function SellerDashboard({ user, profile }) {
                               <p className="text-gray-500 text-sm mt-1 truncate">{bag.description}</p>
                             )}
                             {bag.pickup_start && bag.pickup_end && (
-                              <p className="text-gray-400 text-xs mt-1">🕒 {bag.pickup_start} – {bag.pickup_end}</p>
+                              <p className="text-gray-400 text-xs mt-1 flex items-center gap-1"><Clock className="w-3 h-3" strokeWidth={2} />{bag.pickup_start} – {bag.pickup_end}</p>
                             )}
                           </div>
                           <button
@@ -643,7 +659,9 @@ export default function SellerDashboard({ user, profile }) {
                               bag.available ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
                             }`}
                           >
-                            {bag.available ? '✓ Activa' : '✕ Inactiva'}
+                            {bag.available
+                          ? <><Check className="w-3 h-3 inline -mt-0.5 mr-1" strokeWidth={3} />Activa</>
+                          : <><X className="w-3 h-3 inline -mt-0.5 mr-1" strokeWidth={3} />Inactiva</>}
                           </button>
                         </div>
                         <div className="flex gap-2 mt-3 pt-3 border-t border-gray-100">
@@ -662,13 +680,13 @@ export default function SellerDashboard({ user, profile }) {
                             }}
                             className="flex-1 text-sm text-blue-600 font-medium py-1.5 border border-blue-100 hover:border-blue-300 rounded-xl transition-colors"
                           >
-                            ✏️ Editar
+                            <Pencil className="w-3.5 h-3.5 inline -mt-0.5 mr-1.5" strokeWidth={2} />Editar
                           </button>
                           <button
                             onClick={() => setConfirmDeleteId(bag.id)}
                             className="flex-1 text-sm text-red-500 font-medium py-1.5 border border-red-100 hover:border-red-300 rounded-xl transition-colors"
                           >
-                            🗑️ Eliminar
+                            <Trash2 className="w-3.5 h-3.5 inline -mt-0.5 mr-1.5" strokeWidth={2} />Eliminar
                           </button>
                         </div>
                       </div>
@@ -688,14 +706,14 @@ export default function SellerDashboard({ user, profile }) {
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="font-bold text-gray-900 text-lg">{store.name}</h2>
-                  {store.address && <p className="text-gray-500 text-sm mt-0.5">📍 {store.address}</p>}
+                  {store.address && <p className="text-gray-500 text-sm mt-0.5 flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 flex-shrink-0" strokeWidth={2} />{store.address}</p>}
                   {store.description && <p className="text-gray-500 text-sm mt-1">{store.description}</p>}
                 </div>
                 <button
                   onClick={openEditStore}
                   className="text-sm text-blue-600 font-medium px-3 py-1.5 border border-blue-100 hover:border-blue-300 rounded-xl transition-colors shrink-0"
                 >
-                  ✏️ Editar
+                  <Pencil className="w-3.5 h-3.5 inline -mt-0.5 mr-1.5" strokeWidth={2} />Editar
                 </button>
               </div>
             </div>
@@ -703,18 +721,18 @@ export default function SellerDashboard({ user, profile }) {
             {/* Métricas financieras principales */}
             <div className="grid grid-cols-1 gap-3">
               <div className="bg-green-50 border border-green-200 rounded-2xl p-4">
-                <p className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-1">💰 Ingresos recuperados</p>
+                <p className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-1 flex items-center gap-1.5"><Wallet className="w-3.5 h-3.5" strokeWidth={2} />Ingresos recuperados</p>
                 <p className="text-3xl font-black text-green-700">{clp(deliveredRevenue)}</p>
                 <p className="text-xs text-green-600 mt-1">Dinero recibido por bolsas entregadas</p>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
-                  <p className="text-xs font-semibold text-blue-700 uppercase tracking-wide mb-1">📦 Valor original</p>
+                  <p className="text-xs font-semibold text-blue-700 uppercase tracking-wide mb-1 flex items-center gap-1.5"><Boxes className="w-3.5 h-3.5" strokeWidth={2} />Valor original</p>
                   <p className="text-2xl font-black text-blue-700">{clp(originalValueDelivered)}</p>
                   <p className="text-xs text-blue-500 mt-1">Precio de lista rescatado</p>
                 </div>
                 <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4">
-                  <p className="text-xs font-semibold text-orange-700 uppercase tracking-wide mb-1">♻️ Pérdida evitada</p>
+                  <p className="text-xs font-semibold text-orange-700 uppercase tracking-wide mb-1 flex items-center gap-1.5"><Recycle className="w-3.5 h-3.5" strokeWidth={2} />Pérdida evitada</p>
                   <p className="text-2xl font-black text-orange-700">{clp(savedFromWaste)}</p>
                   <p className="text-xs text-orange-500 mt-1">Ahorro vs. tirar la comida</p>
                 </div>

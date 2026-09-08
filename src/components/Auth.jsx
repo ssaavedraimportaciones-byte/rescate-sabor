@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { LogoMark } from './Logo'
+import { Mail, KeyRound, ShoppingBag, Store, Check, AlertTriangle } from 'lucide-react'
 import { SURFACE_GRADIENT, HEADER_GRADIENT, CTA_GRADIENT } from '../lib/brand'
 
 const G = '#1b7a30'
@@ -192,7 +193,9 @@ export default function Auth({ onAuth }) {
     <Screen>
       <Card title="Revisa tu correo">
         <div className="text-center py-4">
-          <div className="w-20 h-20 rounded-full bg-orange-50 flex items-center justify-center text-4xl mx-auto mb-4">📧</div>
+          <div className="w-20 h-20 rounded-full bg-orange-50 flex items-center justify-center mx-auto mb-4">
+            <Mail className="w-9 h-9" style={{ color: O }} strokeWidth={1.75} />
+          </div>
           <p className="text-gray-500 text-sm leading-relaxed">
             Enviamos un enlace de confirmación a<br />
             <strong className="text-gray-900">{email}</strong>
@@ -210,7 +213,9 @@ export default function Auth({ onAuth }) {
     <Screen>
       <Card title="Revisa tu correo">
         <div className="text-center py-4">
-          <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center text-4xl mx-auto mb-4">🔑</div>
+          <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
+            <KeyRound className="w-9 h-9" style={{ color: G }} strokeWidth={1.75} />
+          </div>
           <p className="text-gray-500 text-sm leading-relaxed">
             Enviamos un enlace para restablecer tu contraseña a<br />
             <strong className="text-gray-900">{email}</strong>
@@ -256,9 +261,9 @@ export default function Auth({ onAuth }) {
                 administración o directamente en la base, nunca por el propio usuario. */}
             <div className="grid grid-cols-2 gap-2">
               {[
-                { key: 'buyer', icon: '🛍️', title: 'Comprador', desc: 'Reservo bolsas', color: O, bg: '#fff3e0', border: O },
-                { key: 'seller', icon: '🏪', title: 'Vendedor', desc: 'Vendo excedentes', color: G, bg: '#f0fdf4', border: G },
-              ].map(({ key, icon, title, desc, color, bg, border }) => (
+                { key: 'buyer', Icon: ShoppingBag, title: 'Comprador', desc: 'Reservo bolsas', color: O, bg: '#fff3e0', border: O },
+                { key: 'seller', Icon: Store, title: 'Vendedor', desc: 'Vendo excedentes', color: G, bg: '#f0fdf4', border: G },
+              ].map(({ key, Icon, title, desc, color, bg, border }) => (
                 <button key={key} onClick={() => setRole(key)}
                   className="border-2 rounded-2xl p-4 text-center transition-all hover:scale-[1.02]"
                   style={{
@@ -266,11 +271,15 @@ export default function Auth({ onAuth }) {
                     background: role === key ? bg : '#fff',
                     boxShadow: role === key ? `0 0 0 3px ${border}20` : 'none',
                   }}>
-                  <div className="text-3xl mb-1.5">{icon}</div>
+                  <div className="flex justify-center mb-2">
+                    <Icon className="w-7 h-7" style={{ color: role === key ? border : '#9ca3af' }} strokeWidth={1.9} />
+                  </div>
                   <div className="font-bold text-gray-900 text-sm">{title}</div>
                   <div className="text-xs text-gray-400 mt-0.5">{desc}</div>
                   {role === key && (
-                    <div className="mt-2 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs mx-auto" style={{ background: border }}>✓</div>
+                    <div className="mt-2 w-5 h-5 rounded-full flex items-center justify-center mx-auto" style={{ background: border }}>
+                      <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                    </div>
                   )}
                 </button>
               ))}
@@ -309,7 +318,7 @@ export default function Auth({ onAuth }) {
                 ))}
               </div>
               <p className="text-xs text-gray-400">
-                {password.length < 6 ? 'Muy corta' : password.length < 8 ? 'Aceptable' : 'Segura ✓'}
+                {password.length < 6 ? 'Muy corta' : password.length < 8 ? 'Aceptable' : 'Segura'}
               </p>
             </div>
           )}
@@ -339,7 +348,7 @@ export default function Auth({ onAuth }) {
         <div className="space-y-4">
           {error && (
             <div className="bg-red-50 text-red-600 rounded-xl px-4 py-3 text-sm border border-red-100 flex items-center gap-2">
-              <span>⚠️</span>{error}
+              <AlertTriangle className="w-4 h-4 flex-shrink-0" strokeWidth={2} />{error}
             </div>
           )}
           <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="tu@email.com" />

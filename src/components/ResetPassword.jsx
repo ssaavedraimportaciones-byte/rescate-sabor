@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { LogoMark } from './Logo'
 import { SURFACE_GRADIENT, HEADER_GRADIENT, CTA_GRADIENT } from '../lib/brand'
+import { Eye, EyeOff } from 'lucide-react'
 
 const G = '#1b7a30'
 const GM = '#2d9d47'
@@ -51,7 +52,7 @@ export default function ResetPassword({ onDone }) {
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 pr-10 text-sm bg-gray-50 focus:bg-white focus:ring-2 focus:border-transparent transition-all"
               />
               <button type="button" onClick={() => setShowPw(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1">
-                {showPw ? '🙈' : '👁️'}
+                {showPw ? <EyeOff className="w-4 h-4" strokeWidth={2} /> : <Eye className="w-4 h-4" strokeWidth={2} />}
               </button>
             </div>
           </div>

@@ -1,8 +1,10 @@
+import { Hourglass, CheckCircle2, PartyPopper, XCircle } from 'lucide-react'
+
 const STATUS_CONFIG = {
-  pending: { label: 'Pendiente', color: 'bg-yellow-100 text-yellow-800 border border-yellow-200', icon: '⏳' },
-  confirmed: { label: 'Confirmado', color: 'bg-blue-100 text-blue-800 border border-blue-200', icon: '✅' },
-  delivered: { label: 'Entregado', color: 'bg-green-100 text-green-800 border border-green-200', icon: '🎉' },
-  cancelled: { label: 'Cancelado', color: 'bg-red-100 text-red-700 border border-red-200', icon: '❌' },
+  pending: { label: 'Pendiente', color: 'bg-yellow-100 text-yellow-800 border border-yellow-200', Icon: Hourglass },
+  confirmed: { label: 'Confirmado', color: 'bg-blue-100 text-blue-800 border border-blue-200', Icon: CheckCircle2 },
+  delivered: { label: 'Entregado', color: 'bg-green-100 text-green-800 border border-green-200', Icon: PartyPopper },
+  cancelled: { label: 'Cancelado', color: 'bg-red-100 text-red-700 border border-red-200', Icon: XCircle },
 }
 
 function clp(amount) {
@@ -23,8 +25,9 @@ export default function ReservationTicket({ reservation, onCancel }) {
             <h3 className="font-bold text-gray-900 text-base">{reservation.bags?.title}</h3>
             <p className="text-gray-600 text-sm mt-0.5">{reservation.bags?.stores?.name}</p>
           </div>
-          <span className={`text-xs font-semibold px-2.5 py-1 rounded-full shrink-0 ${status.color}`}>
-            {status.icon} {status.label}
+          <span className={`text-xs font-semibold px-2.5 py-1 rounded-full shrink-0 inline-flex items-center gap-1.5 ${status.color}`}>
+            <status.Icon className="w-3.5 h-3.5" strokeWidth={2.5} />
+            {status.label}
           </span>
         </div>
       </div>
