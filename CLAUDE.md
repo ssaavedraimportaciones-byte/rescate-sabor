@@ -16,6 +16,12 @@ Conecta vendedores con excedente de comida con compradores que quieren bolsas so
 - `npm run dev` — Servidor de desarrollo (puerto 3000)
 - `npm run build` — Build de producción
 - `npm run preview` — Vista previa del build
+- `npm run db` — Ejecuta las migraciones SQL pendientes (necesita `DATABASE_URL`)
+- `npm run demo` — Crea las cuentas de prueba con tienda y bolsas (necesita `SUPABASE_SERVICE_ROLE_KEY`)
+- `npm run admin -- correo@ejemplo.cl` — Asigna el rol admin a una cuenta existente
+
+Enlaces directos a cada panel y los comandos equivalentes: ver `GESTION.md`.
+Requisitos y pasos para publicar en Google Play: ver `playstore/README.md`.
 
 ## Setup de Supabase
 1. Ejecutar `supabase/schema.sql` en el SQL Editor

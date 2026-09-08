@@ -228,12 +228,13 @@ detrás de un login, Google **obliga** a entregar credenciales de prueba en
 **Play Console → Contenido de la app → Acceso a la app**. Si no las das, el
 revisor solo ve la pantalla de login y rechaza por "no pudimos evaluar la app".
 
-Crea dos cuentas reales en producción y déjalas fijas:
+Crea las dos cuentas con `npm run demo` (ver `GESTION.md`), que además les deja
+una tienda con bolsas publicadas para que el revisor no vea la app vacía:
 
 | Rol | Correo sugerido | Para qué |
 |---|---|---|
-| Comprador | `demo.comprador@rescatesabor.cl` | Ver bolsas, reservar, ticket |
-| Vendedor | `demo.vendedor@rescatesabor.cl` | Publicar bolsas y gestionar reservas |
+| Comprador | `comprador@rescatesabor.cl` | Ver bolsas, reservar, ticket |
+| Vendedor | `vendedor@rescatesabor.cl` | Publicar bolsas y gestionar reservas |
 
 Importante para que la demo se vea bien:
 
@@ -249,12 +250,12 @@ En el campo de instrucciones de Play Console pega algo así:
 La app tiene dos tipos de usuario. Puede entrar con cualquiera de estas cuentas:
 
 COMPRADOR — ve bolsas disponibles y reserva
-Usuario: demo.comprador@rescatesabor.cl
-Clave: (la que definas)
+Usuario: comprador@rescatesabor.cl
+Clave: Demo1234!
 
 VENDEDOR — publica bolsas y gestiona reservas
-Usuario: demo.vendedor@rescatesabor.cl
-Clave: (la que definas)
+Usuario: vendedor@rescatesabor.cl
+Clave: Demo1234!
 
 No se requiere código SMS ni verificación adicional.
 El pago de las bolsas se realiza presencialmente en el local, la app no procesa pagos.
