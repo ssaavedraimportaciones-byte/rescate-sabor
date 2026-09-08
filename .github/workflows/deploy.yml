@@ -1,0 +1,40 @@
+name: Deploy a Vercel
+
+on:
+  push:
+    branches: [master, main, SSAAVEDRA, 'claude/**']
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      # (Antes había un paso aquí que forzaba mailer_autoconfirm=true en Supabase
+      # en cada push a producción. Se quita: pisaba en silencio cualquier
+      # configuración de confirmación de email hecha desde el dashboard, y
+      # dejaba sin efecto el flujo de "reenviar correo de confirmación" de la
+      # app, porque con auto-confirm nunca se dispara ese error. Si quieres
+      # confirmación automática, actívala a mano en Authentication > Providers
+      # — no debería depender de que alguien haga push.)
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_SUPABASE_URL: https://bogdnblwcdiydybnsqni.supabase.co
+          VITE_SUPABASE_ANON_KEY: sb_publishable_J1CE-n4ACpcziRylkTjCFw_EV0bASD_
+
+      - name: Deploy a Vercel
+        run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --yes
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

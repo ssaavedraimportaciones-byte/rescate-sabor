@@ -1,17 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 
+// Anon key is public by design — safe to include in frontend code
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+  || 'https://bogdnblwcdiydybnsqni.supabase.co'
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+  || 'sb_publishable_J1CE-n4ACpcziRylkTjCFw_EV0bASD_'
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error(
-    '[Rescate Sabor] Faltan variables de entorno.\n' +
-    'Copia .env.example → .env y agrega tus credenciales de Supabase.\n' +
-    'Variables requeridas: VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY'
-  )
-}
-
-export const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseAnonKey || 'placeholder'
-)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)

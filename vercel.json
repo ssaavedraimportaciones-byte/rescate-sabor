@@ -1,5 +1,24 @@
 {
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+        { "key": "Pragma", "value": "no-cache" }
+      ]
+    }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  ],
+  "env": {
+    "VITE_SUPABASE_URL": "https://bogdnblwcdiydybnsqni.supabase.co",
+    "VITE_SUPABASE_ANON_KEY": "sb_publishable_J1CE-n4ACpcziRylkTjCFw_EV0bASD_"
+  },
+  "build": {
+    "env": {
+      "VITE_SUPABASE_URL": "https://bogdnblwcdiydybnsqni.supabase.co",
+      "VITE_SUPABASE_ANON_KEY": "sb_publishable_J1CE-n4ACpcziRylkTjCFw_EV0bASD_"
+    }
+  }
 }

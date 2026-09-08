@@ -1,20 +1,23 @@
+import { HEADER_GRADIENT } from '../lib/brand'
+import { Clock, MapPin, Check } from 'lucide-react'
+
 function clp(amount) {
   return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(amount)
 }
 
 export default function BagCard({ bag, onReserve, reserved, loading }) {
-  const savings = bag.original_price - bag.discount_price
-  const savingsPercent = Math.round((savings / bag.original_price) * 100)
+  const savings = (bag.original_price || 0) - (bag.discount_price || 0)
+  const savingsPercent = bag.original_price > 0 ? Math.round((savings / bag.original_price) * 100) : 0
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="bg-gradient-to-r from-orange-400 to-orange-500 px-4 py-3 text-white">
+      <div className="px-4 py-3 text-white" style={{ background: HEADER_GRADIENT }}>
         <div className="flex justify-between items-start gap-2">
           <div>
             <h3 className="font-bold text-lg leading-tight">{bag.title}</h3>
-            <p className="text-orange-100 text-sm mt-0.5 font-medium">{bag.stores?.name}</p>
+            <p className="text-green-100 text-sm mt-0.5 font-medium">{bag.stores?.name}</p>
           </div>
-          <span className="bg-white text-orange-600 text-xs font-bold px-2.5 py-1 rounded-full ml-2 shrink-0 shadow-sm">
+          <span className="bg-white text-xs font-bold px-2.5 py-1 rounded-full ml-2 shrink-0 shadow-sm" style={{ color: '#f57c00' }}>
             -{savingsPercent}%
           </span>
         </div>
@@ -34,13 +37,13 @@ export default function BagCard({ bag, onReserve, reserved, loading }) {
         </div>
         {bag.pickup_start && bag.pickup_end && (
           <div className="flex items-center gap-1.5 text-sm text-gray-600 mb-2">
-            <span>🕒</span>
+            <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" strokeWidth={2} />
             <span>Retiro: <strong>{bag.pickup_start}</strong> – <strong>{bag.pickup_end}</strong></span>
           </div>
         )}
         {bag.stores?.address && (
           <div className="flex items-center gap-1.5 text-sm text-gray-600 mb-3">
-            <span>📍</span>
+            <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" strokeWidth={2} />
             <span>{bag.stores.address}</span>
           </div>
         )}
@@ -50,7 +53,7 @@ export default function BagCard({ bag, onReserve, reserved, loading }) {
           </span>
           {reserved ? (
             <span className="bg-green-100 text-green-700 text-sm font-semibold px-4 py-2 rounded-xl">
-              ✅ Reservado
+              <Check className="w-4 h-4 inline -mt-0.5 mr-1" strokeWidth={3} />Reservado
             </span>
           ) : (
             <button

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sin conexión — Rescate Sabor</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 24px; background: #f4f6f4; color: #1f2937;
+      font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .caja { max-width: 380px; width: 100%; text-align: center; }
+    .logo {
+      width: 96px; height: 96px; margin: 0 auto 24px; background: #fff; border-radius: 26px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 10px 30px rgba(15,42,24,0.10);
+    }
+    .logo svg { width: 72px; height: 72px; display: block; }
+    h1 { font-size: 22px; margin: 0 0 8px; letter-spacing: -.01em; }
+    p { color: #6b7280; margin: 0 0 26px; }
+    button {
+      background: #f57c00; color: #fff; border: 0; font-weight: 700; font-size: 15px;
+      padding: 14px 30px; border-radius: 12px; cursor: pointer; font-family: inherit;
+    }
+    button:active { transform: scale(.97); }
+    .marca { margin-top: 30px; font-size: 13px; color: #9ca3af; }
+  </style>
+</head>
+<body>
+  <div class="caja">
+    <div class="logo" role="img" aria-label="Rescate Sabor">
+      <svg width="72" height="72" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ring" gradientUnits="userSpaceOnUse" x1="91.8" y1="343.3" x2="420.2" y2="343.3">
+      <stop offset="0%" stop-color="#0F5C2E"/>
+      <stop offset="38%" stop-color="#2FA84F"/>
+      <stop offset="72%" stop-color="#F57C00"/>
+      <stop offset="100%" stop-color="#FF9800"/>
+    </linearGradient>
+    <linearGradient id="bowlg" gradientUnits="userSpaceOnUse" x1="152" y1="300" x2="360" y2="396">
+      <stop offset="0%" stop-color="#34B15A"/>
+      <stop offset="100%" stop-color="#14532D"/>
+    </linearGradient>
+    <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="250" y1="304" x2="322" y2="150">
+      <stop offset="0%" stop-color="#15803D"/>
+      <stop offset="100%" stop-color="#5BE584"/>
+    </linearGradient>
+  </defs>
+<g transform="translate(-27.75,6.68) scale(1.1106)">
+  <path d="M 91.77 343.32 A 186 186 0 1 1 420.23 343.32"
+        fill="none" stroke="url(#ring)" stroke-width="34" stroke-linecap="round"/>
+  <g transform="translate(420.23,343.32) rotate(-152.00)">
+    <polygon points="0,-44 -32,21 32,21" fill="#FF9800"/>
+  </g>
+  <path d="M 250.0 304.0 C 228.5 241.4 261.6 170.6 322.0 150.0 C 345.0 209.5 311.8 280.4 250.0 304.0 Z" fill="url(#lg1)"/>
+  <path d="M 152 300 A 104 96 0 0 0 360 300 Z" fill="url(#bowlg)"/>
+  <rect x="140" y="288" width="232" height="23" rx="12" fill="#F57C00"/>
+  </g>
+</svg>
+    </div>
+    <h1>Sin conexión</h1>
+    <p>No pudimos cargar Rescate Sabor. Revisa tu conexión a internet y vuelve a intentarlo.</p>
+    <button onclick="location.reload()">Reintentar</button>
+    <p class="marca">Menos desperdicio. Más sabor.</p>
+  </div>
+  <script>
+    // Reintenta solo cuando el navegador avisa que volvió la conexión.
+    addEventListener('online', () => location.reload())
+  </script>
+</body>
+</html>

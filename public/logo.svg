@@ -1,77 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 450">
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bowlGrad" x1="30%" y1="0%" x2="70%" y2="100%">
-      <stop offset="0%" stop-color="#4ade80"/>
-      <stop offset="100%" stop-color="#15803d"/>
+    <linearGradient id="ring" gradientUnits="userSpaceOnUse" x1="91.8" y1="343.3" x2="420.2" y2="343.3">
+      <stop offset="0%" stop-color="#0F5C2E"/>
+      <stop offset="38%" stop-color="#2FA84F"/>
+      <stop offset="72%" stop-color="#F57C00"/>
+      <stop offset="100%" stop-color="#FF9800"/>
     </linearGradient>
-    <linearGradient id="leaf1Grad" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#15803d"/>
-      <stop offset="100%" stop-color="#4ade80"/>
+    <linearGradient id="bowlg" gradientUnits="userSpaceOnUse" x1="152" y1="300" x2="360" y2="396">
+      <stop offset="0%" stop-color="#34B15A"/>
+      <stop offset="100%" stop-color="#14532D"/>
     </linearGradient>
-    <linearGradient id="leaf2Grad" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#166534"/>
-      <stop offset="100%" stop-color="#22c55e"/>
+    <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="250" y1="304" x2="322" y2="150">
+      <stop offset="0%" stop-color="#15803D"/>
+      <stop offset="100%" stop-color="#5BE584"/>
     </linearGradient>
   </defs>
-
-  <!-- Background -->
-  <rect width="400" height="450" fill="white"/>
-
-  <!-- White circle inside arrows -->
-  <circle cx="200" cy="185" r="107" fill="white"/>
-
-  <!-- Orange arc: 225deg to 30deg clockwise (165deg) -->
-  <!-- 225deg: (118.7, 103.7)  30deg: (299.6, 242.5) -->
-  <path d="M 118.7,103.7 A 115,115 0 0,1 299.6,242.5"
-        fill="none" stroke="#f97316" stroke-width="20" stroke-linecap="butt"/>
-  <!-- Orange arrowhead at 30deg, tangent 120deg -->
-  <polygon points="12,0 -9,-8 -9,8" transform="translate(299.6,242.5) rotate(120)" fill="#f97316"/>
-
-  <!-- Green arc: 30deg to 225deg clockwise (195deg) -->
-  <path d="M 299.6,242.5 A 115,115 0 1,1 118.7,103.7"
-        fill="none" stroke="#166534" stroke-width="20" stroke-linecap="butt"/>
-  <!-- Green arrowhead at 225deg, tangent 315deg -->
-  <polygon points="12,0 -9,-8 -9,8" transform="translate(118.7,103.7) rotate(315)" fill="#166534"/>
-
-  <!-- BOWL BODY -->
-  <path d="M 132,218 Q 130,296 200,299 Q 270,296 268,218 Z" fill="url(#bowlGrad)"/>
-
-  <!-- BOWL RIM (orange band) -->
-  <ellipse cx="200" cy="218" rx="68" ry="13" fill="#f97316"/>
-  <!-- Rim inner highlight -->
-  <ellipse cx="200" cy="216" rx="59" ry="9" fill="rgba(255,255,255,0.25)"/>
-
-  <!-- Bowl shine -->
-  <path d="M 150,235 Q 144,268 156,288" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="11" stroke-linecap="round"/>
-
-  <!-- Bowl base -->
-  <rect x="182" y="296" width="36" height="9" rx="4" fill="#166534"/>
-  <ellipse cx="200" cy="305" rx="26" ry="6" fill="#15803d"/>
-
-  <!-- FORK (orange) -->
-  <rect x="178" y="150" width="5" height="24" rx="2" fill="#f97316"/>
-  <rect x="186" y="150" width="5" height="24" rx="2" fill="#f97316"/>
-  <rect x="194" y="150" width="5" height="24" rx="2" fill="#f97316"/>
-  <rect x="179" y="171" width="22" height="6" rx="2" fill="#f97316"/>
-  <rect x="183" y="176" width="13" height="28" rx="5" fill="#f97316"/>
-
-  <!-- LEAVES (green) -->
-  <path d="M 220,208 C 215,208 209,178 225,163 C 239,166 237,202 220,208Z" fill="url(#leaf1Grad)"/>
-  <line x1="220" y1="208" x2="226" y2="166" stroke="#166534" stroke-width="1.8" stroke-linecap="round"/>
-  <path d="M 234,210 C 229,210 225,179 242,165 C 255,168 252,204 234,210Z" fill="url(#leaf2Grad)"/>
-  <line x1="234" y1="210" x2="241" y2="168" stroke="#14532d" stroke-width="1.8" stroke-linecap="round"/>
-
-  <!-- TEXT -->
-  <text x="194" y="385"
-        font-family="Arial Black, Arial, sans-serif"
-        font-weight="900"
-        font-size="52"
-        fill="#f97316"
-        text-anchor="end">Rescate</text>
-  <text x="208" y="385"
-        font-family="Arial Black, Arial, sans-serif"
-        font-weight="900"
-        font-size="52"
-        fill="#166534"
-        text-anchor="start">Sabor</text>
+<g transform="translate(-27.75,6.68) scale(1.1106)">
+  <path d="M 91.77 343.32 A 186 186 0 1 1 420.23 343.32"
+        fill="none" stroke="url(#ring)" stroke-width="34" stroke-linecap="round"/>
+  <g transform="translate(420.23,343.32) rotate(-152.00)">
+    <polygon points="0,-44 -32,21 32,21" fill="#FF9800"/>
+  </g>
+  <path d="M 250.0 304.0 C 228.5 241.4 261.6 170.6 322.0 150.0 C 345.0 209.5 311.8 280.4 250.0 304.0 Z" fill="url(#lg1)"/>
+  <path d="M 152 300 A 104 96 0 0 0 360 300 Z" fill="url(#bowlg)"/>
+  <rect x="140" y="288" width="232" height="23" rx="12" fill="#F57C00"/>
+  </g>
 </svg>

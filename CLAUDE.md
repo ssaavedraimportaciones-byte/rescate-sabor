@@ -16,15 +16,38 @@ Conecta vendedores con excedente de comida con compradores que quieren bolsas so
 - `npm run dev` — Servidor de desarrollo (puerto 3000)
 - `npm run build` — Build de producción
 - `npm run preview` — Vista previa del build
+- `npm run db` — Ejecuta las migraciones SQL pendientes (necesita `DATABASE_URL`)
+- `npm run demo` — Crea las cuentas de prueba con tienda y bolsas (necesita `SUPABASE_SERVICE_ROLE_KEY`)
+- `npm run admin -- correo@ejemplo.cl` — Asigna el rol admin a una cuenta existente
+
+Enlaces directos a cada panel y los comandos equivalentes: ver `GESTION.md`.
+Requisitos y pasos para publicar en Google Play: ver `playstore/README.md`.
 
 ## Setup de Supabase
 1. Ejecutar `supabase/schema.sql` en el SQL Editor
-2. En Authentication > Settings → desactivar "Enable email confirmations" para desarrollo
-3. En Authentication > URL Configuration → agregar la URL de Vercel como Site URL
+2. Sobre una base que ya existía, ejecutar además `supabase/security_hardening.sql`
+3. En Authentication > Settings → desactivar "Enable email confirmations" para desarrollo
+4. En Authentication > URL Configuration → agregar la URL de Vercel como Site URL
 
 ## Roles de usuario
 - **buyer (comprador)**: Navega bolsas disponibles, hace reservas, ve sus tickets
 - **seller (vendedor)**: Crea su tienda, publica bolsas, gestiona reservas en tiempo real
+- **admin**: Panel con métricas globales, usuarios, tiendas y reservas; puede cambiar
+  el rol de cualquier usuario
+
+`admin` no se puede elegir al registrarse: el registro público solo acepta
+`buyer`/`seller` y un trigger impide que alguien se cambie el rol a sí mismo. El
+primer admin se otorga desde el SQL Editor (última sección de
+`security_hardening.sql`); desde ahí ese admin puede promover a otros.
+
+## Marca
+- Todo uso del logo pasa por `src/components/Logo.jsx` (`<Logo/>` y `<LogoMark/>`).
+  El SVG es cuadrado: no meterlo en cajas con proporción distinta.
+- Los colores y degradados viven en `src/lib/brand.js`. Regla: el verde es la marca
+  (superficies) y el naranja es la acción (botones). No interpolar verde → naranja en
+  un mismo degradado — en sRGB pasa por un oliva apagado.
+- La iconografía es `lucide-react`, no emoji.
+- Los PNG de `public/` (favicons, icono iOS/PWA, og-image) se derivan de `logo.svg`.
 
 ## Flujo de reserva
 1. Comprador reserva una bolsa → se crea reserva con estado `pending`
