@@ -30,8 +30,14 @@ export default function AdminDashboard({ user, profile }) {
   const [reservations, setReservations] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [toast, setToast] = useState(null)
 
   useEffect(() => { loadAll() }, [])
+
+  function showToast(msg, type = 'success') {
+    setToast({ msg, type })
+    setTimeout(() => setToast(null), 3000)
+  }
 
   async function loadAll() {
     setLoading(true)
@@ -59,8 +65,20 @@ export default function AdminDashboard({ user, profile }) {
   }
 
   async function changeRole(userId, newRole) {
-    await supabase.from('profiles').update({ role: newRole }).eq('id', userId)
+    // Un admin no puede cambiarse el rol a sí mismo desde este listado: si lo
+    // hace por error queda fuera del panel al instante, sin confirmación ni
+    // vuelta atrás salvo que otro admin lo restituya (o vuelva al SQL Editor).
+    if (userId === profile.id) {
+      showToast('No puedes cambiar tu propio rol desde aquí. Pídele a otro admin que lo haga.', 'error')
+      return
+    }
+    const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', userId)
+    if (error) {
+      showToast('No se pudo cambiar el rol', 'error')
+      return
+    }
     setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole } : u))
+    showToast('Rol actualizado')
   }
 
   const filteredUsers = users.filter(u =>
@@ -79,6 +97,13 @@ export default function AdminDashboard({ user, profile }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {toast && (
+        <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl shadow-lg text-sm font-medium transition-all ${
+          toast.type === 'error' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
+        }`}>
+          {toast.msg}
+        </div>
+      )}
       <Header user={user} profile={profile} />
 
       <div className="max-w-5xl mx-auto px-4 py-6">
@@ -167,15 +192,21 @@ export default function AdminDashboard({ user, profile }) {
                         <p className="text-xs text-gray-500">{u.email}</p>
                         <p className="text-xs text-gray-400">{new Date(u.created_at).toLocaleDateString('es-CL')}</p>
                       </div>
-                      <select
-                        value={u.role || ''}
-                        onChange={e => changeRole(u.id, e.target.value)}
-                        className={`text-xs font-medium px-2 py-1 rounded-lg border-0 cursor-pointer ${ROLE[u.role]?.cls || 'bg-gray-100 text-gray-600'}`}
-                      >
-                        <option value="buyer">Comprador</option>
-                        <option value="seller">Vendedor</option>
-                        <option value="admin">Admin</option>
-                      </select>
+                      {u.id === profile.id ? (
+                        <span className={`text-xs font-medium px-2 py-1 rounded-lg ${ROLE[u.role]?.cls || 'bg-gray-100 text-gray-600'}`}>
+                          {ROLE[u.role]?.label || u.role} (tú)
+                        </span>
+                      ) : (
+                        <select
+                          value={u.role || ''}
+                          onChange={e => changeRole(u.id, e.target.value)}
+                          className={`text-xs font-medium px-2 py-1 rounded-lg border-0 cursor-pointer ${ROLE[u.role]?.cls || 'bg-gray-100 text-gray-600'}`}
+                        >
+                          <option value="buyer">Comprador</option>
+                          <option value="seller">Vendedor</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                      )}
                     </div>
                   ))}
                   {filteredUsers.length === 0 && (

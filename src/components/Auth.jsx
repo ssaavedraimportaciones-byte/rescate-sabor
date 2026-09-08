@@ -125,6 +125,7 @@ export default function Auth({ onAuth }) {
   const [error, setError] = useState('')
   const [confirmationSent, setConfirmationSent] = useState(false)
   const [resetSent, setResetSent] = useState(false)
+  const [unconfirmed, setUnconfirmed] = useState(false)
 
   function friendlyError(err) {
     if (!err) return ''
@@ -156,16 +157,36 @@ export default function Auth({ onAuth }) {
   async function handleLogin() {
     if (!email || !password) { setError('Ingresa email y contraseña'); return }
     if (loading) return
-    setLoading(true); setError('')
+    setLoading(true); setError(''); setUnconfirmed(false)
     try {
       const { data, error: loginError } = await supabase.auth.signInWithPassword({ email, password })
       if (loginError) {
-        setError(loginError.message === 'Failed to fetch' ? friendlyError(loginError) : 'Email o contraseña incorrectos')
+        // Supabase junta "email no confirmado" con cualquier otro error de login.
+        // Si se muestra como "contraseña incorrecta" el usuario nunca se entera de
+        // que solo le falta confirmar el correo, y termina reintentando sin salida.
+        if (loginError.message === 'Email not confirmed') {
+          setUnconfirmed(true)
+          setError('Todavía no confirmas tu correo. Revisa tu bandeja de entrada.')
+        } else {
+          setError(loginError.message === 'Failed to fetch' ? friendlyError(loginError) : 'Email o contraseña incorrectos')
+        }
         setLoading(false); return
       }
       const { data: profile } = await supabase.from('profiles').select('*').eq('id', data.user.id).single()
       if (!profile) { setError('Error al cargar perfil'); setLoading(false); return }
       onAuth(profile); setLoading(false)
+    } catch (err) {
+      setError(friendlyError(err)); setLoading(false)
+    }
+  }
+
+  async function handleResendConfirmation() {
+    if (!email || loading) return
+    setLoading(true); setError('')
+    try {
+      const { error: resendError } = await supabase.auth.resend({ type: 'signup', email })
+      if (resendError) { setError(friendlyError(resendError)); setLoading(false); return }
+      setConfirmationSent(true); setLoading(false)
     } catch (err) {
       setError(friendlyError(err)); setLoading(false)
     }
@@ -185,7 +206,7 @@ export default function Auth({ onAuth }) {
 
   function goToLogin() {
     setMode('login'); setStep(1); setError('')
-    setResetSent(false); setConfirmationSent(false)
+    setResetSent(false); setConfirmationSent(false); setUnconfirmed(false)
   }
 
   /* ── Confirmación enviada ── */
@@ -347,8 +368,16 @@ export default function Auth({ onAuth }) {
       <Card title="Bienvenido de vuelta" subtitle="Inicia sesión en tu cuenta">
         <div className="space-y-4">
           {error && (
-            <div className="bg-red-50 text-red-600 rounded-xl px-4 py-3 text-sm border border-red-100 flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 flex-shrink-0" strokeWidth={2} />{error}
+            <div className="bg-red-50 text-red-600 rounded-xl px-4 py-3 text-sm border border-red-100">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 flex-shrink-0" strokeWidth={2} />{error}
+              </div>
+              {unconfirmed && (
+                <button onClick={handleResendConfirmation} disabled={loading}
+                  className="mt-2 font-bold text-xs underline disabled:opacity-50">
+                  Reenviar correo de confirmación
+                </button>
+              )}
             </div>
           )}
           <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="tu@email.com" />
