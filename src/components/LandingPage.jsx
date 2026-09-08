@@ -480,7 +480,14 @@ export default function LandingPage({ onStart }) {
           </div>
           <div className="border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-gray-500 text-sm">Menos desperdicio. Más sabor.</p>
-            <p className="text-gray-600 text-xs">© {new Date().getFullYear()} Rescate Sabor. Todos los derechos reservados.</p>
+            {/* Google Play exige que la política de privacidad sea accesible
+                públicamente, sin instalar la app. */}
+            <div className="flex flex-wrap justify-center gap-4">
+              <a href="/privacidad.html" className="text-gray-500 hover:text-white text-xs transition">Privacidad</a>
+              <a href="/terminos.html" className="text-gray-500 hover:text-white text-xs transition">Términos</a>
+              <a href="/eliminar-cuenta.html" className="text-gray-500 hover:text-white text-xs transition">Eliminar cuenta</a>
+            </div>
+            <p className="text-gray-600 text-xs">© {new Date().getFullYear()} Rescate Sabor.</p>
           </div>
         </div>
       </footer>

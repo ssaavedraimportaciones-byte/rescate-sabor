@@ -1,0 +1,52 @@
+/* Estilo compartido de las páginas legales (privacidad, términos, borrado de cuenta). */
+:root {
+  --verde: #1b7a30;
+  --verde-oscuro: #0b4a24;
+  --naranja: #f57c00;
+  --texto: #1f2937;
+  --suave: #6b7280;
+  --borde: #e5e7eb;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--texto);
+  background: #fafafa;
+  font: 16px/1.7 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+header {
+  background: linear-gradient(155deg, #0b4a24 0%, #14612a 38%, #1b7a30 72%, #2d9d47 100%);
+  padding: 28px 24px;
+}
+header .wrap { max-width: 780px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+header img { width: 44px; height: 44px; display: block; }
+header .marca { font-weight: 900; font-size: 20px; letter-spacing: -.02em; }
+header .marca .a { color: #ffb74d; }
+header .marca .b { color: #fff; }
+main { max-width: 780px; margin: 0 auto; padding: 40px 24px 72px; }
+h1 { font-size: 30px; line-height: 1.25; margin: 0 0 6px; letter-spacing: -.02em; }
+.fecha { color: var(--suave); font-size: 14px; margin: 0 0 32px; }
+h2 { font-size: 19px; margin: 36px 0 10px; letter-spacing: -.01em; }
+p, li { color: #374151; }
+ul { padding-left: 22px; }
+li { margin-bottom: 7px; }
+a { color: var(--verde); }
+.caja {
+  background: #fff; border: 1px solid var(--borde); border-radius: 14px;
+  padding: 20px 22px; margin: 22px 0;
+}
+.caja.aviso { background: #fff7ed; border-color: #fed7aa; }
+.caja h3 { margin: 0 0 8px; font-size: 16px; }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 15px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+th { background: #f3f4f6; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--suave); }
+.btn {
+  display: inline-block; background: var(--naranja); color: #fff; text-decoration: none;
+  font-weight: 700; padding: 13px 24px; border-radius: 12px; margin-top: 6px;
+}
+footer {
+  border-top: 1px solid var(--borde); margin-top: 56px; padding: 24px;
+  text-align: center; color: var(--suave); font-size: 14px;
+}
+footer a { margin: 0 10px; }
+@media (max-width: 560px) { h1 { font-size: 25px; } main { padding: 28px 18px 56px; } }
