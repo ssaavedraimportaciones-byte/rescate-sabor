@@ -77,7 +77,10 @@ export default function BuyerDashboard({ user, profile }) {
       .order('created_at', { ascending: false })
     if (error) return
     setReservations(data || [])
-    const ids = new Set(data?.filter(r => r.status !== 'cancelled').map(r => r.bag_id) || [])
+    // Solo bloquea la bolsa mientras la reserva está viva. Una entregada o
+    // cancelada no debe impedir volver a reservar la misma bolsa más adelante.
+    const activas = ['pending', 'confirmed']
+    const ids = new Set(data?.filter(r => activas.includes(r.status)).map(r => r.bag_id) || [])
     setReservedBagIds(ids)
   }
 

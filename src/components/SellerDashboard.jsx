@@ -302,7 +302,8 @@ export default function SellerDashboard({ user, profile }) {
     const { error } = await supabase.from('bags').delete().eq('id', bagId)
     setConfirmDeleteId(null)
     if (error) {
-      showToast('No se puede eliminar (tiene reservas asociadas)', 'error')
+      // La base bloquea el borrado si quedan reservas activas y explica cuántas.
+      showToast(error.message || 'No se pudo eliminar la bolsa', 'error')
     } else {
       loadBags(store.id)
       showToast('Bolsa eliminada')

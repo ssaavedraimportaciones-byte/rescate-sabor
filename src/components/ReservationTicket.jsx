@@ -39,7 +39,7 @@ export default function ReservationTicket({ reservation, onCancel }) {
         {reservation.bags?.discount_price && (
           <div className="text-right">
             <span className="text-lg font-bold text-gray-900">{clp(reservation.bags.discount_price)}</span>
-            <p className="text-xs text-gray-400">pagado</p>
+            <p className="text-xs text-gray-400">pagas al retirar</p>
           </div>
         )}
       </div>

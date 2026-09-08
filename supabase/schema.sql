@@ -61,6 +61,46 @@ create index if not exists idx_reservations_store_id on public.reservations(stor
 create index if not exists idx_reservations_bag_id on public.reservations(bag_id);
 
 -- =====================
+-- FUNCIONES DE APOYO PARA LAS POLÍTICAS
+-- =====================
+-- Consultar profiles DENTRO de una política de profiles provoca
+-- "infinite recursion detected in policy for relation profiles" y deja la tabla
+-- ilegible para todos (nadie puede iniciar sesión). Estas funciones son
+-- SECURITY DEFINER: se ejecutan como su dueño y por lo tanto no vuelven a
+-- disparar RLS, cortando la recursión.
+
+create or replace function public.mi_rol()
+returns text
+language sql
+stable
+security definer
+set search_path = public
+as $$ select role from public.profiles where id = auth.uid() $$;
+
+create or replace function public.es_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$ select coalesce((select role from public.profiles where id = auth.uid()) = 'admin', false) $$;
+
+-- ¿El vendedor autenticado tiene alguna reserva de este comprador en su tienda?
+create or replace function public.es_comprador_de_mi_tienda(p_buyer uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.reservations r
+    join public.stores s on s.id = r.store_id
+    where r.buyer_id = p_buyer and s.seller_id = auth.uid()
+  )
+$$;
+
+-- =====================
 -- ROW LEVEL SECURITY
 -- =====================
 
@@ -81,17 +121,11 @@ create policy "Users can view their own profile"
 -- (para saber a quién entregar la bolsa).
 create policy "Sellers can view profiles of their buyers"
   on public.profiles for select
-  using (
-    exists (
-      select 1 from public.reservations r
-      join public.stores s on s.id = r.store_id
-      where r.buyer_id = public.profiles.id and s.seller_id = auth.uid()
-    )
-  );
+  using (public.es_comprador_de_mi_tienda(id));
 
 create policy "Admins can view all profiles"
   on public.profiles for select
-  using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
+  using (public.es_admin());
 
 -- Un usuario puede editar su propio perfil (nombre/email). El campo role queda
 -- protegido aparte por el trigger enforce_role_immutable — esta política por sí
@@ -102,7 +136,7 @@ create policy "Users can update their own profile"
 
 create policy "Admins can update all profiles"
   on public.profiles for update
-  using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
+  using (public.es_admin());
 
 create policy "Users can insert their own profile"
   on public.profiles for insert
@@ -117,7 +151,7 @@ create policy "Sellers can create stores"
   on public.stores for insert
   with check (
     auth.uid() = seller_id and
-    exists (select 1 from public.profiles where id = auth.uid() and role = 'seller')
+    public.mi_rol() = 'seller'
   );
 
 create policy "Sellers can update their stores"
@@ -154,7 +188,7 @@ create policy "Buyers can view their own reservations"
 
 create policy "Admins can view all reservations"
   on public.reservations for select
-  using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
+  using (public.es_admin());
 
 create policy "Sellers can view reservations for their stores"
   on public.reservations for select
@@ -312,9 +346,11 @@ begin
     raise exception 'Solo se pueden cancelar reservas pendientes';
   end if;
   update public.reservations set status = 'cancelled' where id = p_reservation_id;
+  -- Devuelve el stock. Solo reactiva si estaba apagada por quedarse sin unidades;
+  -- si el vendedor la desactivó a mano (con stock > 0), respeta esa decisión.
   update public.bags
     set quantity  = quantity + 1,
-        available = true
+        available = (available or quantity = 0)
     where id = v_bag_id;
 end;
 $$;
@@ -345,12 +381,42 @@ begin
     raise exception 'Solo se pueden cancelar reservas pendientes';
   end if;
   update public.reservations set status = 'cancelled' where id = p_reservation_id;
+  -- Devuelve el stock. Solo reactiva si estaba apagada por quedarse sin unidades;
+  -- si el vendedor la desactivó a mano (con stock > 0), respeta esa decisión.
   update public.bags
     set quantity  = quantity + 1,
-        available = true
+        available = (available or quantity = 0)
     where id = v_bag_id;
 end;
 $$;
+
+
+-- Impide borrar una bolsa que tenga reservas activas de otras personas.
+-- La FK reservations.bag_id es ON DELETE CASCADE, así que sin esto el borrado
+-- se lleva por delante la reserva del comprador sin avisarle a nadie.
+-- Solo bloquea las activas: las entregadas o canceladas no impiden limpiar.
+create or replace function public.bloquear_borrado_con_reservas()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare v_activas int;
+begin
+  select count(*) into v_activas
+    from public.reservations
+    where bag_id = old.id and status in ('pending', 'confirmed');
+  if v_activas > 0 then
+    raise exception 'No puedes eliminar esta bolsa: tiene % reserva(s) activa(s). Entrégalas o cancélalas primero.', v_activas;
+  end if;
+  return old;
+end;
+$$;
+
+drop trigger if exists trg_bloquear_borrado_con_reservas on public.bags;
+create trigger trg_bloquear_borrado_con_reservas
+  before delete on public.bags
+  for each row execute procedure public.bloquear_borrado_con_reservas();
 
 -- =====================
 -- REALTIME
