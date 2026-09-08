@@ -385,6 +385,17 @@ export default function Auth({ onAuth }) {
               Regístrate gratis
             </button>
           </p>
+
+          {/* Accesibles sin iniciar sesión: Google revisa que la política de
+              privacidad se pueda consultar antes de crear una cuenta. */}
+          <div className="flex justify-center gap-4 pt-1">
+            <a href="/privacidad.html" className="text-xs text-gray-400 hover:text-gray-600 transition">
+              Privacidad
+            </a>
+            <a href="/terminos.html" className="text-xs text-gray-400 hover:text-gray-600 transition">
+              Términos
+            </a>
+          </div>
         </div>
       </Card>
     </Screen>

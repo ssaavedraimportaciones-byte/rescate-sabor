@@ -20,6 +20,8 @@ oficial de Google para PWAs, no un "wrapper" de los que rechazan.
 | Feature graphic 1024×500 | ✅ Listo | `playstore/feature-graphic-1024x500.png` |
 | Capturas: teléfono, tablet 7", tablet 10" y Chromebook | ✅ Listo, 16 | `playstore/screenshots/` |
 | Manifest PWA instalable | ✅ Listo | `public/manifest.json` |
+| Pantalla offline (criterio de calidad TWA) | ✅ Listo | `public/offline.html` + `public/sw.js` |
+| Cuentas de prueba para el revisor | ⚠️ Tuyo | Sección 7 |
 | Verificación de dominio (assetlinks) | ⚠️ Falta la huella | `public/.well-known/assetlinks.json` |
 | Textos de la ficha | ✅ Listo | Sección 4 de este documento |
 | Formulario de seguridad de datos | ✅ Respuestas listas | Sección 5 |
@@ -219,7 +221,48 @@ Resultado esperado: apta para todo público.
 
 ---
 
-## 7. Otros datos de la ficha
+## 7. Acceso para el revisor de Google (no te lo saltes)
+
+Rescate Sabor exige iniciar sesión para ver lo importante. Cuando una app está
+detrás de un login, Google **obliga** a entregar credenciales de prueba en
+**Play Console → Contenido de la app → Acceso a la app**. Si no las das, el
+revisor solo ve la pantalla de login y rechaza por "no pudimos evaluar la app".
+
+Crea dos cuentas reales en producción y déjalas fijas:
+
+| Rol | Correo sugerido | Para qué |
+|---|---|---|
+| Comprador | `demo.comprador@rescatesabor.cl` | Ver bolsas, reservar, ticket |
+| Vendedor | `demo.vendedor@rescatesabor.cl` | Publicar bolsas y gestionar reservas |
+
+Importante para que la demo se vea bien:
+
+- La cuenta de vendedor debe tener **una tienda creada y 2 o 3 bolsas publicadas**.
+  Si el revisor entra y ve todo vacío, la app parece incompleta.
+- No borres estas cuentas ni les cambies la contraseña: Google las reutiliza en
+  cada actualización que envíes.
+- No hace falta dar la cuenta de admin. Es más, no la des.
+
+En el campo de instrucciones de Play Console pega algo así:
+
+```
+La app tiene dos tipos de usuario. Puede entrar con cualquiera de estas cuentas:
+
+COMPRADOR — ve bolsas disponibles y reserva
+Usuario: demo.comprador@rescatesabor.cl
+Clave: (la que definas)
+
+VENDEDOR — publica bolsas y gestiona reservas
+Usuario: demo.vendedor@rescatesabor.cl
+Clave: (la que definas)
+
+No se requiere código SMS ni verificación adicional.
+El pago de las bolsas se realiza presencialmente en el local, la app no procesa pagos.
+```
+
+---
+
+## 8. Otros datos de la ficha
 
 - **Público objetivo**: 18 años en adelante (evita el régimen de "apps para niños").
 - **¿App gratuita o de pago?**: Gratuita. **Ojo: esto no se puede cambiar después.**
@@ -228,9 +271,10 @@ Resultado esperado: apta para todo público.
 
 ---
 
-## 8. Orden recomendado
+## 9. Orden recomendado
 
 1. Ejecutar los dos SQL en Supabase.
+1.b. Crear las dos cuentas de prueba (sección 7) con datos de ejemplo.
 2. Desplegar el sitio y comprobar las URLs de la sección 2.
 3. Crear la cuenta de desarrollador (25 USD, pago único, tarda 1–2 días en aprobarse).
 4. `bubblewrap init` + `bubblewrap build` → `.aab`.
@@ -246,7 +290,7 @@ pedir un video o una cuenta de prueba. Ten a mano un usuario de prueba
 
 ---
 
-## 9. Motivos frecuentes de rechazo (y cómo evitamos cada uno)
+## 10. Motivos frecuentes de rechazo (y cómo evitamos cada uno)
 
 | Motivo | Cómo queda cubierto |
 |---|---|
@@ -255,4 +299,6 @@ pedir un video o una cuenta de prueba. Ten a mano un usuario de prueba
 | Seguridad de datos mal declarada | Tabla de la sección 5, revisada contra el código |
 | "Funcionalidad mínima" / solo un webview | Es un TWA con manifest, iconos y modo standalone |
 | Barra de navegador visible | Se resuelve con assetlinks.json (paso 3) |
-| Capturas que no muestran la app real | Las 5 capturas salen de la app funcionando |
+| Capturas que no muestran la app real | Las 16 capturas salen de la app funcionando |
+| El revisor no puede entrar (app con login) | Cuentas de prueba de la sección 7 |
+| Pantalla de error del navegador sin conexión | `offline.html` servida por el service worker |
