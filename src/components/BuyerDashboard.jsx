@@ -176,7 +176,7 @@ export default function BuyerDashboard({ user, profile }) {
 
       {tab === 'browse' && (
         <div className="bg-white border-b border-gray-100 px-4 py-3">
-          <div className="max-w-2xl mx-auto space-y-2">
+          <div className="max-w-2xl lg:max-w-5xl xl:max-w-6xl mx-auto space-y-2">
             <input
               type="text"
               value={search}
@@ -207,10 +207,10 @@ export default function BuyerDashboard({ user, profile }) {
         </div>
       )}
 
-      <div className="p-4 max-w-2xl mx-auto">
+      <div className="p-4 max-w-2xl lg:max-w-5xl xl:max-w-6xl mx-auto">
         {tab === 'browse' ? (
           loading ? (
-            <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               <SkeletonCard />
               <SkeletonCard />
               <SkeletonCard />
@@ -238,12 +238,13 @@ export default function BuyerDashboard({ user, profile }) {
               )}
             </div>
           ) : (
-            <div className="space-y-4">
+            <>
               {search && (
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 mb-3">
                   {filteredBags.length} resultado{filteredBags.length !== 1 ? 's' : ''} para "{search}"
                 </p>
               )}
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 items-start">
               {filteredBags.map(bag => (
                 <BagCard
                   key={bag.id}
@@ -253,7 +254,8 @@ export default function BuyerDashboard({ user, profile }) {
                   loading={reservingId === bag.id}
                 />
               ))}
-            </div>
+              </div>
+            </>
           )
         ) : (
           reservations.length === 0 ? (
@@ -265,7 +267,7 @@ export default function BuyerDashboard({ user, profile }) {
               <p className="text-gray-400 text-sm mt-1">¡Reserva tu primera bolsa!</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 items-start">
               {reservations.map(r => (
                 <ReservationTicket
                   key={r.id}

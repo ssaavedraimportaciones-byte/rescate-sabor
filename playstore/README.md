@@ -18,7 +18,7 @@ oficial de Google para PWAs, no un "wrapper" de los que rechazan.
 | Función de borrado en la base | ⚠️ Falta ejecutar | `supabase/account_deletion.sql` |
 | Icono 512×512 | ✅ Listo | `playstore/icon-512.png` |
 | Feature graphic 1024×500 | ✅ Listo | `playstore/feature-graphic-1024x500.png` |
-| Capturas de pantalla (mín. 2) | ✅ Listo, 5 | `playstore/screenshots/` |
+| Capturas: teléfono, tablet 7", tablet 10" y Chromebook | ✅ Listo, 16 | `playstore/screenshots/` |
 | Manifest PWA instalable | ✅ Listo | `public/manifest.json` |
 | Verificación de dominio (assetlinks) | ⚠️ Falta la huella | `public/.well-known/assetlinks.json` |
 | Textos de la ficha | ✅ Listo | Sección 4 de este documento |
@@ -147,6 +147,25 @@ el negocio recupera ingresos que daba por perdidos y tú comes bien gastando men
 
 El pago se realiza directamente en el local al retirar tu bolsa.
 ```
+
+### Capturas por tipo de dispositivo
+
+Play Console pide las capturas separadas por formato. Ya están generadas con los
+tamaños exactos que exige cada uno:
+
+| Carpeta | Se sube en | Tamaño | Cantidad |
+|---|---|---|---|
+| `screenshots/telefono/` | Teléfono | 1080×1920 | 5 |
+| `screenshots/tablet-7/` | Tablet de 7" | 1200×1920 | 4 |
+| `screenshots/tablet-10/` | Tablet de 10" | 1920×1200 | 4 |
+| `screenshots/chromebook/` | Chromebook / ChromeOS | 1920×1080 | 3 |
+
+Subir las de tablet no es opcional en la práctica: si faltan, Google baja la
+posición de la app en las búsquedas hechas desde tablets y Chromebooks, y muestra
+un aviso de "no optimizada para este dispositivo".
+
+Para regenerarlas después de un cambio de diseño está `playstore/generar-capturas.py`
+(recibe la carpeta con las capturas crudas de la app).
 
 **Categoría**: Comida y bebida
 **Etiquetas**: comida, sustentabilidad, ahorro, delivery, medio ambiente

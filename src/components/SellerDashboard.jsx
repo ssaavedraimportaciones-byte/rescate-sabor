@@ -516,7 +516,7 @@ export default function SellerDashboard({ user, profile }) {
         </div>
       </div>
 
-      <div className="p-4 max-w-2xl mx-auto">
+      <div className="p-4 max-w-2xl lg:max-w-5xl xl:max-w-6xl mx-auto">
 
         {/* ── RESERVAS ── */}
         {tab === 'reservations' && (
@@ -529,7 +529,7 @@ export default function SellerDashboard({ user, profile }) {
               <p className="text-gray-400 text-sm mt-1">Aparecerán aquí en tiempo real</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 items-start">
               {reservations.map(reservation => (
                 <div key={reservation.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                   <div className="p-4 border-b border-gray-100">
@@ -621,7 +621,7 @@ export default function SellerDashboard({ user, profile }) {
                 <p className="text-gray-400 text-sm mt-1">Agrega tu primera bolsa arriba</p>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 items-start">
                 {bags.map(bag => (
                   <div key={bag.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                     {editingBagId === bag.id ? (
