@@ -1,3 +1,5 @@
+import { HEADER_GRADIENT } from '../lib/brand'
+
 function clp(amount) {
   return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(amount)
 }
@@ -8,7 +10,7 @@ export default function BagCard({ bag, onReserve, reserved, loading }) {
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="px-4 py-3 text-white" style={{ background: 'linear-gradient(90deg, #1b7a30 0%, #2d9d47 50%, #f57c00 100%)' }}>
+      <div className="px-4 py-3 text-white" style={{ background: HEADER_GRADIENT }}>
         <div className="flex justify-between items-start gap-2">
           <div>
             <h3 className="font-bold text-lg leading-tight">{bag.title}</h3>

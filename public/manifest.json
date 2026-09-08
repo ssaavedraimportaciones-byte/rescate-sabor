@@ -2,18 +2,16 @@
   "name": "Rescate Sabor",
   "short_name": "Rescate Sabor",
   "description": "Bolsas sorpresa de comida a precio reducido. Menos desperdicio, más sabor.",
-  "start_url": "/rescate-sabor/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#f9fafb",
-  "theme_color": "#f97316",
+  "background_color": "#ffffff",
+  "theme_color": "#1b7a30",
   "orientation": "portrait",
   "icons": [
-    {
-      "src": "/rescate-sabor/logo.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "categories": ["food", "shopping", "lifestyle"],
   "lang": "es-CL"

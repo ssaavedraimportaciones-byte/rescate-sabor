@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { LogoMark } from './Logo'
+import { SURFACE_GRADIENT, HEADER_GRADIENT, CTA_GRADIENT } from '../lib/brand'
 
 const G = '#1b7a30'
 const GM = '#2d9d47'
@@ -25,13 +27,13 @@ export default function ResetPassword({ onDone }) {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
-      style={{ background: `linear-gradient(155deg, #0d5c1f 0%, ${G} 25%, ${GM} 55%, ${O} 100%)` }}
+      style={{ background: SURFACE_GRADIENT }}
     >
       <div className="w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl">
         <div className="flex flex-col items-center py-8 px-6 relative"
-          style={{ background: `linear-gradient(135deg, ${G} 0%, ${O} 100%)` }}>
+          style={{ background: HEADER_GRADIENT }}>
           <div className="bg-white rounded-2xl p-3 shadow-lg mb-3 relative z-10">
-            <img src="/logo.svg" alt="Rescate Sabor" className="w-16 h-12" />
+            <LogoMark size="lg" />
           </div>
           <h2 className="text-white font-bold mt-2 text-base relative z-10">Crea una nueva contraseña</h2>
         </div>
@@ -68,7 +70,7 @@ export default function ResetPassword({ onDone }) {
           <button
             onClick={handleSubmit} disabled={loading}
             className="w-full text-white font-bold py-3.5 rounded-xl transition-all active:scale-95 shadow-md hover:shadow-lg disabled:opacity-50 text-sm"
-            style={{ background: `linear-gradient(90deg, ${G}, ${O})` }}
+            style={{ background: CTA_GRADIENT }}
           >
             {loading ? 'Guardando...' : 'Guardar contraseña'}
           </button>

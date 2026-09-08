@@ -1,4 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
+import { LogoMark } from './Logo'
+import { SURFACE_GRADIENT, CTA_GRADIENT } from '../lib/brand'
 
 const G = '#1b7a30'
 const GM = '#2d9d47'
@@ -63,10 +65,12 @@ export default function LandingPage({ onStart }) {
         }}
       >
         <div className="flex items-center gap-2.5">
-          <img src="/logo.svg" alt="Rescate Sabor" className="w-10 h-9" />
+          <LogoMark size="sm" />
+          {/* Sobre el hero verde el navbar es transparente: el logotipo se aclara
+              para no quedar verde-sobre-verde e ilegible. */}
           <span className="font-black text-lg tracking-tight">
-            <span style={{ color: O }}>Rescate</span>
-            <span style={{ color: G }}> Sabor</span>
+            <span style={{ color: scrolled ? O : '#FFB74D' }}>Rescate</span>
+            <span style={{ color: scrolled ? G : '#ffffff' }}> Sabor</span>
           </span>
         </div>
         <div className="flex items-center gap-3">
@@ -89,7 +93,7 @@ export default function LandingPage({ onStart }) {
       {/* ━━━ HERO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <section
         className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-36 overflow-hidden"
-        style={{ background: `linear-gradient(155deg, #0d5c1f 0%, ${G} 25%, ${GM} 55%, ${O} 100%)` }}
+        style={{ background: SURFACE_GRADIENT }}
       >
         {/* Decoración */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none opacity-[0.06]"
@@ -102,7 +106,7 @@ export default function LandingPage({ onStart }) {
         {/* Logo */}
         <div className="animate-scaleIn">
           <div className="bg-white rounded-3xl p-6 shadow-2xl mb-8 inline-block animate-float" style={{ animationDuration: '5s' }}>
-            <img src="/logo.svg" alt="Rescate Sabor" className="w-36 h-28 mx-auto" />
+            <LogoMark size="2xl" className="mx-auto" />
             <p className="font-black text-2xl mt-3 tracking-tight">
               <span style={{ color: O }}>Rescate</span>
               <span style={{ color: G }}> Sabor</span>
@@ -221,7 +225,7 @@ export default function LandingPage({ onStart }) {
             <button
               onClick={onStart}
               className="font-bold text-lg px-10 py-4 rounded-2xl text-white shadow-lg transition-all active:scale-95 hover:shadow-xl"
-              style={{ background: `linear-gradient(135deg, ${G}, ${O})` }}
+              style={{ background: CTA_GRADIENT }}
             >
               Probar ahora — es gratis
             </button>
@@ -404,7 +408,7 @@ export default function LandingPage({ onStart }) {
       {/* ━━━ CTA FINAL ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <section
         className="py-28 px-6 text-center relative overflow-hidden"
-        style={{ background: `linear-gradient(140deg, #0d5c1f 0%, ${G} 30%, ${O} 100%)` }}
+        style={{ background: SURFACE_GRADIENT }}
       >
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: 'radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.06) 0%, transparent 70%)' }} />
@@ -412,7 +416,7 @@ export default function LandingPage({ onStart }) {
         <div className="relative z-10 max-w-2xl mx-auto">
           <div className="inline-block mb-8">
             <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-4 inline-block">
-              <img src="/logo.svg" alt="Rescate Sabor" className="w-20 h-16 mx-auto" />
+              <LogoMark size="xl" className="mx-auto" />
             </div>
           </div>
           <h2 className="text-3xl sm:text-5xl font-black text-white mb-4 leading-tight">
@@ -447,7 +451,7 @@ export default function LandingPage({ onStart }) {
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-8">
             <div className="flex items-center gap-2.5">
-              <img src="/logo.svg" alt="Rescate Sabor" className="w-9 h-8" />
+              <LogoMark size="xs" />
               <span className="font-black text-lg tracking-tight">
                 <span style={{ color: O }}>Rescate</span>
                 <span className="text-white"> Sabor</span>

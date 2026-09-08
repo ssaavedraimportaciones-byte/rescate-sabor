@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { LogoMark } from './Logo'
+import { SURFACE_GRADIENT, HEADER_GRADIENT, CTA_GRADIENT } from '../lib/brand'
 
 const G = '#1b7a30'
 const GM = '#2d9d47'
@@ -10,7 +12,7 @@ function Screen({ children }) {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
-      style={{ background: `linear-gradient(155deg, #0d5c1f 0%, ${G} 25%, ${GM} 55%, ${O} 100%)` }}
+      style={{ background: SURFACE_GRADIENT }}
     >
       <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full pointer-events-none opacity-[0.05]"
         style={{ background: 'radial-gradient(circle, #fff 0%, transparent 70%)' }} />
@@ -27,11 +29,11 @@ function Card({ title, subtitle, step, totalSteps, children }) {
     <div className="w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl animate-scaleIn">
       {/* Header */}
       <div className="flex flex-col items-center py-8 px-6 relative"
-        style={{ background: `linear-gradient(135deg, ${G} 0%, ${O} 100%)` }}>
+        style={{ background: HEADER_GRADIENT }}>
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 60%)' }} />
         <div className="bg-white rounded-2xl p-3 shadow-lg mb-3 relative z-10">
-          <img src="/logo.svg" alt="Rescate Sabor" className="w-16 h-12" />
+          <LogoMark size="lg" />
         </div>
         <p className="font-black text-base leading-tight tracking-tight relative z-10">
           <span style={{ color: '#ffe0b2' }}>Rescate</span>
@@ -94,7 +96,7 @@ function Btn({ onClick, disabled, loading, children, style }) {
     <button
       onClick={onClick} disabled={disabled}
       className="w-full text-white font-bold py-3.5 rounded-xl transition-all active:scale-95 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-      style={{ background: `linear-gradient(90deg, ${G}, ${O})`, ...style }}
+      style={{ background: CTA_GRADIENT, ...style }}
     >
       {loading ? (
         <span className="flex items-center justify-center gap-2">

@@ -1,56 +1,28 @@
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="arcG" gradientUnits="userSpaceOnUse" x1="92" y1="350" x2="422" y2="350">
-      <stop offset="0%" stop-color="#14532d"/>
-      <stop offset="45%" stop-color="#22c55e"/>
-      <stop offset="100%" stop-color="#f97316"/>
+    <linearGradient id="ring" gradientUnits="userSpaceOnUse" x1="91.8" y1="343.3" x2="420.2" y2="343.3">
+      <stop offset="0%" stop-color="#0F5C2E"/>
+      <stop offset="38%" stop-color="#2FA84F"/>
+      <stop offset="72%" stop-color="#F57C00"/>
+      <stop offset="100%" stop-color="#FF9800"/>
     </linearGradient>
-    <linearGradient id="bowlG" x1="20%" y1="0%" x2="80%" y2="100%">
-      <stop offset="0%" stop-color="#2db865"/>
-      <stop offset="100%" stop-color="#0a3d18"/>
+    <linearGradient id="bowlg" gradientUnits="userSpaceOnUse" x1="152" y1="300" x2="360" y2="396">
+      <stop offset="0%" stop-color="#34B15A"/>
+      <stop offset="100%" stop-color="#14532D"/>
     </linearGradient>
-    <linearGradient id="lf1" x1="50%" y1="100%" x2="50%" y2="0%">
-      <stop offset="0%" stop-color="#166534"/>
-      <stop offset="100%" stop-color="#4ade80"/>
-    </linearGradient>
-    <linearGradient id="lf2" x1="50%" y1="100%" x2="50%" y2="0%">
-      <stop offset="0%" stop-color="#15803d"/>
-      <stop offset="100%" stop-color="#86efac"/>
+    <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="250" y1="304" x2="322" y2="150">
+      <stop offset="0%" stop-color="#15803D"/>
+      <stop offset="100%" stop-color="#5BE584"/>
     </linearGradient>
   </defs>
-
-  <!-- Arc: 8 o'clock → clockwise over top → 4 o'clock -->
-  <path d="M 92 350 A 190 190 0 1 1 422 350"
-        fill="none" stroke="url(#arcG)" stroke-width="22" stroke-linecap="round"/>
-
-  <!-- Arrow at orange end -->
-  <g transform="translate(422,350) rotate(120)">
-    <polygon points="0,-26 -14,10 14,10" fill="#f97316"/>
+<g transform="translate(-27.75,6.68) scale(1.1106)">
+  <path d="M 91.77 343.32 A 186 186 0 1 1 420.23 343.32"
+        fill="none" stroke="url(#ring)" stroke-width="34" stroke-linecap="round"/>
+  <g transform="translate(420.23,343.32) rotate(-152.00)">
+    <polygon points="0,-44 -32,21 32,21" fill="#FF9800"/>
   </g>
-
-  <!-- Dots at green start -->
-  <circle cx="78"  cy="362" r="6"   fill="#22c55e" opacity="0.75"/>
-  <circle cx="65"  cy="346" r="4.5" fill="#22c55e" opacity="0.55"/>
-  <circle cx="82"  cy="333" r="3.5" fill="#22c55e" opacity="0.4"/>
-
-  <!-- Bowl body (deeper) -->
-  <path d="M 145 295 C 165 400 347 400 367 295 Z" fill="url(#bowlG)"/>
-
-  <!-- Bowl foot -->
-  <ellipse cx="256" cy="396" rx="38" ry="10" fill="#082e12"/>
-
-  <!-- Rim -->
-  <ellipse cx="256" cy="295" rx="114" ry="18" fill="#f97316"/>
-  <ellipse cx="256" cy="292" rx="95"  ry="11" fill="white" opacity="0.25"/>
-
-  <!-- Bowl shine highlight -->
-  <ellipse cx="192" cy="342" rx="28" ry="11" fill="white" opacity="0.13" transform="rotate(-25,192,342)"/>
-
-  <!-- Left leaf -->
-  <path d="M 244 295 C 236 262 218 236 228 207 C 238 180 255 206 248 236 C 245 257 244 278 244 295Z" fill="url(#lf1)"/>
-  <line x1="244" y1="295" x2="231" y2="215" stroke="#166534" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-
-  <!-- Right leaf (larger) -->
-  <path d="M 268 295 C 275 258 298 228 284 196 C 271 167 251 194 257 226 C 262 250 266 275 268 295Z" fill="url(#lf2)"/>
-  <line x1="268" y1="295" x2="279" y2="205" stroke="#15803d" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+  <path d="M 250.0 304.0 C 228.5 241.4 261.6 170.6 322.0 150.0 C 345.0 209.5 311.8 280.4 250.0 304.0 Z" fill="url(#lg1)"/>
+  <path d="M 152 300 A 104 96 0 0 0 360 300 Z" fill="url(#bowlg)"/>
+  <rect x="140" y="288" width="232" height="23" rx="12" fill="#F57C00"/>
+  </g>
 </svg>
