@@ -1,6 +1,11 @@
 import { useEffect, useState, useRef } from 'react'
 import { LogoMark } from './Logo'
 import { SURFACE_GRADIENT, CTA_GRADIENT } from '../lib/brand'
+import {
+  Trash2, TrendingDown, Globe, Store, Smartphone, PartyPopper, TrendingUp,
+  ShoppingBag, Check, Croissant, Pizza, Coffee, ShoppingCart, Fish, Salad,
+  CakeSlice, Beef, Sprout, Wallet, Zap, Star,
+} from 'lucide-react'
 
 const G = '#1b7a30'
 const GM = '#2d9d47'
@@ -177,12 +182,14 @@ export default function LandingPage({ onStart }) {
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { icon: '🗑️', stat: '40%', desc: 'de la comida producida se desperdicia antes de llegar al consumidor' },
-              { icon: '💸', stat: '$2.500M', desc: 'en pérdidas anuales para negocios de alimentos en Chile' },
-              { icon: '🌍', stat: '8-10%', desc: 'de las emisiones de CO₂ globales vienen del desperdicio alimentario' },
-            ].map(({ icon, stat, desc }) => (
+              { Icon: Trash2, tint: '#fee2e2', color: '#dc2626', stat: '40%', desc: 'de la comida producida se desperdicia antes de llegar al consumidor' },
+              { Icon: TrendingDown, tint: '#fff3e0', color: O, stat: '$2.500M', desc: 'en pérdidas anuales para negocios de alimentos en Chile' },
+              { Icon: Globe, tint: '#dcfce7', color: G, stat: '8-10%', desc: 'de las emisiones de CO₂ globales vienen del desperdicio alimentario' },
+            ].map(({ Icon, tint, color, stat, desc }) => (
               <div key={stat} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center hover:shadow-md transition-shadow">
-                <div className="text-4xl mb-3">{icon}</div>
+                <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: tint }}>
+                  <Icon className="w-7 h-7" style={{ color }} strokeWidth={2} />
+                </div>
                 <div className="text-2xl font-black text-gray-900 mb-2">{stat}</div>
                 <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
               </div>
@@ -204,13 +211,13 @@ export default function LandingPage({ onStart }) {
               style={{ background: `linear-gradient(90deg, ${G}30, ${O}30)` }} />
 
             {[
-              { n: '1', icon: '🏪', title: 'El negocio publica', desc: 'El restaurante, panadería o tienda crea una bolsa sorpresa con el excedente del día a precio reducido.', color: G },
-              { n: '2', icon: '📱', title: 'Tú reservas', desc: 'Abre la app, elige la bolsa que te guste y reserva en 30 segundos. Sin filas, sin complicaciones.', color: O },
-              { n: '3', icon: '🎉', title: 'Retiras y disfrutas', desc: 'Pasa por el local en el horario indicado, muestra tu ticket digital y recoge tu bolsa sorpresa.', color: G },
-            ].map(({ n, icon, title, desc, color }) => (
+              { n: '1', Icon: Store, title: 'El negocio publica', desc: 'El restaurante, panadería o tienda crea una bolsa sorpresa con el excedente del día a precio reducido.', color: G },
+              { n: '2', Icon: Smartphone, title: 'Tú reservas', desc: 'Abre la app, elige la bolsa que te guste y reserva en 30 segundos. Sin filas, sin complicaciones.', color: O },
+              { n: '3', Icon: PartyPopper, title: 'Retiras y disfrutas', desc: 'Pasa por el local en el horario indicado, muestra tu ticket digital y recoge tu bolsa sorpresa.', color: G },
+            ].map(({ n, Icon, title, desc, color }) => (
               <div key={n} className="text-center relative z-10">
-                <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl mx-auto mb-5 shadow-lg bg-white border border-gray-100">
-                  {icon}
+                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg bg-white border border-gray-100">
+                  <Icon className="w-9 h-9" style={{ color }} strokeWidth={1.75} />
                 </div>
                 <div className="w-8 h-8 rounded-full text-white text-sm font-black flex items-center justify-center mx-auto -mt-3 mb-3 shadow-md" style={{ background: color }}>
                   {n}
@@ -248,7 +255,7 @@ export default function LandingPage({ onStart }) {
             {/* Card negocio */}
             <div className="bg-white rounded-3xl p-8 shadow-sm border border-green-100">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl" style={{ background: '#dcfce7' }}>📈</div>
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl" style={{ background: '#dcfce7' }}><TrendingUp className="w-7 h-7" style={{ color: G }} strokeWidth={2} /></div>
                 <div>
                   <h3 className="text-xl font-black text-gray-900">Beneficios comerciales</h3>
                   <p className="text-sm text-gray-400">ROI desde el primer día</p>
@@ -264,7 +271,7 @@ export default function LandingPage({ onStart }) {
                   'Mejora tu reputación con RSE',
                 ].map(item => (
                   <li key={item} className="flex items-start gap-3 text-sm text-gray-600">
-                    <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: G }}>✓</span>
+                    <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: G }}><Check className="w-3 h-3 text-white" strokeWidth={3} /></span>
                     {item}
                   </li>
                 ))}
@@ -279,7 +286,7 @@ export default function LandingPage({ onStart }) {
             {/* Card compradores */}
             <div className="bg-white rounded-3xl p-8 shadow-sm border border-orange-100">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl" style={{ background: '#fff3e0' }}>🛍️</div>
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl" style={{ background: '#fff3e0' }}><ShoppingBag className="w-7 h-7" style={{ color: O }} strokeWidth={2} /></div>
                 <div>
                   <h3 className="text-xl font-black text-gray-900">Para compradores</h3>
                   <p className="text-sm text-gray-400">Come rico, gasta menos</p>
@@ -295,7 +302,7 @@ export default function LandingPage({ onStart }) {
                   'Descubre nuevos restaurantes y tiendas',
                 ].map(item => (
                   <li key={item} className="flex items-start gap-3 text-sm text-gray-600">
-                    <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: O }}>✓</span>
+                    <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: O }}><Check className="w-3 h-3 text-white" strokeWidth={3} /></span>
                     {item}
                   </li>
                 ))}
@@ -313,17 +320,17 @@ export default function LandingPage({ onStart }) {
             <h3 className="font-black text-gray-900 text-center text-lg mb-6">Ideal para todo tipo de negocios</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {[
-                { icon: '🍞', name: 'Panaderías' },
-                { icon: '🍕', name: 'Restaurantes' },
-                { icon: '☕', name: 'Cafeterías' },
-                { icon: '🛒', name: 'Supermercados' },
-                { icon: '🍣', name: 'Sushi & delivery' },
-                { icon: '🥗', name: 'Comida saludable' },
-                { icon: '🎂', name: 'Pastelerías' },
-                { icon: '🥩', name: 'Carnicerías' },
-              ].map(({ icon, name }) => (
+                { Icon: Croissant, name: 'Panaderías' },
+                { Icon: Pizza, name: 'Restaurantes' },
+                { Icon: Coffee, name: 'Cafeterías' },
+                { Icon: ShoppingCart, name: 'Supermercados' },
+                { Icon: Fish, name: 'Sushi & delivery' },
+                { Icon: Salad, name: 'Comida saludable' },
+                { Icon: CakeSlice, name: 'Pastelerías' },
+                { Icon: Beef, name: 'Carnicerías' },
+              ].map(({ Icon, name }) => (
                 <div key={name} className="flex items-center gap-2.5 bg-gray-50 rounded-xl px-4 py-3">
-                  <span className="text-2xl">{icon}</span>
+                  <Icon className="w-5 h-5 flex-shrink-0" style={{ color: G }} strokeWidth={1.9} />
                   <span className="text-sm font-medium text-gray-700">{name}</span>
                 </div>
               ))}
@@ -340,13 +347,15 @@ export default function LandingPage({ onStart }) {
 
           <div className="grid sm:grid-cols-4 gap-5">
             {[
-              { icon: '🌱', value: <Counter end={100} suffix="%" />, label: 'Gratis para negocios', color: G },
-              { icon: '💰', value: <Counter end={70} suffix="%" />, label: 'Ahorro promedio', color: O },
-              { icon: '⚡', value: '30s', label: 'Tiempo de reserva', color: G },
-              { icon: '📱', value: '24/7', label: 'Disponible siempre', color: O },
-            ].map(({ icon, value, label, color }) => (
+              { Icon: Sprout, value: <Counter end={100} suffix="%" />, label: 'Gratis para negocios', color: G },
+              { Icon: Wallet, value: <Counter end={70} suffix="%" />, label: 'Ahorro promedio', color: O },
+              { Icon: Zap, value: '30s', label: 'Tiempo de reserva', color: G },
+              { Icon: Smartphone, value: '24/7', label: 'Disponible siempre', color: O },
+            ].map(({ Icon, value, label, color }) => (
               <div key={label} className="rounded-2xl p-6 text-center border border-gray-100 shadow-sm hover:shadow-md transition-shadow bg-white">
-                <div className="text-4xl mb-3">{icon}</div>
+                <div className="w-12 h-12 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: color === G ? '#dcfce7' : '#fff3e0' }}>
+                  <Icon className="w-6 h-6" style={{ color }} strokeWidth={2} />
+                </div>
                 <div className="text-2xl font-black mb-1" style={{ color }}>{value}</div>
                 <div className="text-sm text-gray-500">{label}</div>
               </div>
@@ -363,18 +372,24 @@ export default function LandingPage({ onStart }) {
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { name: 'María G.', role: 'Compradora', text: 'Compro mi bolsa sorpresa cada viernes. Siempre viene llena de cosas ricas a un precio increíble. Ya no compro snacks en el supermercado.', avatar: '👩‍💼', stars: 5 },
-              { name: 'Carlos R.', role: 'Panadería El Trigo', text: 'Antes tirábamos 20 kilos de pan cada noche. Ahora vendemos todo en bolsas sorpresa y recuperamos un ingreso que dábamos por perdido.', avatar: '👨‍🍳', stars: 5 },
-              { name: 'Ana P.', role: 'Compradora', text: 'La app es súper fácil. Reservo en 30 segundos, paso a buscar y listo. Siento que hago algo bueno por el planeta cada vez que compro.', avatar: '👩', stars: 5 },
-            ].map(({ name, role, text, avatar, stars }) => (
+              { name: 'María G.', role: 'Compradora', text: 'Compro mi bolsa sorpresa cada viernes. Siempre viene llena de cosas ricas a un precio increíble. Ya no compro snacks en el supermercado.', tint: '#fff3e0', color: O, stars: 5 },
+              { name: 'Carlos R.', role: 'Panadería El Trigo', text: 'Antes tirábamos 20 kilos de pan cada noche. Ahora vendemos todo en bolsas sorpresa y recuperamos un ingreso que dábamos por perdido.', tint: '#dcfce7', color: G, stars: 5 },
+              { name: 'Ana P.', role: 'Compradora', text: 'La app es súper fácil. Reservo en 30 segundos, paso a buscar y listo. Siento que hago algo bueno por el planeta cada vez que compro.', tint: '#fff3e0', color: O, stars: 5 },
+            ].map(({ name, role, text, tint, color, stars }) => (
               <div key={name} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-11 h-11 rounded-full flex items-center justify-center text-xl bg-gray-50">{avatar}</div>
+                  <div className="w-11 h-11 rounded-full flex items-center justify-center font-black text-sm" style={{ background: tint, color }}>
+                    {name.charAt(0)}
+                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-bold text-gray-900 text-sm">{name}</div>
                     <div className="text-xs text-gray-400">{role}</div>
                   </div>
-                  <div className="text-yellow-400 text-sm">{'★'.repeat(stars)}</div>
+                  <div className="flex gap-0.5">
+                    {Array.from({ length: stars }).map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                    ))}
+                  </div>
                 </div>
                 <p className="text-gray-600 text-sm leading-relaxed italic">"{text}"</p>
               </div>
